@@ -3,7 +3,7 @@ import { couple, wedding } from "@/data/wedding";
 import "./globals.css";
 
 export const metadata = {
-  metadataBase: new URL("https://ducanhdiemmy.com"),
+  metadataBase: new URL("https://ducanhdiemmy.gloweb.site"),
   title: `${couple.groom} & ${couple.bride} — Wedding Invitation`,
   description: `Join us at ${wedding.venue.name} on ${wedding.dateLabel}.`,
   openGraph: {
