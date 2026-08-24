@@ -1,0 +1,141 @@
+.hero {
+  position: relative;
+  min-height: 100svh;
+  background: var(--navy-deep);
+  overflow: hidden;
+
+  /*
+   * The other half of the cross-dissolve. The hero waits slightly over-scaled
+   * and out of focus; as the gate dissolves it settles — a focus pull, so the
+   * handover is continuous instead of a cut.
+   */
+  transform: scale(1.08);
+  filter: blur(8px);
+  /* Symmetric easing, so the hero keeps moving for the whole dissolve rather
+     than snapping sharp in the first third while the gate is still fading. */
+  transition:
+    transform var(--dur-gate) var(--ease-inout),
+    filter var(--dur-gate) var(--ease-inout);
+}
+
+.heroIn {
+  transform: scale(1);
+  filter: blur(0px);
+}
+
+/*
+ * Once the dissolve has finished, drop the filter entirely. A lingering
+ * `blur(0px)` still forces a compositing layer around a fullscreen video, which
+ * costs battery on phones for no visual gain.
+ */
+.heroSettled {
+  filter: none;
+  will-change: auto;
+}
+
+.video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+/* Rect matched to the video's rendered frame — see Hero.js. */
+.frame {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/*
+ * The empty line itself, in video coordinates (top/height set from Hero.js).
+ * Centring by grid rather than by a -50% translate keeps the entrance
+ * animation's transform free — the two used to overwrite each other.
+ */
+.slot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  display: grid;
+  place-items: center;
+  padding-inline: 8%;
+  /* Aligns to the video card's own centre, not the frame's — see Hero.js. */
+  transform: translateX(var(--slot-shift, 0px));
+}
+
+.guestName {
+  margin: 0;
+  width: 100%;
+  text-align: center;
+  text-wrap: balance;
+
+  /* Sized from the video frame (see Hero.js) so the name always sits in
+     proportion to the lettering already in the footage. */
+  font-size: clamp(0.95rem, var(--name-size, 1.3rem), 2rem);
+  line-height: 1;
+  color: #fffaf2;
+  text-shadow: 0 1px 14px #09203a4d;
+
+  opacity: 0;
+  transform: translateY(0.4rem);
+  transition:
+    opacity 1.4s var(--ease) 0.35s,
+    transform 1.4s var(--ease) 0.35s;
+}
+
+.nameIn {
+  opacity: 1;
+  transform: none;
+}
+
+/* TAN Aegean — used when the face covers every character in the name. */
+.guestDisplay {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-indent: 0.06em;
+}
+
+/* Cormorant italic — whole-string fallback for Vietnamese diacritics. */
+.guestFallback {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* Optional private line for a specific guest. */
+.note {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  bottom: calc(var(--s-9) + var(--s-4));
+  translate: -50% 0;
+  width: min(80%, 22rem);
+  text-align: center;
+  color: #fffaf2c7;
+  text-shadow: 0 1px 12px #09203a80;
+}
+
+.scrollHint {
+  position: absolute;
+  bottom: var(--s-6);
+  left: 50%;
+  translate: -50% 0;
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 1s var(--ease) 1.6s;
+}
+.hintOn {
+  opacity: 1;
+}
+
+.hintLine {
+  display: block;
+  width: 1px;
+  height: 3rem;
+  background: linear-gradient(180deg, transparent, var(--cream));
+  animation: scroll-hint 2.6s var(--ease-inout) infinite;
+}

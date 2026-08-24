@@ -1,0 +1,148 @@
+.list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+  width: 100%;
+  text-align: left;
+}
+
+.item {
+  display: grid;
+  grid-template-columns: auto 1px 1fr;
+  align-items: start;
+  column-gap: var(--s-4);
+}
+
+.time {
+  font-family: var(--font-heading);
+  font-size: var(--t-fine);
+  letter-spacing: 0.06em;
+  color: var(--gold);
+  white-space: nowrap;
+  padding-top: 0.15em;
+}
+
+.divider {
+  align-self: stretch;
+  width: 1px;
+  background: linear-gradient(180deg, var(--gold), #c6a75f1a);
+  opacity: 0.6;
+}
+
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  color: var(--ink);
+}
+
+/* Kept to a single line — the titles used to wrap onto two. */
+.title {
+  white-space: nowrap;
+}
+
+.subtitle {
+  font-size: var(--t-small);
+  font-style: italic;
+  color: var(--cream);
+}
+
+/* ---- Venue card --------------------------------------------------------- */
+
+.venue {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.card {
+  position: relative;
+  width: min(62%, 17rem);
+  /* Headroom for the wax seal, which straddles the top edge of the card. */
+  padding-top: clamp(1.5rem, 6vw, 2.25rem);
+}
+
+.cardImage {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 18px 40px #00000059);
+}
+
+.seal {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  width: clamp(2.75rem, 13vw, 3.75rem);
+  height: auto;
+  filter: drop-shadow(0 6px 14px #00000073);
+}
+
+/*
+ * The card artwork leaves a blank band between the building and the hand:
+ * 0.38 → 0.575 of the image height, measured off the file. The text is placed
+ * inside that band, and scales with the card so it stays there.
+ */
+.cardText {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  top: calc(clamp(1.5rem, 6vw, 2.25rem) + 38%);
+  height: 19.5%;
+  z-index: 1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35em;
+  text-align: center;
+  /* Ink on the cream card, not cream on navy. */
+  color: #4a3a2c;
+}
+
+.venueName {
+  font-family: var(--font-heading);
+  font-size: clamp(0.75rem, 3.4vw, 0.95rem);
+  line-height: 1.15;
+  letter-spacing: 0.04em;
+  color: #3c2d22;
+}
+
+.venueAddress {
+  font-size: clamp(0.5625rem, 2.5vw, 0.6875rem);
+  line-height: 1.35;
+  color: #6b5645;
+  text-wrap: pretty;
+}
+
+.mapLink {
+  font-size: clamp(0.5rem, 2.25vw, 0.625rem);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  text-indent: 0.16em;
+  color: #7a5a2e;
+  border-bottom: 1px solid #7a5a2e66;
+  padding-bottom: 0.15em;
+  transition: color var(--dur-fast) var(--ease);
+}
+
+@media (hover: hover) {
+  .mapLink:hover {
+    color: #a1743a;
+  }
+}
+
+@media (min-width: 768px) {
+  .list {
+    gap: var(--s-6);
+  }
+  .item {
+    column-gap: var(--s-6);
+  }
+  .time {
+    font-size: var(--t-small);
+  }
+}

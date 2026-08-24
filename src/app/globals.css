@@ -1,40 +1,171 @@
+/* ==========================================================================
+   ĐỨC ANH & DIỄM MY — DESIGN SYSTEM
+   Concept: Luxury & Intimate. Mobile-first.
+
+   Everything below is the "apply layer": build sections by composing
+   .section / .shell / .stack / .h-* / .btn / .field — never hardcode
+   a colour, a font-size or a padding inside a component.
+   --------------------------------------------------------------------------
+   0. Tokens          1. Reset           2. Layout (section + shell + stack)
+   3. Typography      4. Rules & marks   5. Buttons
+   6. Forms           7. Ornaments       8. Motion / reveal
+   ========================================================================== */
+
+/* ==========================================================================
+   0. TOKENS
+   ========================================================================== */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* ---- Palette ---------------------------------------------------------- */
+  --navy: #0f2e4e;
+  --navy-deep: #09203a; /* darker pool, for video scrim + footers */
+  --navy-lift: #163c63; /* hairlines / hovers on navy */
+  --wine: #520e17;
+  --wine-deep: #3a090f;
+  --wine-lift: #6b1620;
+  --gold: #c6a75f;
+  --gold-bright: #dcc084; /* hover / highlight state */
+  --gold-dim: #8d764028; /* translucent gold, for borders */
+  --cream: #e8dcc8;
+  --cream-bright: #f4ecdf;
+
+  /* ---- Semantic --------------------------------------------------------- */
+  --bg: var(--navy);
+  --ink: var(--cream);
+  --ink-soft: #e8dcc8b3; /* 70% — secondary body copy */
+  --ink-faint: #e8dcc880; /* 50% — captions, fine print */
+  --accent: var(--gold);
+  --line: var(--gold-dim);
+  --scrim: linear-gradient(
+    180deg,
+    #09203acc 0%,
+    #09203a4d 32%,
+    #09203a66 62%,
+    #09203ae6 100%
+  );
+
+  /* ---- Type ------------------------------------------------------------- */
+  --font-heading: var(--font-display), "Cormorant Garamond", Georgia, serif;
+  --font-couple-name: var(--font-couple), var(--font-display), Georgia, serif;
+  --font-body: var(--font-body), Georgia, serif;
+
+  /* Fluid scale. Mobile value → desktop ceiling. */
+  --t-couple: clamp(2.75rem, 12.5vw, 6rem);
+  --t-hero: clamp(2.5rem, 11vw, 4.5rem);
+  --t-h1: clamp(2.25rem, 9.5vw, 3.75rem);
+  --t-h2: clamp(1.75rem, 7vw, 2.75rem);
+  --t-h3: clamp(1.25rem, 5vw, 1.75rem);
+  --t-h4: clamp(1rem, 4.05vw, 1.25rem); /* list titles — sized to stay on one line */
+  --t-lede: clamp(1.125rem, 4.6vw, 1.5rem);
+  --t-body: clamp(1rem, 4.2vw, 1.1875rem);
+  --t-small: clamp(0.9375rem, 3.7vw, 1.0625rem);
+  --t-fine: clamp(0.8125rem, 3.2vw, 0.9375rem);
+  --t-eyebrow: clamp(0.6875rem, 2.9vw, 0.8125rem);
+
+  --lh-tight: 1.06; /* display headings */
+  --lh-snug: 1.3; /* sub-headings */
+  --lh-body: 1.72; /* body copy — generous, this is an invitation */
+
+  --track-display: 0.02em;
+  --track-eyebrow: 0.26em; /* wide-spaced small caps */
+  --track-btn: 0.24em;
+
+  /* ---- Space scale ------------------------------------------------------ */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 2.75rem;
+  --s-8: 3.5rem;
+  --s-9: 4.5rem;
+  --s-10: 6rem;
+
+  /* ---- Layout rules ----------------------------------------------------- */
+  --shell: 34rem; /* reading width — deliberately narrow, invitation-like */
+  --shell-wide: 48rem;
+  --gutter: clamp(1.5rem, 7vw, 2.5rem); /* horizontal page padding */
+  --section-y: clamp(4.5rem, 16vw, 8rem); /* vertical section rhythm */
+  --section-y-tight: clamp(3rem, 11vw, 5rem);
+  /* Fixed drop from the top of a screen-section to its heading. Every section
+     uses the same value, so headings line up as you scroll between them
+     instead of floating to wherever the content's centre happens to fall. */
+  --section-head-offset: clamp(3.75rem, 11svh, 6rem);
+
+  /* Heading spacing — the gaps that give the page its cadence. */
+  --gap-eyebrow-heading: var(--s-4);
+  --gap-heading-body: var(--s-4);
+  --gap-block: var(--s-7); /* between blocks inside a section */
+  --gap-rule: var(--s-6); /* around divider rules */
+
+  /* ---- Surface ---------------------------------------------------------- */
+  --radius: 2px; /* almost square — luxury print, not app UI */
+  --radius-pill: 999px;
+  --border-hair: 1px solid var(--line);
+  --shadow-lift: 0 18px 50px -24px #00000099;
+
+  /* ---- Motion ----------------------------------------------------------- */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 0.28s;
+  --dur: 0.7s;
+  --dur-slow: 1.2s;
+  --dur-gate: 1.6s; /* intro→hero cross-dissolve; shared by both halves */
+
+  /* ---- Backdrops -------------------------------------------------------- */
+  --pattern-navy: url("/assets/pattern-navy.webp");
+  --pattern-wine: url("/assets/pattern-wine.webp");
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ==========================================================================
+   1. RESET
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 html {
-  height: 100%;
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
 }
 
 html,
 body {
   max-width: 100vw;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100svh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+/* Locks scroll while the intro gate is up. */
+body[data-locked="true"] {
+  overflow: hidden;
+  touch-action: none;
+}
+
+img,
+video,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
 }
 
 a {
@@ -42,8 +173,813 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold-bright);
+  outline-offset: 3px;
+}
+
+/* Visually hidden, still announced by screen readers. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+::selection {
+  background: var(--gold);
+  color: var(--navy-deep);
+}
+
+/* ==========================================================================
+   2. LAYOUT
+   Compose: <section class="section section--wine"><div class="shell stack">
+   ========================================================================== */
+
+.section {
+  position: relative;
+  isolation: isolate; /* keeps ornaments/overlays contained */
+  padding-block: var(--section-y);
+  padding-inline: var(--gutter);
+  overflow: hidden;
+}
+
+.section--tight {
+  padding-block: var(--section-y-tight);
+}
+.section--flush {
+  padding-block: 0;
+  padding-inline: 0;
+}
+.section--full {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+}
+
+/*
+ * One screen, one section. Every section fills the viewport and centres its
+ * content, so the invitation reads as a deck of 9:16 cards rather than a
+ * ribbon whose panels are as tall as whatever happens to be inside them.
+ * `min-height` (not `height`) so a section can still grow on a very short
+ * viewport instead of clipping its content.
+ */
+.section--screen {
+  min-height: 100svh;
+  display: grid;
+  align-content: start; /* heading pinned to --section-head-offset, not centred */
+  justify-items: center;
+  padding-block: var(--section-head-offset) var(--section-y-tight);
+}
+
+/* --- Section surfaces. The damask patterns alternate down the page. ------ */
+.section--navy {
+  background-color: var(--navy);
+}
+.section--wine {
+  background-color: var(--wine);
+}
+
+.section--pattern-navy {
+  background-color: var(--navy);
+  background-image: var(--pattern-navy);
+  background-size: cover;
+  background-position: center;
+}
+.section--pattern-wine {
+  background-color: var(--wine);
+  background-image: var(--pattern-wine);
+  background-size: cover;
+  background-position: center;
+}
+
+/* Vignette so centred copy always sits on the darkest part of the damask. */
+.section--pattern-navy::before,
+.section--pattern-wine::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(
+    ellipse 80% 60% at 50% 50%,
+    #00000000 0%,
+    #00000059 100%
+  );
+  pointer-events: none;
+}
+
+/* --- Shell: the centred measure ----------------------------------------- */
+.shell {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--shell);
+  margin-inline: auto;
+}
+.shell--wide {
+  max-width: var(--shell-wide);
+}
+
+/* --- Stack: vertical rhythm without per-element margins ------------------ */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-block);
+}
+.stack--tight {
+  gap: var(--s-4);
+}
+.stack--snug {
+  gap: var(--s-5);
+}
+.stack--loose {
+  gap: var(--s-8);
+}
+
+.center {
+  text-align: center;
+  align-items: center;
+}
+
+/* Header cluster: eyebrow → heading → body, with the correct gaps baked in. */
+.masthead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.masthead > .eyebrow + .h-1,
+.masthead > .eyebrow + .h-2,
+.masthead > .eyebrow + .h-couple,
+.masthead > .eyebrow + .h-hero {
+  margin-top: var(--gap-eyebrow-heading);
+}
+.masthead > .h-1 + *,
+.masthead > .h-2 + *,
+.masthead > .h-couple + *,
+.masthead > .h-hero + * {
+  margin-top: var(--gap-heading-body);
+}
+
+/* ==========================================================================
+   3. TYPOGRAPHY
+   ========================================================================== */
+
+.h-couple,
+.h-hero,
+.h-1,
+.h-2,
+.h-3,
+.h-4 {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  letter-spacing: var(--track-display);
+  line-height: var(--lh-tight);
+  text-wrap: balance;
+}
+
+/* Couple names only — TAN Pearl is reserved for this. */
+.h-couple {
+  font-family: var(--font-couple-name);
+  font-size: var(--t-couple);
+  line-height: 1;
+}
+
+.h-hero {
+  font-size: var(--t-hero);
+}
+.h-1 {
+  font-size: var(--t-h1);
+}
+.h-2 {
+  font-size: var(--t-h2);
+}
+.h-3 {
+  font-size: var(--t-h3);
+  line-height: var(--lh-snug);
+}
+.h-4 {
+  font-size: var(--t-h4);
+  line-height: var(--lh-snug);
+}
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--t-eyebrow);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: var(--track-eyebrow);
+  line-height: 1.4;
+  color: var(--accent);
+  text-indent: var(--track-eyebrow); /* re-centre optically */
+}
+
+.lede {
+  font-size: var(--t-lede);
+  line-height: 1.6;
+  font-style: italic;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+
+.body {
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+  color: var(--ink-soft);
+  text-wrap: pretty;
+}
+
+.fine {
+  font-size: var(--t-fine);
+  line-height: 1.6;
+  color: var(--ink-faint);
+  font-style: italic;
+  text-wrap: pretty;
+}
+
+.gold {
+  color: var(--accent);
+}
+.ink {
+  color: var(--ink);
+}
+
+/* Venue wordmark (Fairmont Hanoi lockup) — supplied as artwork, not a font. */
+.venue-mark {
+  width: min(72%, 17rem);
+  margin-inline: auto;
+  opacity: 0.95;
+}
+
+/* ==========================================================================
+   4. RULES & MARKS
+   ========================================================================== */
+
+.rule {
+  width: 100%;
+  max-width: 12rem;
+  height: 1px;
+  margin-inline: auto;
+  border: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--gold) 22%,
+    var(--gold) 78%,
+    transparent
+  );
+  opacity: 0.55;
+}
+
+/* Rule with a diamond at the centre. */
+.rule-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-3);
+  color: var(--accent);
+}
+.rule-mark::before,
+.rule-mark::after {
+  content: "";
+  flex: 1 1 0;
+  max-width: 5.5rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold));
+  opacity: 0.6;
+}
+.rule-mark::after {
+  background: linear-gradient(90deg, var(--gold), transparent);
+}
+.rule-mark__dot {
+  width: 6px;
+  height: 6px;
+  rotate: 45deg;
+  background: var(--gold);
+  flex: none;
+}
+
+/* ==========================================================================
+   5. BUTTONS — glassmorphism
+   .btn is the base; add one modifier for intent. Every button is a frosted
+   pill: a translucent pane that borrows the colour of whatever sits behind it,
+   lit by a hairline rim, an inner top highlight and a slow diagonal sheen.
+   ========================================================================== */
+
+.btn {
+  /* Per-button knobs — modifiers only need to change these. */
+  --btn-tint: 255 255 255; /* white glass, as an rgb triplet for alpha mixing */
+  --btn-tint-a: 0.14; /* pane opacity */
+  --btn-fg: #ffffff;
+  --btn-rim: rgb(var(--btn-tint) / 0.5);
+  --btn-rim-lit: rgb(var(--btn-tint) / 0.85);
+  --btn-glow: 0 10px 34px -14px #09203aa6;
+  --btn-blur: 18px;
+  --btn-gloss: 0.5; /* strength of the specular highlight */
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-3);
+  min-height: 3.375rem;
+  padding: var(--s-3) var(--s-7);
+  isolation: isolate;
+  overflow: hidden;
+
+  border: 1px solid var(--btn-rim);
+  border-radius: var(--radius-pill);
+  color: var(--btn-fg);
+
+  /* The frosted pane: a soft vertical fade over whatever is behind it. */
+  background-color: rgb(var(--btn-tint) / var(--btn-tint-a));
+  background-image: linear-gradient(
+    170deg,
+    rgb(var(--btn-tint) / 0.22) 0%,
+    rgb(var(--btn-tint) / 0.06) 44%,
+    rgb(var(--btn-tint) / 0.02) 70%,
+    rgb(var(--btn-tint) / 0.14) 100%
+  );
+  backdrop-filter: blur(var(--btn-blur)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--btn-blur)) saturate(150%);
+
+  /* Rim light on top, shadow catch underneath, glow beneath the whole pill. */
+  box-shadow:
+    inset 0 1px 0 rgb(var(--btn-tint) / 0.5),
+    inset 0 -1px 1px rgb(var(--btn-tint) / 0.14),
+    inset 0 0 22px -6px rgb(var(--btn-tint) / 0.28),
+    var(--btn-glow);
+
+  font-family: var(--font-body);
+  font-size: var(--t-fine);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: var(--track-btn);
+  text-indent: var(--track-btn);
+  line-height: 1;
+  text-shadow: 0 1px 12px #09203a80; /* keeps the label legible over photography */
+
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease),
+    background-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+/*
+ * Specular reflection. Two lights, always on: a broad gloss spilling from the
+ * top edge (as if lit from above) and a narrow diagonal glare across the upper
+ * left. This is what separates glass from flat translucency.
+ */
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      130% 74% at 50% -26%,
+      rgb(255 255 255 / calc(var(--btn-gloss) * 0.92)) 0%,
+      rgb(255 255 255 / calc(var(--btn-gloss) * 0.3)) 38%,
+      transparent 66%
+    ),
+    linear-gradient(
+      112deg,
+      transparent 12%,
+      rgb(255 255 255 / calc(var(--btn-gloss) * 0.34)) 26%,
+      rgb(255 255 255 / calc(var(--btn-gloss) * 0.06)) 38%,
+      transparent 52%
+    ),
+    radial-gradient(
+      120% 60% at 50% 128%,
+      rgb(255 255 255 / calc(var(--btn-gloss) * 0.3)) 0%,
+      transparent 62%
+    );
+  pointer-events: none;
+}
+
+/* Diagonal sheen — parked off to the left, sweeps across on hover/focus. */
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  translate: -120% 0;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgb(var(--btn-tint) / 0.05) 38%,
+    rgb(var(--btn-tint) / 0.34) 50%,
+    rgb(var(--btn-tint) / 0.05) 62%,
+    transparent 100%
+  );
+  transition: translate 0.9s var(--ease);
+  pointer-events: none;
+}
+.btn:hover::after,
+.btn:focus-visible::after {
+  translate: 120% 0;
+}
+
+.btn:hover {
+  border-color: var(--btn-rim-lit);
+  box-shadow:
+    inset 0 1px 0 rgb(var(--btn-tint) / 0.62),
+    inset 0 -1px 1px rgb(var(--btn-tint) / 0.18),
+    inset 0 0 26px -4px rgb(var(--btn-tint) / 0.36),
+    var(--btn-glow);
+}
+
+.btn:active {
+  transform: translateY(1px) scale(0.995);
+}
+
+.btn[disabled],
+.btn[aria-disabled="true"] {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* --- Intents ------------------------------------------------------------- */
+
+/*
+ * Primary call to action (Save the Date, Send Response): the same white glass,
+ * turned up — denser pane, brighter rim, stronger gloss.
+ */
+.btn--primary {
+  --btn-tint-a: 0.2;
+  --btn-rim: rgb(var(--btn-tint) / 0.68);
+  --btn-rim-lit: rgb(var(--btn-tint) / 0.95);
+  --btn-gloss: 0.72;
+  --btn-glow:
+    0 12px 38px -14px #09203ab3,
+    0 0 26px -10px rgb(255 255 255 / 0.35);
+  font-weight: 600;
+}
+
+/* Clear glass — secondary actions. */
+.btn--outline {
+  --btn-tint-a: 0.08;
+}
+
+/* Barely-there glass — tertiary / inline actions. */
+.btn--ghost {
+  --btn-tint-a: 0.05;
+  --btn-rim: rgb(var(--btn-tint) / 0.2);
+  --btn-glow: none;
+  --btn-blur: 8px;
+  min-height: 2.75rem;
+  padding-inline: var(--s-5);
+  font-size: var(--t-fine);
+}
+
+.btn--block {
+  display: flex;
+  width: 100%;
+}
+.btn--wide {
+  padding-inline: var(--s-9);
+}
+
+/* Circular glass icon button — used by the music toggle. */
+.btn-icon {
+  --btn-tint: 255 250 242;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1px solid rgb(var(--btn-tint) / 0.34);
+  border-radius: var(--radius-pill);
+  color: var(--cream-bright);
+  background-color: rgb(var(--btn-tint) / 0.1);
+  background-image: linear-gradient(
+    170deg,
+    rgb(var(--btn-tint) / 0.2),
+    rgb(var(--btn-tint) / 0.03)
+  );
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  box-shadow:
+    inset 0 1px 0 rgb(var(--btn-tint) / 0.45),
+    0 8px 24px -12px #09203aa6;
+  cursor: pointer;
+  transition:
+    color var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease);
+}
+.btn-icon:hover {
+  color: #fff6e4;
+  border-color: rgb(var(--btn-tint) / 0.6);
+}
+
+/* Frosted panes are unreadable where backdrop-filter is unsupported —
+   fall back to an opaque tint. */
+@supports not (backdrop-filter: blur(1px)) {
+  .btn,
+  .btn-icon {
+    background-color: rgb(var(--btn-tint) / 0.3);
+  }
+}
+
+/* ==========================================================================
+   6. FORMS
+   ========================================================================== */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  text-align: left;
+}
+
+.label {
+  font-size: var(--t-eyebrow);
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--ink-faint);
+  font-weight: 500;
+}
+
+.input,
+.textarea,
+.select {
+  width: 100%;
+  padding: var(--s-3) var(--s-5);
+  min-height: 3.5rem;
+  background: rgb(255 250 242 / 0.05);
+  border: 1px solid rgb(255 250 242 / 0.22);
+  border-radius: 1.5rem;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--ink);
+  font-size: var(--t-small);
+  font-family: var(--font-body);
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    background-color var(--dur-fast) var(--ease);
+}
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--ink-faint);
+  font-style: italic;
+}
+.input:focus,
+.textarea:focus,
+.select:focus {
+  outline: none;
+  border-color: rgb(255 255 255 / 0.62);
+  background: rgb(255 255 255 / 0.1);
+  box-shadow: 0 0 22px -10px rgb(255 255 255 / 0.55);
+}
+.textarea {
+  min-height: 6.5rem;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+/* Radio group rendered as selectable pills. */
+.choices {
+  display: grid;
+  gap: var(--s-3);
+}
+.choices--2 {
+  grid-template-columns: 1fr 1fr;
+}
+
+.choice {
+  --btn-tint: 255 250 242;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 3.5rem;
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid rgb(var(--btn-tint) / 0.28);
+  border-radius: var(--radius-pill);
+  color: var(--ink-soft);
+  background-color: rgb(var(--btn-tint) / 0.06);
+  background-image: linear-gradient(
+    170deg,
+    rgb(var(--btn-tint) / 0.14),
+    rgb(var(--btn-tint) / 0.02)
+  );
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  box-shadow: inset 0 1px 0 rgb(var(--btn-tint) / 0.32);
+  font-size: var(--t-fine);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease),
+    background-color var(--dur-fast) var(--ease);
+}
+.choice input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  cursor: pointer;
+}
+.choice:has(input:checked) {
+  --btn-tint: 255 255 255;
+  border-color: rgb(var(--btn-tint) / 0.78);
+  background-color: rgb(var(--btn-tint) / 0.19);
+  color: #ffffff;
+  box-shadow:
+    inset 0 1px 0 rgb(var(--btn-tint) / 0.62),
+    inset 0 12px 20px -14px rgb(var(--btn-tint) / 0.9),
+    0 0 22px -8px rgb(255 255 255 / 0.4);
+}
+
+.form-note {
+  font-size: var(--t-fine);
+  color: var(--ink-faint);
+  text-align: center;
+}
+.form-error {
+  font-size: var(--t-fine);
+  color: #f0b8b8;
+  text-align: center;
+}
+
+/* ==========================================================================
+   7. ORNAMENTS
+   Decorative cherub / cat line-art. Absolutely placed, never interactive,
+   hidden from assistive tech.
+   ========================================================================== */
+
+.ornament {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.5;
+  width: clamp(5.5rem, 26vw, 9rem);
+  height: auto;
+}
+.ornament--soft {
+  opacity: 0.28;
+}
+.ornament--strong {
+  opacity: 0.75;
+}
+.ornament--flip {
+  scale: -1 1;
+}
+
+/* Corner placements */
+.o-tl {
+  top: var(--s-5);
+  left: calc(var(--gutter) * -0.35);
+}
+.o-tr {
+  top: var(--s-5);
+  right: calc(var(--gutter) * -0.35);
+}
+.o-bl {
+  bottom: var(--s-5);
+  left: calc(var(--gutter) * -0.35);
+}
+.o-br {
+  bottom: var(--s-5);
+  right: calc(var(--gutter) * -0.35);
+}
+
+/* Inline (in-flow) decorative mark, centred */
+.mark {
+  width: clamp(4rem, 20vw, 6rem);
+  margin-inline: auto;
+  opacity: 0.9;
+}
+.mark--lg {
+  width: clamp(8rem, 46vw, 14rem);
+}
+
+/* ==========================================================================
+   8. MOTION
+   ========================================================================== */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(1.75rem);
+  transition:
+    opacity var(--dur-slow) var(--ease),
+    transform var(--dur-slow) var(--ease);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes float-soft {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(1.5deg);
+  }
+}
+.float {
+  animation: float-soft 7s var(--ease-inout) infinite;
+}
+
+@keyframes spin-slow {
+  to {
+    rotate: 360deg;
+  }
+}
+.spin {
+  animation: spin-slow 9s linear infinite;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scroll-hint {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translateY(8px);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
   html {
-    color-scheme: dark;
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ==========================================================================
+   9. BREAKPOINT ADJUSTMENTS (mobile-first: only widen from here)
+   ========================================================================== */
+
+@media (min-width: 768px) {
+  :root {
+    --track-eyebrow: 0.42em;
+  }
+  .ornament {
+    opacity: 0.42;
+  }
+  .o-tl,
+  .o-tr,
+  .o-bl,
+  .o-br {
+    inset-inline: auto;
+  }
+  .o-tl {
+    left: -3rem;
+  }
+  .o-tr {
+    right: -3rem;
+  }
+  .o-bl {
+    left: -3rem;
+  }
+  .o-br {
+    right: -3rem;
   }
 }

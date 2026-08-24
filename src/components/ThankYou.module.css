@@ -1,0 +1,27 @@
+/*
+ * Same vertical rhythm as every other section — the artwork is a bleed, not a
+ * block, so it never pushes the section past one screen.
+ */
+.section {
+  position: relative;
+  /* Room at the foot for the champagne, so the copy never sits on top of it. */
+  padding-bottom: clamp(11rem, 34svh, 17rem);
+}
+
+.toast {
+  position: absolute;
+  left: 50%;
+  bottom: -4px; /* kills the sub-pixel seam under the stems */
+  translate: -50% 0;
+  z-index: 0;
+  width: clamp(7.5rem, 46vw, 12rem);
+  height: auto;
+  filter: drop-shadow(0 14px 34px #00000066);
+  pointer-events: none;
+}
+
+.signature {
+  font-family: var(--font-couple-name);
+  color: var(--cream-bright);
+  white-space: nowrap;
+}

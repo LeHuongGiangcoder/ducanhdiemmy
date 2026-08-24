@@ -1,0 +1,32 @@
+.toggle {
+  position: fixed;
+  right: var(--s-4);
+  bottom: var(--s-4);
+  z-index: 60;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.8);
+  transition:
+    opacity var(--dur) var(--ease),
+    transform var(--dur) var(--ease);
+}
+
+.on {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+.disc {
+  display: grid;
+  place-items: center;
+}
+
+@media (min-width: 768px) {
+  .toggle {
+    right: var(--s-6);
+    bottom: var(--s-6);
+    width: 3.25rem;
+    height: 3.25rem;
+  }
+}

@@ -1,0 +1,159 @@
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--navy-deep);
+  animation: fade-in 0.9s var(--ease) both;
+  will-change: opacity, transform;
+}
+
+/*
+ * Exit: the gate dissolves and drifts forward while the hero underneath pulls
+ * into focus (see Hero.module.css). The two halves of the cross-dissolve share
+ * the same duration and easing, so the handover reads as one move rather than
+ * one screen being swapped for another.
+ */
+.closing {
+  animation: intro-dissolve var(--dur-gate) var(--ease-inout) forwards;
+  pointer-events: none;
+}
+
+@keyframes intro-dissolve {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0px);
+  }
+  55% {
+    opacity: 0.42;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.09);
+    filter: blur(7px);
+    visibility: hidden;
+  }
+}
+
+/* The cluster leaves fractionally sooner than the photograph behind it. */
+.closing .cluster {
+  animation: cluster-out calc(var(--dur-gate) * 0.55) var(--ease) forwards;
+}
+
+@keyframes cluster-out {
+  to {
+    opacity: 0;
+    transform: translateY(-0.75rem);
+  }
+}
+
+/* The photograph runs full-bleed and untinted — no scrim over it. */
+.bg {
+  object-fit: cover;
+  z-index: 0;
+}
+
+.body {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  padding: var(--gutter);
+}
+
+/* Monogram, button and hint as one tight, obviously-tappable group. */
+.cluster {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-5);
+  animation: cluster-in 1.4s var(--ease) 0.35s both;
+}
+
+@keyframes cluster-in {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.monogram {
+  width: clamp(2.75rem, 12vw, 3.75rem);
+  height: auto;
+  /* Cream over the water, where the navy artwork would go muddy. */
+  filter: brightness(0) saturate(100%) invert(97%) sepia(6%) saturate(220%)
+    hue-rotate(2deg) brightness(108%) contrast(97%)
+    drop-shadow(0 2px 12px #09203a73);
+  opacity: 0.96;
+}
+
+/* A slow breath, so the button reads as live rather than decorative. */
+.cta {
+  animation: cta-breathe 3.6s var(--ease-inout) 1.6s infinite;
+}
+
+@keyframes cta-breathe {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.5),
+      inset 0 -1px 1px rgb(255 255 255 / 0.14),
+      inset 0 0 22px -6px rgb(255 255 255 / 0.28),
+      0 12px 38px -14px #09203ab3,
+      0 0 26px -10px rgb(255 255 255 / 0.35);
+  }
+  50% {
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.62),
+      inset 0 -1px 1px rgb(255 255 255 / 0.2),
+      inset 0 0 26px -4px rgb(255 255 255 / 0.4),
+      0 12px 38px -14px #09203ab3,
+      0 0 38px -8px rgb(255 255 255 / 0.6);
+  }
+}
+
+.hint {
+  display: flex;
+  flex-direction: column; /* chevron above the label, nodding up at the button */
+  align-items: center;
+  gap: var(--s-2);
+  font-size: var(--t-fine);
+  font-style: italic;
+  color: rgb(255 255 255 / 0.88);
+  text-shadow: 0 1px 10px #09203a99;
+  animation: hint-pulse 3.6s var(--ease-inout) 1.6s infinite;
+}
+
+/* Small chevron nudging up toward the button. */
+.hintChevron {
+  width: 9px;
+  height: 9px;
+  border-top: 1.5px solid currentColor;
+  border-left: 1.5px solid currentColor;
+  rotate: 45deg;
+  opacity: 0.8;
+}
+
+@keyframes hint-pulse {
+  0%,
+  100% {
+    opacity: 0.62;
+    transform: translateY(2px);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+
+@media (min-width: 768px) {
+  .monogram {
+    width: 3.25rem;
+  }
+}

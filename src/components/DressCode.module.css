@@ -1,0 +1,33 @@
+.swatches {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--s-5) var(--s-6);
+}
+
+.swatch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-2);
+  min-width: 4.5rem;
+}
+
+.chip {
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--gold);
+  box-shadow: var(--shadow-lift);
+}
+
+.swatch .chip {
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+@media (hover: hover) {
+  .swatch:hover .chip {
+    transform: scale(1.08);
+  }
+}
