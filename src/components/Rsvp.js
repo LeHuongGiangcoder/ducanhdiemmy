@@ -124,7 +124,7 @@ export default function Rsvp({ guest }) {
 
               <fieldset className="field">
                 <legend className="label">Will you be joining us?</legend>
-                <div className="choices choices--2">
+                <div className="choices">
                   <label className="choice">
                     <input
                       type="radio"
@@ -132,6 +132,7 @@ export default function Rsvp({ guest }) {
                       checked={attending === true}
                       onChange={() => setAttending(true)}
                     />
+                    <span className="choice__mark" aria-hidden="true" />
                     Joyfully accept
                   </label>
                   <label className="choice">
@@ -141,6 +142,7 @@ export default function Rsvp({ guest }) {
                       checked={attending === false}
                       onChange={() => setAttending(false)}
                     />
+                    <span className="choice__mark" aria-hidden="true" />
                     Regretfully decline
                   </label>
                 </div>
@@ -182,7 +184,7 @@ export default function Rsvp({ guest }) {
 
               <button
                 type="submit"
-                className="btn btn--primary btn--block"
+                className={`btn btn--primary ${styles.submit}`}
                 disabled={status === "sending"}
               >
                 {status === "sending" ? "Sending…" : "Send Response"}

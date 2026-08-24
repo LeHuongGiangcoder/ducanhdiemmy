@@ -701,6 +701,8 @@ select {
 
 /* ==========================================================================
    6. FORMS
+   Stationery, not app UI: fields are a single ruled line, and the attendance
+   choice is a small mark with its label beside it. No panels, no fills.
    ========================================================================== */
 
 .field {
@@ -718,98 +720,104 @@ select {
   font-weight: 500;
 }
 
+/* A ruled line to write on — nothing else. */
 .input,
 .textarea,
 .select {
   width: 100%;
-  padding: var(--s-3) var(--s-5);
-  min-height: 3.5rem;
-  background: rgb(255 250 242 / 0.05);
-  border: 1px solid rgb(255 250 242 / 0.22);
-  border-radius: 1.5rem;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  padding: var(--s-2) 0;
+  min-height: 2.75rem;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid rgb(255 250 242 / 0.26);
+  border-radius: 0;
   color: var(--ink);
   font-size: var(--t-small);
   font-family: var(--font-body);
   transition:
     border-color var(--dur-fast) var(--ease),
-    background-color var(--dur-fast) var(--ease);
+    box-shadow var(--dur-fast) var(--ease);
 }
+
 .input::placeholder,
 .textarea::placeholder {
   color: var(--ink-faint);
   font-style: italic;
 }
+
 .input:focus,
 .textarea:focus,
 .select:focus {
   outline: none;
-  border-color: rgb(255 255 255 / 0.62);
-  background: rgb(255 255 255 / 0.1);
-  box-shadow: 0 0 22px -10px rgb(255 255 255 / 0.55);
+  border-bottom-color: var(--gold);
+  /* Doubles the rule rather than drawing a box. */
+  box-shadow: 0 1px 0 0 var(--gold);
 }
+
 .textarea {
-  min-height: 6.5rem;
+  min-height: 3.5rem;
   resize: vertical;
   line-height: 1.6;
 }
 
-/* Radio group rendered as selectable pills. */
-.choices {
-  display: grid;
-  gap: var(--s-3);
+/* Native select keeps its arrow but loses the platform chrome. */
+.select {
+  appearance: none;
+  padding-right: var(--s-5);
 }
-.choices--2 {
-  grid-template-columns: 1fr 1fr;
+
+/* --- Attendance choice: small mark, label alongside ---------------------- */
+
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  align-items: flex-start;
 }
 
 .choice {
-  --btn-tint: 255 250 242;
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
-  text-align: center;
-  min-height: 3.5rem;
-  padding: var(--s-3) var(--s-4);
-  border: 1px solid rgb(var(--btn-tint) / 0.28);
-  border-radius: var(--radius-pill);
-  color: var(--ink-soft);
-  background-color: rgb(var(--btn-tint) / 0.06);
-  background-image: linear-gradient(
-    170deg,
-    rgb(var(--btn-tint) / 0.14),
-    rgb(var(--btn-tint) / 0.02)
-  );
-  backdrop-filter: blur(12px) saturate(140%);
-  -webkit-backdrop-filter: blur(12px) saturate(140%);
-  box-shadow: inset 0 1px 0 rgb(var(--btn-tint) / 0.32);
-  font-size: var(--t-fine);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  gap: var(--s-3);
   cursor: pointer;
-  transition:
-    border-color var(--dur-fast) var(--ease),
-    color var(--dur-fast) var(--ease),
-    box-shadow var(--dur-fast) var(--ease),
-    background-color var(--dur-fast) var(--ease);
+  color: var(--ink-soft);
+  font-size: var(--t-small);
+  line-height: 1.2;
+  transition: color var(--dur-fast) var(--ease);
 }
+
 .choice input {
   position: absolute;
   opacity: 0;
-  inset: 0;
-  cursor: pointer;
+  width: 0;
+  height: 0;
 }
+
+.choice__mark {
+  flex: none;
+  width: 1.05rem;
+  height: 1.05rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgb(255 250 242 / 0.38);
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease);
+}
+
 .choice:has(input:checked) {
-  --btn-tint: 255 255 255;
-  border-color: rgb(var(--btn-tint) / 0.78);
-  background-color: rgb(var(--btn-tint) / 0.19);
-  color: #ffffff;
-  box-shadow:
-    inset 0 1px 0 rgb(var(--btn-tint) / 0.62),
-    inset 0 12px 20px -14px rgb(var(--btn-tint) / 0.9),
-    0 0 22px -8px rgb(255 255 255 / 0.4);
+  color: var(--cream-bright);
+}
+
+.choice:has(input:checked) .choice__mark {
+  border-color: var(--gold);
+  /* Filled centre, drawn rather than nested in another element. */
+  box-shadow: inset 0 0 0 3px var(--gold);
+}
+
+.choice:has(input:focus-visible) .choice__mark {
+  outline: 2px solid var(--gold-bright);
+  outline-offset: 2px;
 }
 
 .form-note {
@@ -817,6 +825,7 @@ select {
   color: var(--ink-faint);
   text-align: center;
 }
+
 .form-error {
   font-size: var(--t-fine);
   color: #f0b8b8;

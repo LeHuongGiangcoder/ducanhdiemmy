@@ -1,8 +1,13 @@
+/* This section carries the most content, so it runs a tighter rhythm. */
+.shell {
+  gap: var(--s-6);
+}
+
 .list {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: var(--s-5);
+  gap: var(--s-4);
   width: 100%;
   text-align: left;
 }
@@ -53,20 +58,28 @@
 .venue {
   width: 100%;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-3);
 }
 
 .card {
   position: relative;
-  width: min(62%, 17rem);
+  display: block;
+  width: min(55%, 15rem);
   /* Headroom for the wax seal, which straddles the top edge of the card. */
-  padding-top: clamp(1.5rem, 6vw, 2.25rem);
+  padding-top: clamp(1.25rem, 5vw, 1.75rem);
+  /*
+   * Card-relative units for everything printed on the card, so the type keeps
+   * its place in the artwork's blank band at any card size.
+   */
+  container-type: inline-size;
 }
 
 .cardImage {
   width: 100%;
   height: auto;
-  filter: drop-shadow(0 18px 40px #00000059);
+  filter: drop-shadow(0 16px 36px #00000059);
 }
 
 .seal {
@@ -75,21 +88,20 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 2;
-  width: clamp(2.75rem, 13vw, 3.75rem);
+  width: clamp(2.5rem, 12vw, 3.25rem);
   height: auto;
   filter: drop-shadow(0 6px 14px #00000073);
 }
 
 /*
- * The card artwork leaves a blank band between the building and the hand:
- * 0.38 → 0.575 of the image height, measured off the file. The text is placed
- * inside that band, and scales with the card so it stays there.
+ * The artwork leaves a blank band between the building and the hand at
+ * 0.38 → 0.575 of the image height, measured off the file itself.
  */
 .cardText {
   position: absolute;
-  left: 6%;
-  right: 6%;
-  top: calc(clamp(1.5rem, 6vw, 2.25rem) + 38%);
+  left: 7%;
+  right: 7%;
+  top: calc(clamp(1.25rem, 5vw, 1.75rem) + 38%);
   height: 19.5%;
   z-index: 1;
 
@@ -97,41 +109,40 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.35em;
+  gap: 0.4em;
   text-align: center;
-  /* Ink on the cream card, not cream on navy. */
-  color: #4a3a2c;
 }
 
 .venueName {
   font-family: var(--font-heading);
-  font-size: clamp(0.75rem, 3.4vw, 0.95rem);
-  line-height: 1.15;
-  letter-spacing: 0.04em;
-  color: #3c2d22;
+  font-size: 8.4cqw;
+  line-height: 1.1;
+  letter-spacing: 0.03em;
+  color: #3c2d22; /* ink on cream, not cream on navy */
 }
 
 .venueAddress {
-  font-size: clamp(0.5625rem, 2.5vw, 0.6875rem);
-  line-height: 1.35;
+  font-size: 5.4cqw;
+  line-height: 1.3;
   color: #6b5645;
   text-wrap: pretty;
 }
 
+/* Readable label on navy, rather than a few points of type on the card. */
 .mapLink {
-  font-size: clamp(0.5rem, 2.25vw, 0.625rem);
+  font-size: var(--t-small);
   text-transform: uppercase;
-  letter-spacing: 0.16em;
-  text-indent: 0.16em;
-  color: #7a5a2e;
-  border-bottom: 1px solid #7a5a2e66;
-  padding-bottom: 0.15em;
+  letter-spacing: 0.18em;
+  text-indent: 0.18em;
+  color: var(--gold);
+  border-bottom: 1px solid #c6a75f4d;
+  padding-bottom: 0.25em;
   transition: color var(--dur-fast) var(--ease);
 }
 
 @media (hover: hover) {
-  .mapLink:hover {
-    color: #a1743a;
+  .card:hover + .mapLink {
+    color: var(--gold-bright);
   }
 }
 

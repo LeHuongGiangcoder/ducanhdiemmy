@@ -23,7 +23,9 @@ export const wedding = {
     name: "Fairmont Hanoi",
     mark: "/assets/venue.webp",
     address: "83A Ly Thuong Kiet, Hoan Kiem, Hanoi",
-    mapUrl: "https://maps.google.com/?q=Fairmont+Hanoi",
+    // TODO — confirm the street address with the couple.
+    mapUrl:
+      "https://www.google.com/maps/search/?api=1&query=Fairmont+Hanoi",
   },
 };
 

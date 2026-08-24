@@ -7,14 +7,16 @@ import styles from "./Agenda.module.css";
  * The evening: when it happens, then where.
  *
  * No cherub ornaments here — the venue card carries the decoration, sealed with
- * the wax stamp the way a printed invitation would be.
+ * the wax stamp the way a printed invitation would be. The whole card is the
+ * link to the map, so the tap target is the artwork rather than a few points of
+ * type; the visible label sits below it, on navy, where it can be read.
  */
 export default function Agenda() {
   const { venue } = wedding;
 
   return (
     <section className="section section--screen section--pattern-navy">
-      <div className="shell stack center">
+      <div className={`shell stack center ${styles.shell}`}>
         <Reveal className="masthead">
           <p className="eyebrow">The Evening</p>
           <h2 className="h-1">Timeline</h2>
@@ -36,41 +38,48 @@ export default function Agenda() {
           ))}
         </ol>
 
-        {/* Venue, presented as a sealed card. */}
         <Reveal delay={140} className={styles.venue}>
-          <div className={styles.card}>
+          <a
+            className={styles.card}
+            href={venue.mapUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${venue.name}, ${venue.address} — open in Google Maps`}
+          >
             <Image
               src="/assets/seal.webp"
               alt=""
               aria-hidden="true"
               width={240}
               height={249}
-              sizes="(max-width: 767px) 22vw, 110px"
+              sizes="(max-width: 767px) 20vw, 100px"
               className={styles.seal}
             />
             <Image
               src="/assets/venue-card.webp"
-              alt={`Illustration of ${venue.name}`}
+              alt=""
+              aria-hidden="true"
               width={536}
               height={900}
-              sizes="(max-width: 767px) 62vw, 300px"
+              sizes="(max-width: 767px) 55vw, 280px"
               className={styles.cardImage}
             />
 
             {/* Sits in the card's blank band, between the drawing and the hand. */}
-            <div className={styles.cardText}>
-              <p className={styles.venueName}>{venue.name}</p>
-              <p className={styles.venueAddress}>{venue.address}</p>
-              <a
-                className={styles.mapLink}
-                href={venue.mapUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                View on Google Maps
-              </a>
-            </div>
-          </div>
+            <span className={styles.cardText}>
+              <span className={styles.venueName}>{venue.name}</span>
+              <span className={styles.venueAddress}>{venue.address}</span>
+            </span>
+          </a>
+
+          <a 
+            className={styles.mapLink} 
+            href={venue.mapUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View on Google Maps
+          </a>
         </Reveal>
       </div>
     </section>

@@ -1,33 +1,78 @@
+/* Room at the foot for the silk drape, so copy never sits on top of it. */
+.section {
+  padding-bottom: clamp(6rem, 20svh, 9rem);
+}
+
+.shell {
+  gap: var(--s-6);
+}
+
+/* ---- Palette ------------------------------------------------------------ */
+
+.palette {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-6);
+}
+
+/* All four colours on a single row. */
 .swatches {
   list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--s-5) var(--s-6);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--s-3);
+  width: 100%;
+  max-width: 20rem;
+  margin: 0;
+  padding: 0;
 }
 
 .swatch {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--s-2);
-  min-width: 4.5rem;
+  gap: var(--s-3);
+  min-width: 0;
 }
 
 .chip {
-  width: 3rem;
-  height: 3rem;
+  width: clamp(2.5rem, 12vw, 3rem);
+  height: clamp(2.5rem, 12vw, 3rem);
   border-radius: var(--radius-pill);
   border: 1px solid var(--gold);
-  box-shadow: var(--shadow-lift);
+  box-shadow: 0 6px 18px -8px #000000a6;
 }
 
-.swatch .chip {
-  transition: transform var(--dur-fast) var(--ease);
+.swatchName {
+  font-size: var(--t-fine);
+  line-height: 1.2;
+  font-style: italic;
+  color: var(--ink-faint);
+  /* One line each, so the chips share a baseline. */
+  white-space: nowrap;
 }
 
-@media (hover: hover) {
-  .swatch:hover .chip {
-    transform: scale(1.08);
-  }
+/* ---- Closing motif ------------------------------------------------------ */
+
+.cherub {
+  width: clamp(4.5rem, 30vw, 8rem);
+  height: auto;
+  margin-inline: auto;
+  opacity: 0.8;
+}
+
+/* ---- Silk hand-off ------------------------------------------------------ */
+
+.silk {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px; /* kills the sub-pixel seam at the section join */
+  z-index: 0;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
 }
