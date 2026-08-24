@@ -623,6 +623,9 @@ select {
  * turned up — denser pane, brighter rim, stronger gloss.
  */
 .btn--primary {
+  /* Fixed footprint, so every primary action is the same button — the intro's
+     "Save the Date" and the form's "Send Response" match exactly. */
+  min-width: min(15rem, 100%);
   --btn-tint-a: 0.2;
   --btn-rim: rgb(var(--btn-tint) / 0.68);
   --btn-rim-lit: rgb(var(--btn-tint) / 0.95);

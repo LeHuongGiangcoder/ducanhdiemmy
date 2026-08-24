@@ -29,7 +29,7 @@ export default function ThankYou() {
       </div>
 
       <Image
-        src="/assets/glass.webp"
+        src="/ly.png"
         alt=""
         aria-hidden="true"
         width={588}

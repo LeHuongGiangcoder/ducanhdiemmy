@@ -175,7 +175,7 @@ export default function Rsvp({ guest }) {
                 <textarea
                   id="rsvp-message"
                   className="textarea"
-                  rows={3}
+                  rows={2}
                   placeholder="Your wishes for Duc Anh & Diem My…"
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
