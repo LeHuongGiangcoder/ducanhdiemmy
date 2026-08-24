@@ -29,10 +29,10 @@ export default function ThankYou() {
       </div>
 
       <Image
-        src="/ly.png"
+        src="/assets/ly.webp"
         alt=""
         aria-hidden="true"
-        width={588}
+        width={669}
         height={1000}
         sizes="(max-width: 767px) 46vw, 260px"
         className={styles.toast}

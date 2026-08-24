@@ -11,10 +11,10 @@
 .toast {
   position: absolute;
   left: 50%;
-  bottom: -4px; /* kills the sub-pixel seam under the stems */
+  bottom: -4rem; /* pushed down to hide the base of the glasses */
   translate: -50% 0;
   z-index: 0;
-  width: clamp(10rem, 60vw, 18rem);
+  width: clamp(14rem, 80vw, 26rem); /* significantly larger */
   height: auto;
   filter: drop-shadow(0 14px 34px #00000066);
   pointer-events: none;

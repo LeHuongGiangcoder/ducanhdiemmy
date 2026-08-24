@@ -41,7 +41,6 @@
   width: clamp(2.5rem, 12vw, 3rem);
   height: clamp(2.5rem, 12vw, 3rem);
   border-radius: var(--radius-pill);
-  border: 1px solid var(--gold);
   box-shadow: 0 6px 18px -8px #000000a6;
 }
 
@@ -60,7 +59,22 @@
   width: clamp(4.5rem, 30vw, 8rem);
   height: auto;
   margin-inline: auto;
+  margin-top: 4rem; /* pushes the cherub lower down */
   opacity: 0.8;
+  animation: wobble 4s ease-in-out infinite;
+  transform-origin: center center;
+}
+
+@keyframes wobble {
+  0%, 100% {
+    transform: rotate(0deg) translateY(0);
+  }
+  25% {
+    transform: rotate(-4deg) translateY(-2px);
+  }
+  75% {
+    transform: rotate(4deg) translateY(2px);
+  }
 }
 
 /* ---- Silk hand-off ------------------------------------------------------ */

@@ -500,7 +500,7 @@ select {
   isolation: isolate;
   overflow: hidden;
 
-  border: 1px solid var(--btn-rim);
+  border: 1px solid transparent;
   border-radius: var(--radius-pill);
   color: var(--btn-fg);
 
@@ -516,12 +516,8 @@ select {
   backdrop-filter: blur(var(--btn-blur)) saturate(150%);
   -webkit-backdrop-filter: blur(var(--btn-blur)) saturate(150%);
 
-  /* Rim light on top, shadow catch underneath, glow beneath the whole pill. */
-  box-shadow:
-    inset 0 1px 0 rgb(var(--btn-tint) / 0.5),
-    inset 0 -1px 1px rgb(var(--btn-tint) / 0.14),
-    inset 0 0 22px -6px rgb(var(--btn-tint) / 0.28),
-    var(--btn-glow);
+  /* Shadow catch underneath, glow beneath the whole pill. */
+  box-shadow: var(--btn-glow);
 
   font-family: var(--font-body);
   font-size: var(--t-fine);
@@ -598,12 +594,13 @@ select {
 }
 
 .btn:hover {
-  border-color: var(--btn-rim-lit);
+  border-color: transparent;
   box-shadow:
-    inset 0 1px 0 rgb(var(--btn-tint) / 0.62),
-    inset 0 -1px 1px rgb(var(--btn-tint) / 0.18),
-    inset 0 0 26px -4px rgb(var(--btn-tint) / 0.36),
-    var(--btn-glow);
+    0 12px 38px -14px #09203ab3,
+    0 0 26px -10px rgb(var(--btn-tint) / 0.25);
+  background-color: rgb(var(--btn-tint) / calc(var(--btn-tint-a) + 0.08));
+  color: #fff;
+  transform: translateY(-1px);
 }
 
 .btn:active {

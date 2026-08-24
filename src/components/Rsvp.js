@@ -55,14 +55,6 @@ export default function Rsvp({ guest }) {
 
   return (
     <section id="rsvp" className="section section--screen section--pattern-navy">
-      <Ornament src="/assets/cherub-tray.webp" place="o-tl" tone="ornament--soft" />
-      <Ornament
-        src="/assets/cherub-bucket.webp"
-        place="o-br"
-        tone="ornament--soft"
-        flip
-      />
-
       <div className="shell stack center">
         <Reveal className="masthead">
           <p className="eyebrow">Kindly Reply</p>

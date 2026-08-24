@@ -20,7 +20,7 @@ export const wedding = {
   dateShort: "02 . 10 . 2026",
   timeLabel: "17:45",
   venue: {
-    name: "Fairmont Hanoi",
+    name: "Fairmont",
     mark: "/assets/venue.webp",
     address: "83A Ly Thuong Kiet, Hoan Kiem, Hanoi",
     // TODO — confirm the street address with the couple.
