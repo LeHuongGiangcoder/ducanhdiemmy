@@ -97,7 +97,7 @@
   grid-template-columns: 1fr 1fr;
   align-content: center;
   justify-items: center;
-  gap: 4cqw 3cqw;
+  gap: 6cqw 5cqw;
 }
 
 .swatch {
@@ -109,8 +109,8 @@
 }
 
 .chip {
-  width: 13cqw;
-  height: 13cqw;
+  width: 11cqw;
+  height: 11cqw;
   border-radius: var(--radius-pill);
   /* Vintage gold rim to separate from the background */
   box-shadow:
