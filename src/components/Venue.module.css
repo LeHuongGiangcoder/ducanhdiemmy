@@ -7,126 +7,79 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--s-4);
-}
-
-/* Keeps the card hidden until the hand raises it past this edge. */
-.stage {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.card {
-  position: relative;
-  display: block;
-  width: min(80%, 21rem);
-  /* Headroom for the wax seal, which straddles the top edge of the card. */
-  padding-top: clamp(1.25rem, 5vw, 1.75rem);
-  /*
-   * Card-relative units for everything printed on the card, so the type keeps
-   * its place in the artwork's blank band at any card size.
-   */
-  container-type: inline-size;
-
-  translate: 0 104%;
-  opacity: 0;
-  transition:
-    translate 1.7s var(--ease) 0.65s,
-    opacity 0.7s var(--ease) 0.65s;
-}
-
-.venue[data-in="true"] .card {
-  translate: 0 0;
-  opacity: 1;
+  gap: var(--s-5);
+  text-align: center;
 }
 
 /*
- * The artwork is cropped at the wrist, so the last few percent are faded out
- * rather than left as a hard horizontal cut across the glove.
+ * The drawing is a gilt line on black. `screen` drops the black ground into
+ * the navy so only the gold lines are left, and the mask feathers the four
+ * edges of the file so it never reads as a pasted rectangle.
  */
-.cardImage {
-  width: 100%;
+.sketch {
+  width: min(100%, 34rem);
   height: auto;
-  filter: drop-shadow(0 16px 36px #00000059);
-  mask-image: linear-gradient(180deg, #000 94%, transparent 100%);
-  
-  /* Cut out top negative space */
-  clip-path: inset(11% 0 0 0);
-  margin-top: -26.63%;
-}
+  mix-blend-mode: screen;
+  mask-image:
+    linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%),
+    linear-gradient(180deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
+  mask-composite: intersect;
+  -webkit-mask-composite: source-in;
 
-/* Pressed on once the card has settled. */
-.seal {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  z-index: 2;
-  width: clamp(2.5rem, 12vw, 3.25rem);
-  height: auto;
-  filter: drop-shadow(0 6px 14px #00000073);
-
-  translate: -50% 0;
-  scale: 0.6;
   opacity: 0;
+  scale: 1.04;
   transition:
-    opacity 0.5s var(--ease) 2.35s,
-    scale 0.8s var(--ease) 2.35s;
+    opacity 1.1s var(--ease) 0.15s,
+    scale 1.6s var(--ease) 0.15s;
 }
 
-.venue[data-in="true"] .seal {
+.venue[data-in="true"] .sketch {
+  opacity: 1;
   scale: 1;
-  opacity: 1;
 }
 
-/*
- * The drawing on the card finishes at 0.40 of the image height and the glove
- * comes over the paper at 0.68 — measured off the file itself. The address is
- * centred in the blank paper between the two.
- * (Adjusted: top 11% of image is cropped to reduce negative space)
- */
-.cardText {
-  position: absolute;
-  left: 7%;
-  right: 7%;
-  top: calc(clamp(1.25rem, 5vw, 1.75rem) + 32.6%);
-  height: 31.5%;
-  z-index: 1;
-
+.details {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 0.45em;
-  text-align: center;
+  gap: var(--s-2);
+
+  opacity: 0;
+  translate: 0 10px;
+  transition:
+    opacity 0.8s var(--ease) 0.6s,
+    translate 0.8s var(--ease) 0.6s;
+}
+
+.venue[data-in="true"] .details {
+  opacity: 1;
+  translate: 0 0;
 }
 
 .venueName {
   font-family: var(--font-heading);
-  font-size: 7.6cqw;
-  white-space: nowrap;
-  line-height: 1.1;
-  letter-spacing: 0.03em;
-  color: #3c2d22; /* ink on cream, not cream on navy */
+  font-size: var(--t-h2);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--track-display);
+  color: var(--cream-bright);
 }
 
 .venueHall {
-  font-size: 5cqw;
-  line-height: 1.3;
+  font-size: var(--t-small);
+  line-height: var(--lh-snug);
   letter-spacing: 0.02em;
-  color: #5c4736;
+  color: var(--ink-soft);
 }
 
 .venueAddress {
-  font-size: 4.8cqw;
-  line-height: 1.3;
-  color: #6b5645;
+  font-size: var(--t-fine);
+  line-height: var(--lh-snug);
+  color: var(--ink-faint);
   text-wrap: pretty;
 }
 
-/* Readable label on navy, rather than a few points of type on the card. */
 .mapLink {
+  margin-top: var(--s-2);
   font-size: var(--t-small);
   text-transform: uppercase;
   letter-spacing: 0.18em;
@@ -138,8 +91,8 @@
   opacity: 0;
   translate: 0 6px;
   transition:
-    opacity 0.6s var(--ease),
-    translate 0.6s var(--ease),
+    opacity 0.6s var(--ease) 0.85s,
+    translate 0.6s var(--ease) 0.85s,
     color var(--dur-fast) var(--ease);
 }
 
@@ -149,7 +102,7 @@
 }
 
 @media (hover: hover) {
-  .stage:hover ~ .mapLink {
+  .mapLink:hover {
     color: var(--gold-bright);
   }
 }

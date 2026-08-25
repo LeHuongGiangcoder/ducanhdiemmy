@@ -9,10 +9,10 @@ import styles from "./Venue.module.css";
 /**
  * Where it happens — the first stop after the hero.
  *
- * The card is presented rather than just placed: the map link lands first, the
- * gloved hand raises the card up out of it, and the wax seal is pressed on once
- * the card has settled. `.stage` clips the card until it rises, so the whole
- * move reads as one gesture coming from the line of type below.
+ * A gold line drawing of the hotel, set straight on the navy: the artwork is
+ * screen-blended so its black ground drops out and only the gilt lines are
+ * left standing on the section. Name, address and the map link follow it on
+ * the navy rather than on a card, so nothing competes with the drawing.
  */
 export default function Venue() {
   const { venue } = wedding;
@@ -46,41 +46,21 @@ export default function Venue() {
         </Reveal>
 
         <div ref={ref} className={styles.venue} data-in={shown ? "true" : "false"}>
-          <div className={styles.stage}>
-            <a
-              className={styles.card}
-              href={venue.mapUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`${venue.name}, ${venue.hall}, ${venue.address} — open in Google Maps`}
-            >
-              <Image
-                src="/assets/seal.webp"
-                alt=""
-                aria-hidden="true"
-                width={240}
-                height={249}
-                sizes="(max-width: 767px) 20vw, 100px"
-                className={styles.seal}
-              />
-              <Image
-                src="/assets/venue-hand.webp"
-                alt=""
-                aria-hidden="true"
-                width={1000}
-                height={2421}
-                sizes="(max-width: 767px) 74vw, 320px"
-                className={styles.cardImage}
-                priority
-              />
+          <Image
+            src="/assets/venue-sketch.png"
+            alt=""
+            aria-hidden="true"
+            width={1200}
+            height={800}
+            sizes="(max-width: 767px) 92vw, 34rem"
+            className={styles.sketch}
+            priority
+          />
 
-              {/* Sits in the card's blank band, below the drawing. */}
-              <span className={styles.cardText}>
-                <span className={styles.venueName}>{venue.name}</span>
-                <span className={styles.venueHall}>{venue.hall}</span>
-                <span className={styles.venueAddress}>{venue.address}</span>
-              </span>
-            </a>
+          <div className={styles.details}>
+            <span className={styles.venueName}>{venue.name}</span>
+            <span className={styles.venueHall}>{venue.hall}</span>
+            <span className={styles.venueAddress}>{venue.address}</span>
           </div>
 
           <a

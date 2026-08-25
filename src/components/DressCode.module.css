@@ -1,92 +1,156 @@
-/* Room at the foot for the silk drape, so copy never sits on top of it. */
+/*
+ * The silk is allowed to run past the section's own floor, so the join with
+ * the timeline is a drape rather than a cut. That needs the shared
+ * `overflow: hidden` lifted, and a stacking order above the section below.
+ */
 .section {
-  padding-bottom: clamp(6rem, 20svh, 9rem);
+  overflow: visible;
+  z-index: 1;
+  /* Room at the foot for the toast, so copy never sits on top of it. */
+  padding-bottom: clamp(13rem, 42svh, 20rem);
 }
 
 .shell {
   gap: var(--s-6);
 }
 
-/* ---- Palette ------------------------------------------------------------ */
+/* ---- Palette, held up on the card --------------------------------------- */
 
+/* Breaks the page gutter, so the paper is big enough to be read from. */
 .palette {
-  width: 100%;
+  width: calc(100% + 2 * var(--gutter));
+  margin-inline: calc(-1 * var(--gutter));
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--s-6);
+  justify-content: center;
 }
 
-/* All four colours on a single row. */
-.swatches {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--s-3);
+.card {
+  position: relative;
+  width: min(100%, 30rem);
+  /* Headroom for the wax seal, which straddles the top edge of the paper. */
+  padding-top: clamp(1.25rem, 5vw, 1.75rem);
+  /*
+   * Card-relative units for everything printed on the paper, so the swatches
+   * keep their place in the artwork at any card size.
+   */
+  container-type: inline-size;
+}
+
+.paper {
+  position: relative;
+}
+
+/*
+ * The artwork is cropped at the wrist, so the last few percent are faded out
+ * rather than left as a hard horizontal cut across the glove.
+ */
+.cardImage {
+  display: block;
   width: 100%;
-  max-width: 20rem;
+  height: auto;
+  filter: drop-shadow(0 16px 36px #00000059);
+  mask-image: linear-gradient(180deg, #000 92%, transparent 100%);
+}
+
+/* Pressed on the top edge of the paper. */
+.seal {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 2;
+  width: clamp(2.5rem, 12vw, 3.25rem);
+  height: auto;
+  translate: -50% 0;
+  filter: drop-shadow(0 6px 14px #00000073);
+}
+
+/*
+ * The paper runs from 0.22 to 0.77 across the file and from 0.02 to 0.52 down
+ * it — measured off the artwork. The swatches are inset inside that, clear of
+ * the fingers that come over the lower edge.
+ */
+.swatches {
+  position: absolute;
+  left: 27%;
+  right: 27%;
+  top: 8%;
+  height: 39%;
+  z-index: 1;
+
+  list-style: none;
   margin: 0;
   padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-content: center;
+  justify-items: center;
+  gap: 4cqw 3cqw;
 }
 
 .swatch {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--s-3);
+  gap: 1.4cqw;
   min-width: 0;
 }
 
 .chip {
-  width: clamp(2.5rem, 12vw, 3rem);
-  height: clamp(2.5rem, 12vw, 3rem);
+  width: 13cqw;
+  height: 13cqw;
   border-radius: var(--radius-pill);
-  box-shadow: 0 6px 18px -8px #000000a6;
+  /* Hairline rim so Black and Ivory both keep an edge on the paper. */
+  box-shadow:
+    0 0 0 1px #3c2d2226,
+    0 6px 14px -6px #3c2d2273;
 }
 
 .swatchName {
-  font-size: var(--t-fine);
+  font-size: 3.6cqw;
   line-height: 1.2;
   font-style: italic;
-  color: var(--ink-faint);
-  /* One line each, so the chips share a baseline. */
   white-space: nowrap;
+  color: #5c4736; /* ink on paper, not cream on wine */
 }
 
-/* ---- Closing motif ------------------------------------------------------ */
+/* ---- The toast, and the silk hand-off ----------------------------------- */
 
-.cherub {
-  width: clamp(4.5rem, 30vw, 8rem);
-  height: auto;
-  margin-inline: auto;
-  margin-top: 4rem; /* pushes the cherub lower down */
-  opacity: 0.8;
-  animation: wobble 4s ease-in-out infinite;
-  transform-origin: center center;
-}
-
-@keyframes wobble {
-  0%, 100% {
-    transform: rotate(0deg) translateY(0);
-  }
-  25% {
-    transform: rotate(-4deg) translateY(-2px);
-  }
-  75% {
-    transform: rotate(4deg) translateY(2px);
-  }
-}
-
-/* ---- Silk hand-off ------------------------------------------------------ */
-
-.silk {
+.finale {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: -1px; /* kills the sub-pixel seam at the section join */
+  bottom: 0;
+  height: 0;
   z-index: 0;
-  width: 100%;
-  height: auto;
   pointer-events: none;
   user-select: none;
+}
+
+/* Stands behind the silk; lifted so no foot of the glass shows below it. */
+.glasses {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(1.5rem, 4svh, 3rem);
+  translate: -50% 0;
+  width: clamp(8rem, 42vw, 15rem);
+  height: auto;
+  filter: drop-shadow(0 18px 40px #00000066);
+}
+
+/* Sweeps over the glasses and bleeds down into the next section. */
+.drape {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(-3rem, -6svh, -2rem);
+  translate: -50% 0;
+  width: 150%;
+  height: auto;
+  filter: drop-shadow(0 -10px 30px #00000040);
+}
+
+@media (min-width: 768px) {
+  /* Wide screens don't need the overhang — the wave already spans the width. */
+  .drape {
+    width: 100%;
+  }
 }
