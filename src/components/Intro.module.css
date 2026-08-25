@@ -120,8 +120,11 @@
   gap: var(--s-2);
   font-size: var(--t-fine);
   font-style: italic;
-  color: #e8dcc8b8;
-  text-shadow: 0 1px 10px #09203a99;
+  color: var(--cream-bright);
+  /* It lands on surf and lit rock, so it needs a real shadow to hold. */
+  text-shadow:
+    0 1px 3px #09203ab3,
+    0 2px 14px #09203acc;
   animation: hint-pulse 3.6s var(--ease-inout) 1.6s infinite;
 }
 
@@ -138,7 +141,7 @@
 @keyframes hint-pulse {
   0%,
   100% {
-    opacity: 0.62;
+    opacity: 0.78;
     transform: translateY(2px);
   }
   50% {
