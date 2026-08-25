@@ -1,0 +1,165 @@
+.section {
+  /* The rail runs long — this section is allowed to outgrow one screen. */
+  padding-bottom: var(--s-9);
+}
+
+.shell {
+  gap: var(--s-7);
+}
+
+.list {
+  list-style: none;
+  width: 100%;
+  text-align: left;
+}
+
+/*
+ * Fixed time column so every dot hangs off the same rail, whatever the digits.
+ * The breathing room lives in the item's own padding rather than a gap, so the
+ * rail segments meet and read as one continuous line.
+ */
+.item {
+  --row-gap: var(--s-8);
+  --dot-drop: 0.7em; /* where the dot sits against the first line of the title */
+
+  display: grid;
+  grid-template-columns: 4em var(--s-5) 1fr;
+  align-items: start;
+  padding-bottom: var(--row-gap);
+}
+
+.item[data-last="true"] {
+  padding-bottom: 0;
+}
+
+.time {
+  font-family: var(--font-heading);
+  font-size: var(--t-fine);
+  letter-spacing: 0.06em;
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  padding-top: 0.4em;
+  opacity: 0.55;
+  transition: opacity var(--dur) var(--ease);
+}
+
+.item[data-on="true"] .time {
+  opacity: 1;
+}
+
+/* ---- The rail ----------------------------------------------------------- */
+
+.marker {
+  position: relative;
+  align-self: stretch;
+  justify-self: center;
+  width: 1px;
+}
+
+/* Unlit track: the whole evening is visible from the start, just dimmed. */
+/* Runs past the item's own box so the segments meet at the next dot. */
+.rail {
+  position: absolute;
+  top: var(--dot-drop);
+  bottom: calc(-1 * (var(--row-gap) + var(--dot-drop)));
+  left: 0;
+  width: 1px;
+  background: #c6a75f2e;
+  overflow: hidden;
+}
+
+.item[data-last="true"] .rail {
+  display: none;
+}
+
+/* Lit length, drawn downwards from the dot as the guest reaches it. */
+.railFill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, var(--gold), #c6a75f66);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform var(--dur-slow) var(--ease);
+}
+
+.item[data-on="true"] .railFill {
+  transform: scaleY(1);
+}
+
+.dot {
+  position: absolute;
+  top: var(--dot-drop);
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  translate: -50% -50%;
+  rotate: 45deg;
+  background: var(--navy);
+  border: 1px solid #c6a75f66;
+  transition:
+    background var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease),
+    scale var(--dur) var(--ease);
+}
+
+.item[data-on="true"] .dot {
+  background: var(--gold-bright);
+  border-color: var(--gold-bright);
+  box-shadow: 0 0 0 4px #c6a75f1f, 0 0 14px 2px #c6a75f59;
+  scale: 1.15;
+}
+
+/* ---- Copy --------------------------------------------------------------- */
+
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  color: var(--ink);
+  opacity: 0.6;
+  transition: opacity var(--dur) var(--ease);
+}
+
+.item[data-on="true"] .detail {
+  opacity: 1;
+}
+
+.title {
+  text-wrap: balance;
+}
+
+.subtitle {
+  font-size: var(--t-small);
+  font-style: italic;
+  color: var(--cream);
+  text-wrap: pretty;
+}
+
+.note {
+  max-width: 30ch;
+  text-align: center;
+  color: var(--cream);
+  opacity: 0.75;
+}
+
+.cherub {
+  width: clamp(9rem, 46vw, 15rem);
+  height: auto;
+  opacity: 0.9;
+}
+
+@media (min-width: 768px) {
+  .item {
+    --row-gap: var(--s-9);
+    grid-template-columns: 5em var(--s-6) 1fr;
+  }
+  .time {
+    font-size: var(--t-small);
+  }
+  /* Room enough to keep every title on one line. */
+  .title {
+    white-space: nowrap;
+  }
+}

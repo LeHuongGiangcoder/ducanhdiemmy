@@ -1,13 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Agenda from "./Agenda";
 import DressCode from "./DressCode";
 import Hero from "./Hero";
 import Intro from "./Intro";
 import MusicToggle from "./MusicToggle";
 import Rsvp from "./Rsvp";
 import ThankYou from "./ThankYou";
+import Timeline from "./Timeline";
+import Venue from "./Venue";
 
 const MUSIC_SRC = "/audio/music.mp3";
 /** Must match --dur-gate in globals.css (the cross-dissolve length). */
@@ -97,8 +98,9 @@ export default function Invitation({ guest }) {
 
       <main aria-hidden={!gateGone}>
         <Hero guest={guest} started={gateGone} revealing={opened} />
-        <Agenda />
+        <Venue />
         <DressCode />
+        <Timeline />
         <Rsvp guest={guest} />
         <ThankYou />
       </main>

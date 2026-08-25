@@ -17,44 +17,60 @@ export const wedding = {
   // Taken from the card composed into hero.mp4: FRIDAY | OCTOBER 02 | 17:45 | 2026
   date: "2026-10-02T17:45:00+07:00",
   dateLabel: "Friday, 02 October 2026",
-  dateShort: "02 . 10 . 2026",
+  dateShort: "02 · 10 · 2026",
   timeLabel: "17:45",
   venue: {
-    name: "Fairmont",
+    name: "Fairmont Hanoi",
     mark: "/assets/venue.webp",
-    address: "83A Ly Thuong Kiet, Hoan Kiem, Hanoi",
-    // TODO — confirm the street address with the couple.
+    hall: "Grand Ballroom, B1 Floor",
+    address: "27–29 Ly Thai To, Hoan Kiem, Hanoi",
     mapUrl:
       "https://www.google.com/maps/search/?api=1&query=Fairmont+Hanoi",
   },
 };
 
 export const timeline = [
-  { time: "17:45", title: "Guest Arrival" },
-  { time: "18:15", title: "Wedding Reception" },
   {
-    time: "22:15",
-    title: "Live Performance",
-    subtitle: "Lucky draw",
-    note: "Please keep your Lucky Number until the end of the celebration to receive a gift from the bride and groom.",
+    time: "17:45",
+    title: "Welcome Reception",
+    subtitle: "Drinks, canapés, live music & photographs",
+  },
+  { time: "18:45", title: "Wedding Ceremony" },
+  {
+    time: "19:15",
+    title: "Dinner Reception",
+    subtitle: "Dinner, live performances & lucky draws",
+  },
+  {
+    time: "20:30",
+    title: "Evening Celebration",
+    subtitle: "Games, gifts & special moments",
+  },
+  {
+    time: "21:30",
+    title: "DJ & After Party",
+    subtitle: "Music, drinks & dancing",
   },
 ];
 
+/** Small print under the timeline. */
+export const timelineNote =
+  "Please keep your lucky number close throughout the evening.";
+
 export const dressCode = {
   headline: "Elegant and formal attire",
-  body: "in shades of navy blue, black, cream, and blue.",
   swatches: [
-    { name: "Navy blue", hex: "#0f2e4e" },
+    { name: "Midnight Blue", hex: "#0f2e4e" },
+    { name: "Ocean Blue", hex: "#3d6285" },
     { name: "Black", hex: "#111111" },
-    { name: "Cream", hex: "#e8dcc8" },
-    { name: "Blue", hex: "#3d6285" },
+    { name: "Ivory", hex: "#e8dcc8" },
   ],
 };
 
 export const thankYou = {
   headline: "Thank You",
-  body: "For standing beside us, for the years that led here, and for raising a glass to the ones ahead. Your presence is the finest thing on our table.",
-  signoff: "With love,",
+  body: "Some moments are made all the more meaningful by the people we share them with. Thank you for being part of ours.",
+  signoff: "With Love",
 };
 
 /** Fallback used at `/` — anyone opening the site without a personal link. */

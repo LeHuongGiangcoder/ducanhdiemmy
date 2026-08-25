@@ -16,7 +16,7 @@ export default function Rsvp({ guest }) {
 
   const [attending, setAttending] = useState(null);
   const [guestCount, setGuestCount] = useState(1);
-  const [name, setName] = useState("");
+  const [name, setName] = useState(personalised ? guest.name : "");
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState("idle"); // idle | sending | done | error
   const [error, setError] = useState("");
@@ -54,22 +54,12 @@ export default function Rsvp({ guest }) {
   }
 
   return (
-    <section id="rsvp" className="section section--screen section--pattern-navy">
+    <section id="rsvp" className="section section--screen section--pattern-wine">
       <div className="shell stack center">
         <Reveal className="masthead">
           <p className="eyebrow">Kindly Reply</p>
-          <h2 className="h-1">R.S.V.P</h2>
-          <p className="body">
-            {personalised ? (
-              <>
-                This invitation is reserved for{" "}
-                <span className="gold">{guest.name}</span>
-                {seats > 1 ? ` and up to ${seats} seats.` : "."}
-              </>
-            ) : (
-              "We would be delighted to know whether you can join us."
-            )}
-          </p>
+          <h2 className="h-1">R.S.V.P.</h2>
+          <p className="body">We would be delighted to have you join us.</p>
         </Reveal>
 
         {status === "done" ? (
@@ -96,23 +86,20 @@ export default function Rsvp({ guest }) {
         ) : (
           <Reveal delay={120} className={styles.formWrap}>
             <form className={styles.form} onSubmit={handleSubmit}>
-              {!personalised && (
-                <div className="field">
-                  <label className="label" htmlFor="rsvp-name">
-                    Your name
-                  </label>
-                  <input
-                    id="rsvp-name"
-                    className="input"
-                    type="text"
-                    required
-                    autoComplete="name"
-                    placeholder="Full name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </div>
-              )}
+              <div className="field">
+                <label className="label" htmlFor="rsvp-name">
+                  Your name
+                </label>
+                <input
+                  id="rsvp-name"
+                  className="input"
+                  type="text"
+                  required
+                  autoComplete="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
 
               <fieldset className="field">
                 <legend className="label">Will you be joining us?</legend>
@@ -187,7 +174,7 @@ export default function Rsvp({ guest }) {
                   {error}
                 </p>
               ) : (
-                <p className="form-note">Kindly reply before 1 November.</p>
+                <p className="form-note">Kindly reply by 20 September.</p>
               )}
             </form>
           </Reveal>

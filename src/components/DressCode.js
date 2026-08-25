@@ -21,8 +21,6 @@ export default function DressCode() {
         </Reveal>
 
         <Reveal delay={120} className={styles.palette}>
-          <p className="body">{dressCode.body}</p>
-
           <ul className={styles.swatches}>
             {dressCode.swatches.map((s) => (
               <li key={s.name} className={styles.swatch}>

@@ -11,7 +11,7 @@ import styles from "./ThankYou.module.css";
  */
 export default function ThankYou() {
   return (
-    <section className={`section section--screen section--pattern-wine ${styles.section}`}>
+    <section className={`section section--screen section--pattern-navy ${styles.section}`}>
       <div className="shell stack center">
         <Reveal className="masthead">
           <p className="eyebrow">{thankYou.signoff}</p>
