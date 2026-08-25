@@ -97,7 +97,7 @@
   grid-template-columns: 1fr 1fr;
   align-content: center;
   justify-items: center;
-  gap: 6cqw 5cqw;
+  gap: 3cqw 3.5cqw;
 }
 
 .swatch {
@@ -109,8 +109,8 @@
 }
 
 .chip {
-  width: 11cqw;
-  height: 11cqw;
+  width: 12cqw;
+  height: 12cqw;
   border-radius: var(--radius-pill);
   /* Vintage gold rim to separate from the background */
   box-shadow:
@@ -119,7 +119,7 @@
 }
 
 .swatchName {
-  font-size: 3.6cqw;
+  font-size: 3.2cqw;
   line-height: 1.2;
   font-style: italic;
   white-space: nowrap;
