@@ -10,11 +10,11 @@ export const metadata = {
     title: `${couple.groom} & ${couple.bride}`,
     description: `${wedding.dateLabel} · ${wedding.venue.name}`,
     type: "website",
-    images: ["/preview.jpg"],
+    images: ["/social preview.jpg"],
   },
   twitter: {
     card: "summary_large_image",
-    images: ["/preview.jpg"],
+    images: ["/social preview.jpg"],
   },
   robots: { index: false, follow: false }, // private invitation
 };
