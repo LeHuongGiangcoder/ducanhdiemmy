@@ -99,6 +99,11 @@
   --gap-block: var(--s-7); /* between blocks inside a section */
   --gap-rule: var(--s-6); /* around divider rules */
 
+  /* ---- Marks -----------------------------------------------------------
+     One size for the couple's monogram wherever it appears (the intro gate,
+     the closing screen), so the mark never changes weight between screens. */
+  --logo-size: clamp(3.25rem, 14vw, 4.5rem);
+
   /* ---- Surface ---------------------------------------------------------- */
   --radius: 2px; /* almost square — luxury print, not app UI */
   --radius-pill: 999px;
@@ -472,6 +477,16 @@ select {
   flex: none;
 }
 
+/*
+ * The couple's monogram. One artwork, one size, one shadow — used by the
+ * intro gate and the closing screen, both of which sit on photography.
+ */
+.monogram {
+  width: var(--logo-size);
+  height: auto;
+  filter: drop-shadow(0 2px 12px #09203a73);
+}
+
 /* ==========================================================================
    5. BUTTONS — glassmorphism
    .btn is the base; add one modifier for intent. Every button is a frosted
@@ -767,6 +782,15 @@ select {
 }
 
 /* --- Attendance choice: small mark, label alongside ---------------------- */
+
+/*
+ * A fieldset needs more air under its legend than a label needs under its
+ * input: without it the question reads as the first option's neighbour rather
+ * than as the heading of the group.
+ */
+fieldset.field {
+  gap: var(--s-4);
+}
 
 .choices {
   display: flex;

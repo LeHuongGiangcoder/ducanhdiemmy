@@ -6,15 +6,15 @@
 export const couple = {
   groom: "Duc Anh",
   bride: "Diem My",
-  // Full names as they appear burnt into hero.mp4.
+  // Full names as they appear burnt into "hero final.mp4".
   groomFull: "Vu Trung Duc Anh",
   brideFull: "Nguyen Tat Diem My",
   initials: "D.A & D.M",
-  monogram: "/assets/monogram.webp",
+  monogram: "/assets/monogram-couple.png",
 };
 
 export const wedding = {
-  // Taken from the card composed into hero.mp4: FRIDAY | OCTOBER 02 | 17:45 | 2026
+  // Taken from the card composed into "hero final.mp4": FRIDAY | OCTOBER 02 | 17:45 | 2026
   date: "2026-10-02T17:45:00+07:00",
   dateLabel: "Friday, 02 October 2026",
   dateShort: "02 · 10 · 2026",

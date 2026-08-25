@@ -4,20 +4,41 @@
  */
 .section {
   position: relative;
-  /* Room at the foot for the champagne, so the copy never sits on top of it. */
-  padding-bottom: clamp(11rem, 34svh, 17rem);
+  background-color: var(--navy-deep);
+  /*
+   * The one section that does not pin its heading to `--section-head-offset`.
+   * With no scrim over the photograph the copy has to find its own ground, and
+   * centring the block puts it on the water below the horizon while keeping
+   * the screen balanced — dropped any lower it pooled at the bottom.
+   */
+  align-content: center;
+  padding-block: var(--section-y);
 }
 
-.toast {
+/* ---- The photograph ----------------------------------------------------- */
+
+.backdrop {
   position: absolute;
-  left: 50%;
-  bottom: -4rem; /* pushed down to hide the base of the glasses */
-  translate: -50% 0;
-  z-index: 0;
-  width: clamp(14rem, 80vw, 26rem); /* significantly larger */
-  height: auto;
-  filter: drop-shadow(0 14px 34px #00000066);
+  inset: 0;
+  z-index: -1;
   pointer-events: none;
+}
+
+.backdropImage {
+  object-fit: cover;
+  /*
+   * Framed low: without a scrim the copy has to find its own dark ground, and
+   * that is the water below the horizon, not the sky.
+   */
+  object-position: center 22%;
+}
+
+/* ---- Content ------------------------------------------------------------ */
+
+.crest {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--s-2);
 }
 
 .signature {

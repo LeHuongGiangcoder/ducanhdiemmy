@@ -14,11 +14,14 @@
   border: 0;
 }
 
-.opt {
-  text-transform: none;
-  letter-spacing: 0.04em;
-  font-style: italic;
-  opacity: 0.7;
+/* Line-art cupid over the damask, sitting just above the one action. */
+.cherub {
+  align-self: center;
+  width: clamp(4.5rem, 26vw, 8rem);
+  height: auto;
+  margin-bottom: calc(-1 * var(--s-3));
+  opacity: 0.66;
+  filter: drop-shadow(0 4px 16px #00000059);
 }
 
 /* Same footprint as the intro's "Save the Date" — centred, not full width. */

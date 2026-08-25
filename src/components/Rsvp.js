@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import Ornament from "./Ornament";
 import Reveal from "./Reveal";
@@ -17,7 +18,6 @@ export default function Rsvp({ guest }) {
   const [attending, setAttending] = useState(null);
   const [guestCount, setGuestCount] = useState(1);
   const [name, setName] = useState(personalised ? guest.name : "");
-  const [message, setMessage] = useState("");
   const [status, setStatus] = useState("idle"); // idle | sending | done | error
   const [error, setError] = useState("");
 
@@ -40,7 +40,6 @@ export default function Rsvp({ guest }) {
           name,
           attending,
           guestCount,
-          message,
         }),
       });
 
@@ -147,19 +146,16 @@ export default function Rsvp({ guest }) {
                 </div>
               )}
 
-              <div className="field">
-                <label className="label" htmlFor="rsvp-message">
-                  A note for the couple <span className={styles.opt}>(optional)</span>
-                </label>
-                <textarea
-                  id="rsvp-message"
-                  className="textarea"
-                  rows={2}
-                  placeholder="Your wishes for Duc Anh & Diem My…"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                />
-              </div>
+              {/* Cupid, aimed at the one thing left to do. */}
+              <Image
+                src="/assets/cherub-arrow.png"
+                alt=""
+                aria-hidden="true"
+                width={800}
+                height={758}
+                sizes="(max-width: 767px) 28vw, 130px"
+                className={styles.cherub}
+              />
 
               <button
                 type="submit"

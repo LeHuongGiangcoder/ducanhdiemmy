@@ -2,6 +2,23 @@
   gap: var(--s-6);
 }
 
+/*
+ * The cherub sits in the gap the heading leaves, and pushes the drawing and
+ * the address down the screen with it.
+ */
+.cherub {
+  display: flex;
+  justify-content: center;
+  margin-block: var(--s-4) var(--s-2);
+}
+
+.cherub img {
+  width: clamp(4.5rem, 24vw, 7.5rem);
+  height: auto;
+  opacity: 0.72;
+  filter: drop-shadow(0 4px 16px #00000059);
+}
+
 .venue {
   width: 100%;
   display: flex;
@@ -12,19 +29,54 @@
 }
 
 /*
+ * A soft bloom behind the drawing. It has to be a layer of its own: the file
+ * is fully opaque, so a `drop-shadow` would halo its rectangle rather than its
+ * lines.
+ */
+.sketchGlow {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  /* Breaks the page gutter — the drawing carries this section. */
+  width: calc(100% + 2 * var(--gutter));
+  max-width: 40rem;
+}
+
+.sketchGlow::before {
+  content: "";
+  position: absolute;
+  inset: 6% 4%;
+  z-index: 0;
+  background: radial-gradient(
+    ellipse 58% 54% at 50% 52%,
+    #c6a75f3d 0%,
+    #c6a75f1a 45%,
+    transparent 72%
+  );
+  filter: blur(14px);
+  pointer-events: none;
+
+  opacity: 0;
+  transition: opacity 1.4s var(--ease) 0.35s;
+}
+
+.venue[data-in="true"] .sketchGlow::before {
+  opacity: 1;
+}
+
+/*
  * The drawing is a gilt line on black. `screen` drops the black ground into
- * the navy so only the gold lines are left, and the mask feathers the four
- * edges of the file so it never reads as a pasted rectangle.
+ * the navy, so the file needs no cut-out of its own — only the gold lines are
+ * left standing on the section. Held just off full strength so the gilt sits
+ * in the damask rather than burning out of it.
  */
 .sketch {
-  width: min(100%, 34rem);
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: none;
   height: auto;
   mix-blend-mode: screen;
-  mask-image:
-    linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%),
-    linear-gradient(180deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
-  mask-composite: intersect;
-  -webkit-mask-composite: source-in;
 
   opacity: 0;
   scale: 1.04;
@@ -34,7 +86,7 @@
 }
 
 .venue[data-in="true"] .sketch {
-  opacity: 1;
+  opacity: 0.86;
   scale: 1;
 }
 

@@ -6,8 +6,12 @@
 .section {
   overflow: visible;
   z-index: 1;
-  /* Room at the foot for the toast, so copy never sits on top of it. */
-  padding-bottom: clamp(13rem, 42svh, 20rem);
+  /*
+   * No `section--screen` here — see DressCode.js. The section takes the head
+   * offset the other sections use, then ends where the artwork ends: the arm
+   * runs down into the silk rather than stopping short of a screen edge.
+   */
+  padding-block: var(--section-head-offset) 0;
 }
 
 .shell {
@@ -26,7 +30,14 @@
 
 .card {
   position: relative;
-  width: min(100%, 30rem);
+  /*
+   * Deliberately wider than the page: the artwork carries a lot of empty
+   * ground either side of the arm, so oversizing it is what makes the hand
+   * read at full size. The section clips nothing — the empty edges simply run
+   * off the page.
+   */
+  flex: none; /* a flex item would shrink back to the page width */
+  width: min(115%, 36rem);
   /* Headroom for the wax seal, which straddles the top edge of the paper. */
   padding-top: clamp(1.25rem, 5vw, 1.75rem);
   /*
@@ -41,15 +52,16 @@
 }
 
 /*
- * The artwork is cropped at the wrist, so the last few percent are faded out
- * rather than left as a hard horizontal cut across the glove.
+ * The artwork is cropped at the wrist. The silk covers most of that cut, but
+ * the wave dips, so the last few percent are faded as well — otherwise a hard
+ * flat edge shows through wherever the drape rides high.
  */
 .cardImage {
   display: block;
   width: 100%;
   height: auto;
   filter: drop-shadow(0 16px 36px #00000059);
-  mask-image: linear-gradient(180deg, #000 92%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 90%, transparent 100%);
 }
 
 /* Pressed on the top edge of the paper. */
@@ -58,7 +70,8 @@
   top: 0;
   left: 50%;
   z-index: 2;
-  width: clamp(2.5rem, 12vw, 3.25rem);
+  /* Card-relative, like everything else printed on the paper. */
+  width: 12cqw;
   height: auto;
   translate: -50% 0;
   filter: drop-shadow(0 6px 14px #00000073);
@@ -99,9 +112,9 @@
   width: 13cqw;
   height: 13cqw;
   border-radius: var(--radius-pill);
-  /* Hairline rim so Black and Ivory both keep an edge on the paper. */
+  /* Vintage gold rim to separate from the background */
   box-shadow:
-    0 0 0 1px #3c2d2226,
+    0 0 0 2px #c5a870,
     0 6px 14px -6px #3c2d2273;
 }
 
@@ -113,7 +126,7 @@
   color: #5c4736; /* ink on paper, not cream on wine */
 }
 
-/* ---- The toast, and the silk hand-off ----------------------------------- */
+/* ---- The silk hand-off --------------------------------------------------- */
 
 .finale {
   position: absolute;
@@ -121,23 +134,13 @@
   right: 0;
   bottom: 0;
   height: 0;
-  z-index: 0;
+  /* Above the arm, so the wrist disappears into the silk. */
+  z-index: 2;
   pointer-events: none;
   user-select: none;
 }
 
-/* Stands behind the silk; lifted so no foot of the glass shows below it. */
-.glasses {
-  position: absolute;
-  left: 50%;
-  bottom: clamp(1.5rem, 4svh, 3rem);
-  translate: -50% 0;
-  width: clamp(8rem, 42vw, 15rem);
-  height: auto;
-  filter: drop-shadow(0 18px 40px #00000066);
-}
-
-/* Sweeps over the glasses and bleeds down into the next section. */
+/* Bleeds down into the next section. */
 .drape {
   position: absolute;
   left: 50%;

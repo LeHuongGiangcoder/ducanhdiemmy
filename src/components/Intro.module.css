@@ -63,55 +63,56 @@
   padding: var(--gutter);
 }
 
-/* Monogram, button and hint as one tight, obviously-tappable group. */
+/* Monogram, line, names and button as one centred cluster. */
 .cluster {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--s-5);
+  gap: var(--s-4);
+  text-align: center;
   animation: cluster-in 1.4s var(--ease) 0.35s both;
 }
 
-@keyframes cluster-in {
-  from {
-    opacity: 0;
-    transform: translateY(1rem);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
+/* Beige, a step under the names — small caps, but wide and set to be read. */
+.eyebrow {
+  margin-top: var(--s-2);
+  font-size: var(--t-small);
+  text-transform: uppercase;
+  letter-spacing: var(--track-eyebrow);
+  text-indent: var(--track-eyebrow);
+  color: var(--cream);
+  text-shadow: 0 1px 12px #09203a99;
 }
 
-.monogram {
-  width: clamp(2.75rem, 12vw, 3.75rem);
-  height: auto;
-  /* Cream over the water, where the navy artwork would go muddy. */
-  filter: brightness(0) saturate(100%) invert(97%) sepia(6%) saturate(220%)
-    hue-rotate(2deg) brightness(108%) contrast(97%)
-    drop-shadow(0 2px 12px #09203a73);
-  opacity: 0.96;
+/*
+ * Stacked rather than set on one line: at this size the pair breaks anyway,
+ * and breaking it deliberately keeps the ampersand between the names instead
+ * of stranded at the end of the first line.
+ */
+.names {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-1);
+  /* TAN Pearl — the face reserved for the couple's names. */
+  font-family: var(--font-couple-name);
+  font-size: var(--t-h1);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--track-display);
+  /* The one pure white in the cluster: the top of the hierarchy. */
+  color: #ffffff;
+  text-shadow: 0 2px 18px #09203a8c;
 }
 
-/* A slow breath, so the button reads as live rather than decorative. */
-.cta {
-  animation: cta-breathe 3.6s var(--ease-inout) 1.6s infinite;
+/* The ampersand steps back so the two names read as the pair. */
+.amp {
+  font-family: var(--font-body);
+  font-size: 0.42em;
+  font-style: italic;
+  color: var(--cream);
 }
 
-@keyframes cta-breathe {
-  0%,
-  100% {
-    box-shadow:
-      0 12px 38px -14px #09203ab3,
-      0 0 26px -10px rgb(255 255 255 / 0.35);
-  }
-  50% {
-    box-shadow:
-      0 12px 38px -14px #09203ab3,
-      0 0 38px -8px rgb(255 255 255 / 0.6);
-  }
-}
-
+/* The quietest line on the screen — beige, held well under the button. */
 .hint {
   display: flex;
   flex-direction: column; /* chevron above the label, nodding up at the button */
@@ -119,7 +120,7 @@
   gap: var(--s-2);
   font-size: var(--t-fine);
   font-style: italic;
-  color: rgb(255 255 255 / 0.88);
+  color: #e8dcc8b8;
   text-shadow: 0 1px 10px #09203a99;
   animation: hint-pulse 3.6s var(--ease-inout) 1.6s infinite;
 }
@@ -146,8 +147,33 @@
   }
 }
 
-@media (min-width: 768px) {
-  .monogram {
-    width: 3.25rem;
+@keyframes cluster-in {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* A slow breath, so the button reads as live rather than decorative. */
+.cta {
+  margin-top: var(--s-4);
+  animation: cta-breathe 3.6s var(--ease-inout) 1.6s infinite;
+}
+
+@keyframes cta-breathe {
+  0%,
+  100% {
+    box-shadow:
+      0 12px 38px -14px #09203ab3,
+      0 0 26px -10px rgb(255 255 255 / 0.35);
+  }
+  50% {
+    box-shadow:
+      0 12px 38px -14px #09203ab3,
+      0 0 38px -8px rgb(255 255 255 / 0.6);
   }
 }

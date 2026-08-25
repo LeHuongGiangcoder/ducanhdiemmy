@@ -6,13 +6,37 @@ import styles from "./ThankYou.module.css";
 /**
  * Closing section. Structured exactly like the others — `section--screen`,
  * a centred `shell stack`, the same masthead cluster — so its rhythm matches.
- * The champagne is lifted out of the flow and anchored to the bottom edge as a
- * bleed, so it decorates the screen without stretching the section past it.
+ *
+ * The damask gives way here: the last screen is the sunset photograph, shown
+ * untinted — no scrim over it — with the couple's monogram at the head. The
+ * photograph is framed so its dark water, not its horizon, falls behind the
+ * copy.
  */
 export default function ThankYou() {
   return (
-    <section className={`section section--screen section--pattern-navy ${styles.section}`}>
+    <section className={`section section--screen ${styles.section}`}>
+      <div className={styles.backdrop} aria-hidden="true">
+        <Image
+          src="/assets/thankyou-bg.jpg"
+          alt=""
+          fill
+          sizes="100vw"
+          className={styles.backdropImage}
+        />
+      </div>
+
       <div className="shell stack center">
+        <Reveal className={styles.crest}>
+          <Image
+            src="/assets/monogram-couple.png"
+            alt={`${couple.initials} monogram`}
+            width={876}
+            height={900}
+            sizes="(max-width: 767px) 12vw, 60px"
+            className="monogram"
+          />
+        </Reveal>
+
         <Reveal className="masthead">
           <p className="eyebrow">{thankYou.signoff}</p>
           <h2 className="h-1">{thankYou.headline}</h2>
@@ -27,16 +51,6 @@ export default function ThankYou() {
           <p className="eyebrow">{wedding.dateShort}</p>
         </Reveal>
       </div>
-
-      <Image
-        src="/assets/ly.webp"
-        alt=""
-        aria-hidden="true"
-        width={669}
-        height={1000}
-        sizes="(max-width: 767px) 46vw, 260px"
-        className={styles.toast}
-      />
     </section>
   );
 }

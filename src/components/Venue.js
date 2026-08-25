@@ -9,10 +9,11 @@ import styles from "./Venue.module.css";
 /**
  * Where it happens — the first stop after the hero.
  *
- * A gold line drawing of the hotel, set straight on the navy: the artwork is
+ * A cherub raises a glass at the head of the section; below it, a gold line
+ * drawing of the hotel set straight on the navy — the artwork is
  * screen-blended so its black ground drops out and only the gilt lines are
- * left standing on the section. Name, address and the map link follow it on
- * the navy rather than on a card, so nothing competes with the drawing.
+ * left standing. Name, address and the map link follow it on the navy rather
+ * than on a card, so nothing competes with the drawing.
  */
 export default function Venue() {
   const { venue } = wedding;
@@ -45,17 +46,31 @@ export default function Venue() {
           <h2 className="h-1">Venue</h2>
         </Reveal>
 
-        <div ref={ref} className={styles.venue} data-in={shown ? "true" : "false"}>
+        {/* Fills the space between the heading and the drawing. */}
+        <Reveal delay={120} className={styles.cherub}>
           <Image
-            src="/assets/venue-sketch.png"
+            src="/assets/cherub-toast.png"
             alt=""
             aria-hidden="true"
-            width={1200}
-            height={800}
-            sizes="(max-width: 767px) 92vw, 34rem"
-            className={styles.sketch}
-            priority
+            width={800}
+            height={1085}
+            sizes="(max-width: 767px) 26vw, 120px"
           />
+        </Reveal>
+
+        <div ref={ref} className={styles.venue} data-in={shown ? "true" : "false"}>
+          <div className={styles.sketchGlow}>
+            <Image
+              src="/assets/venue-sketch.png"
+              alt=""
+              aria-hidden="true"
+              width={1200}
+              height={800}
+              sizes="(max-width: 767px) 100vw, 40rem"
+              className={styles.sketch}
+              priority
+            />
+          </div>
 
           <div className={styles.details}>
             <span className={styles.venueName}>{venue.name}</span>

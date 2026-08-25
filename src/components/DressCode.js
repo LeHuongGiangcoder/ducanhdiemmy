@@ -8,13 +8,14 @@ import styles from "./DressCode.module.css";
  * the gloved hand presents the paper, the wax seal is pressed on its top edge,
  * and the four swatches are printed in the blank of the paper itself.
  *
- * The foot of the section is a set piece rather than an ornament: the glasses
- * stand on the section's floor and the silk sweeps over their stems, carrying
- * the wine of this section down into the navy of the timeline below.
+ * This is the one section that is not held to a single screen: the arm needs
+ * its full length to read as an arm, so the section is as tall as the artwork
+ * and the wrist runs on under the silk at the foot. The silk carries the wine
+ * of this section down into the navy of the timeline below.
  */
 export default function DressCode() {
   return (
-    <section className={`section section--screen section--pattern-wine ${styles.section}`}>
+    <section className={`section section--pattern-wine ${styles.section}`}>
       <div className={`shell stack center ${styles.shell}`}>
         <Reveal className="masthead">
           <p className="eyebrow">For the Occasion</p>
@@ -63,16 +64,8 @@ export default function DressCode() {
         </Reveal>
       </div>
 
-      {/* The toast, then the silk over it — the hand-off into the timeline. */}
+      {/* The silk — the hand-off into the timeline. */}
       <div className={styles.finale} aria-hidden="true">
-        <Image
-          src="/assets/glasses.webp"
-          alt=""
-          width={700}
-          height={1218}
-          sizes="(max-width: 767px) 42vw, 240px"
-          className={styles.glasses}
-        />
         <Image
           src="/assets/drape.webp"
           alt=""

@@ -7,11 +7,11 @@ import styles from "./Hero.module.css";
 /**
  * Hero — the looping invitation video with the guest's name set into it.
  *
- * hero.mp4 is already a finished card: monogram, both full names, the wishes
- * line, the date and the Fairmont lockup are composed into the footage, and a
- * blank line is left under "Dear" for the guest. So this component adds exactly
- * one thing — that name — and nothing else. Anything more would double up on
- * type the video already carries.
+ * "hero final.mp4" is already a finished card: monogram, both full names, the
+ * wishes line, the date and the Fairmont lockup are composed into the footage,
+ * and a blank line is left under "Dear" for the guest. So this component adds
+ * exactly one thing — that name — and nothing else. Anything more would double
+ * up on type the video already carries.
  *
  * The name uses TAN Aegean, which has no Vietnamese tone marks; a name it can't
  * set falls back wholly to Cormorant italic rather than breaking glyph by
@@ -22,27 +22,27 @@ const VIDEO_W = 1080;
 const VIDEO_H = 1920;
 
 /*
- * The blank line the video leaves for the guest, found by scanning the frame at
- * 0.3s for its bright text rows:
+ * The blank line the video leaves for the guest — the run of empty frame
+ * between "Dear" and the wishes line, measured off the footage itself (ink
+ * bounding boxes at 0.3s and 5.0s, which agree to the pixel):
  *
- *   0.4177 – 0.4417   "Dear"
- *   0.4417 – 0.4792    ← the slot
- *   0.4792 – 0.4943   "We would be honored by your presence"
+ *   0.3927 – 0.4089   "Dear"            (px 754–785)
+ *   0.4089 – 0.4891    ← the slot        (px 785–939)
+ *   0.4891 – 0.5115   "We would be honored by your presence"
  *
  * Fractions of the video frame, not of the viewport, so they hold on any screen
  * once the slot is positioned against the video's rendered box.
  */
-const SLOT_TOP = 0.4417;
-const SLOT_BOTTOM = 0.4792;
+const SLOT_TOP = 0.4089;
+const SLOT_BOTTOM = 0.4891;
 const SLOT_HEIGHT = SLOT_BOTTOM - SLOT_TOP;
 
 /*
  * The card composed into the video is not centred in its own frame — it sits
- * slightly right. Measuring the "Dear" line gives a centre of 0.5208 (stable
- * across four timestamps and three brightness thresholds), so the slot is
- * nudged by the same 2.08% to hang the guest's name directly under it.
+ * slightly right. The "Dear" line spans px 508–597, a centre of 0.5113, so the
+ * slot is nudged by the same 1.13% to hang the guest's name directly under it.
  */
-const SLOT_X = 0.5208;
+const SLOT_X = 0.5113;
 /** Name size as a fraction of the frame, so it tracks the video's own type. */
 const NAME_SIZE = 0.025;
 
@@ -98,7 +98,7 @@ export default function Hero({ guest, started, revealing }) {
     >
       <video
         className={styles.video}
-        src="/hero.mp4"
+        src="/hero%20final.mp4"
         autoPlay
         loop
         muted
