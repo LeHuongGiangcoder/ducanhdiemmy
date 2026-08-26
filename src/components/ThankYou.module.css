@@ -48,12 +48,12 @@
 .watermark {
   position: absolute;
   left: 50%;
-  top: 68%;
+  top: 85%;
   z-index: -1;
-  width: clamp(7rem, 40vw, 13rem);
+  width: clamp(14rem, 80vw, 24rem);
   height: auto;
   translate: -50% -50%;
-  opacity: 0.16;
+  opacity: 0.06;
   pointer-events: none;
   user-select: none;
 }
