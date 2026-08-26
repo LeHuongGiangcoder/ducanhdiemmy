@@ -66,7 +66,6 @@ export default function Intro({ onOpen, closing }) {
           {/* Tells the guest the button is the way in. */}
           <p className={styles.hint}>
             <span className={styles.hintChevron} aria-hidden="true" />
-            Tap to open your invitation
           </p>
         </div>
       </div>
