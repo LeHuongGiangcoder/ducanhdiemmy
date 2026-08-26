@@ -10,7 +10,7 @@ import ThankYou from "./ThankYou";
 import Timeline from "./Timeline";
 import Venue from "./Venue";
 
-const MUSIC_SRC = "/audio/music.mp3";
+const MUSIC_SRC = "/audio/rewrite-the-stars.mp4";
 /** Must match --dur-gate in globals.css (the cross-dissolve length). */
 const GATE_MS = 1600;
 

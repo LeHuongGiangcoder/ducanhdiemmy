@@ -100,15 +100,21 @@
   position: absolute;
   left: 27%;
   right: 27%;
-  top: 8%;
-  height: 39%;
+  /*
+   * Starts below the wax seal, which straddles the paper's top edge and hangs
+   * roughly 8% of the paper's height over it — the heading has to clear that,
+   * not sit behind it. The block still ends well above the fingers coming over
+   * the paper's lower edge at ~52%.
+   */
+  top: 15%;
+  height: 33%;
   z-index: 1;
 
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 3cqw;
+  gap: 4.5cqw;
 }
 
 /* Set on the paper, in the paper's own ink — not the section's cream on wine. */
@@ -129,14 +135,14 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   justify-items: center;
-  gap: 3cqw 3.5cqw;
+  gap: 4cqw 3.5cqw;
 }
 
 .swatch {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.4cqw;
+  gap: 2cqw;
   min-width: 0;
 }
 
