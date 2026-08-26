@@ -39,24 +39,13 @@ export default function Venue() {
   }, [shown]);
 
   return (
-    <section className="section section--screen section--pattern-navy">
+    <section className={`section section--screen section--pattern-navy ${styles.section}`}>
       <div className={`shell stack center ${styles.shell}`}>
         <Reveal className="masthead">
           <p className="eyebrow">The Celebration</p>
           <h2 className="h-1">Venue</h2>
         </Reveal>
 
-        {/* Fills the space between the heading and the drawing. */}
-        <Reveal delay={120} className={styles.cherub}>
-          <Image
-            src="/assets/cherub-toast.png"
-            alt=""
-            aria-hidden="true"
-            width={800}
-            height={1085}
-            sizes="(max-width: 767px) 26vw, 120px"
-          />
-        </Reveal>
 
         <div ref={ref} className={styles.venue} data-in={shown ? "true" : "false"}>
           <div className={styles.sketchGlow}>

@@ -129,7 +129,7 @@ export default function Rsvp({ guest }) {
               {attending === true && seats > 1 && (
                 <div className="field">
                   <label className="label" htmlFor="rsvp-count">
-                    How many of you?
+                    Number of guests?
                   </label>
                   <select
                     id="rsvp-count"
