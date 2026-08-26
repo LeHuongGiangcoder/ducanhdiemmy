@@ -39,7 +39,7 @@ export const timeline = [
   {
     time: "19:15",
     title: "Dinner Reception",
-    subtitle: "Dinner, live performances & lucky draws",
+    subtitle: "Dinner, curated wines & spirits, live performances & lucky draws",
   },
   {
     time: "20:30",
