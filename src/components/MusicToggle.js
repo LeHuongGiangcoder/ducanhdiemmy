@@ -17,7 +17,7 @@ export default function MusicToggle({ playing, onToggle, visible }) {
       aria-pressed={playing}
     >
       <span
-        className={`${styles.disc} ${playing ? "spin" : ""}`}
+        className={styles.disc}
         aria-hidden="true"
       >
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
