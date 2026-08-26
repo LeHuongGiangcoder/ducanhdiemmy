@@ -8,9 +8,13 @@ import styles from "./ThankYou.module.css";
  * a centred `shell stack`, the same masthead cluster — so its rhythm matches.
  *
  * The damask gives way here: the last screen is the sunset photograph, shown
- * untinted — no scrim over it — with the couple's monogram at the head. The
- * photograph is framed so its dark water, not its horizon, falls behind the
- * copy.
+ * untinted — no scrim over it. The photograph is framed so its dark water, not
+ * its horizon, falls behind the copy.
+ *
+ * The monogram is deliberately not repeated at the head the way the opening
+ * does it — it is sunk into the lower third of the screen as a watermark
+ * behind the sign-off, so the closing screen reads as an echo of the gate
+ * rather than a second copy of it.
  */
 export default function ThankYou() {
   return (
@@ -25,28 +29,29 @@ export default function ThankYou() {
         />
       </div>
 
-      <div className="shell stack center">
-        <Reveal className={styles.crest}>
-          <Image
-            src="/assets/monogram-couple.png"
-            alt={`${couple.initials} monogram`}
-            width={876}
-            height={900}
-            sizes="(max-width: 767px) 12vw, 60px"
-            className="monogram"
-          />
-        </Reveal>
+      {/* Sunk into the lower third, behind the sign-off. */}
+      <Image
+        src="/assets/monogram-couple.png"
+        alt=""
+        aria-hidden="true"
+        width={876}
+        height={900}
+        sizes="(max-width: 767px) 46vw, 220px"
+        className={styles.watermark}
+      />
 
+      <div className="shell stack center">
         <Reveal className="masthead">
-          <p className="eyebrow">{thankYou.signoff}</p>
           <h2 className="h-1">{thankYou.headline}</h2>
           <p className="body">{thankYou.body}</p>
         </Reveal>
 
-        <Reveal delay={140} className="stack stack--snug center">
+        {/* The sign-off block: the closing words, the names, the date. */}
+        <Reveal delay={140} className={`stack stack--snug center ${styles.signoff}`}>
           <div className="rule-mark" aria-hidden="true">
             <span className="rule-mark__dot" />
           </div>
+          <p className="eyebrow">{thankYou.signoff}</p>
           <p className={`h-2 ${styles.signature}`}>{couple.initials}</p>
           <p className="eyebrow">{wedding.dateShort}</p>
         </Reveal>

@@ -112,6 +112,32 @@
   color: var(--cream);
 }
 
+/*
+ * The date, set between two short rules so it reads as a plate under the
+ * names rather than a third stacked line. Cream, like the eyebrow above —
+ * the names keep the only white.
+ */
+.date {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  /* Held to one line: the rules only work with the date unbroken between them. */
+  font-size: var(--t-eyebrow);
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: var(--track-eyebrow);
+  color: var(--cream);
+  text-shadow: 0 1px 12px #09203a99;
+}
+
+.dateRule {
+  flex: none; /* the date takes the room; the rules keep their length */
+  width: clamp(1.25rem, 6vw, 2.5rem);
+  height: 1px;
+  background: currentColor;
+  opacity: 0.55;
+}
+
 /* The quietest line on the screen — beige, held well under the button. */
 .hint {
   display: flex;

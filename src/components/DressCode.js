@@ -20,7 +20,7 @@ export default function DressCode() {
         <Reveal className="masthead">
           <p className="eyebrow">For the Occasion</p>
           <h2 className="h-1">Dress code</h2>
-          <p className="lede">{dressCode.headline}</p>
+          <p className={styles.headline}>{dressCode.headline}</p>
         </Reveal>
 
         <Reveal delay={120} className={styles.palette}>
@@ -47,18 +47,24 @@ export default function DressCode() {
               />
 
               {/* Printed in the blank of the paper, above the glove. */}
-              <ul className={styles.swatches}>
-                {dressCode.swatches.map((s) => (
-                  <li key={s.name} className={styles.swatch}>
-                    <span
-                      className={styles.chip}
-                      style={{ background: s.hex }}
-                      aria-hidden="true"
-                    />
-                    <span className={styles.swatchName}>{s.name}</span>
-                  </li>
-                ))}
-              </ul>
+              <div className={styles.printed}>
+                <h3 className={styles.paletteHeading}>
+                  {dressCode.paletteHeading}
+                </h3>
+
+                <ul className={styles.swatches}>
+                  {dressCode.swatches.map((s) => (
+                    <li key={s.name} className={styles.swatch}>
+                      <span
+                        className={styles.chip}
+                        style={{ background: s.hex }}
+                        aria-hidden="true"
+                      />
+                      <span className={styles.swatchName}>{s.name}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </Reveal>

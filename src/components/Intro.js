@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { couple } from "@/data/wedding";
+import { couple, wedding } from "@/data/wedding";
 import styles from "./Intro.module.css";
 
 /**
@@ -53,6 +53,13 @@ export default function Intro({ onOpen, closing }) {
             <span>{couple.groom}</span>
             <span className={styles.amp}>&</span>
             <span>{couple.bride}</span>
+          </p>
+
+          {/* The date itself — the promise the gate is asking to be kept. */}
+          <p className={styles.date}>
+            <span className={styles.dateRule} aria-hidden="true" />
+            <span>{wedding.dateLabel}</span>
+            <span className={styles.dateRule} aria-hidden="true" />
           </p>
 
           <button

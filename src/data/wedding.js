@@ -58,7 +58,8 @@ export const timelineNote =
   "Please keep your lucky number close throughout the evening.";
 
 export const dressCode = {
-  headline: "Elegant and formal attire",
+  headline: "Elegant & formal attire",
+  paletteHeading: "Dress Palette",
   swatches: [
     { name: "Midnight Blue", hex: "#0f2e4e" },
     { name: "Ocean Blue", hex: "#3d6285" },

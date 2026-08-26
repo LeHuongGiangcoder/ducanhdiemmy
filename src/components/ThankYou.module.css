@@ -35,10 +35,32 @@
 
 /* ---- Content ------------------------------------------------------------ */
 
-.crest {
-  display: flex;
-  justify-content: center;
-  margin-bottom: var(--s-2);
+/*
+ * The monogram as a watermark rather than a crest. It sits in the lower third
+ * of the screen, behind the sign-off, at an opacity that lets the water read
+ * straight through it — the opening screen keeps the monogram as a solid mark
+ * at the head, and this one must not repeat that.
+ *
+ * Same `z-index: -1` as the backdrop and later in the DOM, so it paints over
+ * the photograph but under the copy without the copy needing a stacking
+ * context of its own.
+ */
+.watermark {
+  position: absolute;
+  left: 50%;
+  top: 68%;
+  z-index: -1;
+  width: clamp(7rem, 40vw, 13rem);
+  height: auto;
+  translate: -50% -50%;
+  opacity: 0.16;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* The closing words, the names and the date, read as one block. */
+.signoff {
+  position: relative;
 }
 
 .signature {

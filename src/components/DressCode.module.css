@@ -18,6 +18,20 @@
   gap: var(--s-6);
 }
 
+/*
+ * The instruction itself, not a caption for it. Set in the display face at
+ * heading scale and in gold, so it reads as the point of the section — the
+ * swatches below are the supporting detail.
+ */
+.headline {
+  font-family: var(--font-heading);
+  font-size: var(--t-h3);
+  line-height: var(--lh-snug);
+  letter-spacing: var(--track-display);
+  color: var(--accent);
+  text-wrap: balance;
+}
+
 /* ---- Palette, held up on the card --------------------------------------- */
 
 /* Breaks the page gutter, so the paper is big enough to be read from. */
@@ -82,7 +96,7 @@
  * it — measured off the artwork. The swatches are inset inside that, clear of
  * the fingers that come over the lower edge.
  */
-.swatches {
+.printed {
   position: absolute;
   left: 27%;
   right: 27%;
@@ -90,12 +104,30 @@
   height: 39%;
   z-index: 1;
 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3cqw;
+}
+
+/* Set on the paper, in the paper's own ink — not the section's cream on wine. */
+.paletteHeading {
+  font-family: var(--font-heading);
+  font-size: 4.2cqw;
+  line-height: 1.1;
+  letter-spacing: var(--track-display);
+  font-weight: 400;
+  white-space: nowrap;
+  color: #5c4736;
+}
+
+.swatches {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  align-content: center;
   justify-items: center;
   gap: 3cqw 3.5cqw;
 }

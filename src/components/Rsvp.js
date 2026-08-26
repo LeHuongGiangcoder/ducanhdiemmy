@@ -131,18 +131,16 @@ export default function Rsvp({ guest }) {
                   <label className="label" htmlFor="rsvp-count">
                     Number of guests?
                   </label>
-                  <select
+                  <input
                     id="rsvp-count"
-                    className="select"
+                    className="input"
+                    type="number"
+                    min="1"
+                    max={seats}
+                    required
                     value={guestCount}
                     onChange={(e) => setGuestCount(Number(e.target.value))}
-                  >
-                    {Array.from({ length: seats }, (_, i) => i + 1).map((n) => (
-                      <option key={n} value={n}>
-                        {n} {n === 1 ? "guest" : "guests"}
-                      </option>
-                    ))}
-                  </select>
+                  />
                 </div>
               )}
 
