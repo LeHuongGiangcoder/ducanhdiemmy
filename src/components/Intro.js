@@ -58,7 +58,7 @@ export default function Intro({ onOpen, closing }) {
           {/* The date itself — the promise the gate is asking to be kept. */}
           <p className={styles.date}>
             <span className={styles.dateRule} aria-hidden="true" />
-            <span>{wedding.dateLabel}</span>
+            <span>{wedding.dateShort}</span>
             <span className={styles.dateRule} aria-hidden="true" />
           </p>
 
