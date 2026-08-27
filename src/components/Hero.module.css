@@ -73,14 +73,18 @@
 
   /* Sized from the video frame (see Hero.js) so the name always sits in
      proportion to the lettering already in the footage. */
-  /* --name-scale lets a fallback face correct for its own cap-height without
-     re-deriving the video-relative sizing above. */
-  font-size: clamp(
-    calc(0.95rem * var(--name-scale, 1)),
-    calc(var(--name-size, 1.3rem) * var(--name-scale, 1)),
-    calc(2rem * var(--name-scale, 1))
+  /* Two multipliers, two jobs: --name-scale corrects a fallback face for its
+     own cap-height, --name-fit shrinks a long name into the slot (Hero.js). */
+  font-size: calc(
+    clamp(
+      calc(0.95rem * var(--name-scale, 1)),
+      calc(var(--name-size, 1.3rem) * var(--name-scale, 1)),
+      calc(2rem * var(--name-scale, 1))
+    ) * var(--name-fit, 1)
   );
-  line-height: 1;
+  /* Names long enough to wrap need the second line clear of the first's
+     descenders; a single line is centred in the slot either way. */
+  line-height: 1.14;
   color: #fffaf2;
   text-shadow: 0 1px 14px #09203a4d;
 

@@ -48,11 +48,13 @@ const NAME_SIZE = 0.025;
 
 /*
  * How much of the slot a name may occupy. The slot is the whole gap between
- * "Dear" and the wishes line; a name that fills it edge to edge reads as
- * colliding with both even while it technically fits, so long names are given
- * air rather than the last pixel.
+ * "Dear" and the wishes line, and it was cut for one line of type. A two-line
+ * name that merely *fits* it still reads as colliding, because the video's own
+ * lines sit right against the edges — measured on screen, 0.82 of the slot put
+ * "Bà Trần Thị Phương Loan" a descender away from the wishes line. 0.7 leaves
+ * the name visibly clear of both.
  */
-const SLOT_FILL = 0.82;
+const SLOT_FILL = 0.7;
 /** Never shrink past this — below it the name stops reading as the same card. */
 const MIN_FIT = 0.62;
 
