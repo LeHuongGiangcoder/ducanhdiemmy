@@ -1,23 +1,29 @@
 import { notFound } from "next/navigation";
 import Invitation from "@/components/Invitation";
-import { allSlugs, getGuest } from "@/data/guests";
+import { allSlugs, getGuest } from "@/lib/guest-registry";
 import { couple, wedding } from "@/data/wedding";
 
 /**
- * One prerendered invitation per guest. The registry is build-time content, so
- * these pages are fully static — no database read stands between a guest
- * tapping their link and seeing their own name.
+ * Every guest in the sheet is prerendered at build time, so the invitations
+ * that exist when the site ships are served as static HTML.
  */
-export function generateStaticParams() {
-  return allSlugs().map((slug) => ({ slug }));
+export async function generateStaticParams() {
+  return (await allSlugs()).map((slug) => ({ slug }));
 }
 
-/** Only known guests get a page; unknown slugs 404 rather than render blank. */
-export const dynamicParams = false;
+/**
+ * A name added to the sheet after the build still works: the page is rendered
+ * on demand the first time it is opened, then cached like the rest. An unknown
+ * slug 404s from inside the page.
+ */
+export const dynamicParams = true;
+
+/** How long a rendered invitation is served before the sheet is re-read. */
+export const revalidate = 60; // keep in sync with GUESTS_TTL_SECONDS
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const guest = getGuest(slug);
+  const guest = await getGuest(slug);
   if (!guest) return {};
 
   return {
@@ -29,7 +35,7 @@ export async function generateMetadata({ params }) {
 
 export default async function GuestPage({ params }) {
   const { slug } = await params;
-  const guest = getGuest(slug);
+  const guest = await getGuest(slug);
   if (!guest) notFound();
 
   return <Invitation guest={guest} />;

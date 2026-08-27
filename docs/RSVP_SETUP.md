@@ -1,133 +1,100 @@
-# RSVP → Google Sheets (15 minutes)
+# Google Sheet = nguồn duy nhất (20 phút)
 
-Responses are posted to a Google Apps Script Web App bound to the couple's own
-spreadsheet. No third-party service, no API keys, no monthly cost — and the
-couple watches replies land in a sheet they already know how to use.
+Một spreadsheet, một tab `Guests`. Cô dâu chú rể gõ tên khách vào đó; website
+đọc lên để dựng link riêng cho từng người, và ghi phản hồi RSVP ngược lại đúng
+hàng của người đó. Không có chỗ nào khác phải sửa, không cần deploy lại.
 
-Each guest's `slug` is the primary key, so a reply is always filed against the
-right invitation and a guest who changes their mind **updates their existing
-row** rather than creating a duplicate.
+| Cột | Ai điền | Ý nghĩa |
+|-----|---------|---------|
+| `No` | tự sinh | số thứ tự |
+| `Name` | **bạn gõ** | tên hiện trên thiệp — có dấu tiếng Việt thoải mái |
+| `Seats` | **bạn gõ** | số chỗ tối đa của thiệp này (bỏ trống = 2) |
+| `Slug` | tự sinh | phần đuôi URL, sinh từ tên |
+| `Link` | tự sinh | link để gửi cho khách — copy thẳng từ đây |
+| `Attending` | website ghi | `YES` / `NO` |
+| `Guests` | website ghi | số người khách xác nhận |
+| `Message` | website ghi | lời nhắn của khách |
+| `Updated` | website ghi | lúc khách trả lời gần nhất |
+
+`Slug` sinh ra một lần rồi **không bao giờ tự đổi** — link đã gửi cho khách sống
+mãi, kể cả khi sau này sửa lại chính tả cái tên. Muốn tự đặt link, cứ gõ tay vào
+cột `Slug` trước.
 
 ---
 
-## 1. Create the sheet
+## 1. Tạo sheet và dán script
 
-1. Go to <https://sheets.new> and name it e.g. `Duc Anh & Diem My — RSVP`.
-2. **Extensions → Apps Script**. Delete the placeholder `myFunction`.
-3. Paste the script below.
-4. Change `SECRET` to any long random string. Keep it — you'll need it in step 3.
+1. Vào <https://sheets.new>, đặt tên `Duc Anh & Diem My — RSVP`.
+2. **Extensions → Apps Script**, xoá `myFunction` mẫu.
+3. Dán toàn bộ nội dung [`docs/apps-script.gs`](apps-script.gs).
+4. Sửa hai hằng số ở đầu file:
+   - `SECRET` — chuỗi ngẫu nhiên thật dài. Giữ lại, bước 3 cần đến.
+   - `SITE_ORIGIN` — domain thật của site, dùng để dựng cột `Link`.
+5. Lưu, chọn hàm `setupSheet` rồi bấm **Run** một lần (cấp quyền khi Google hỏi).
+   Tab `Guests` và hàng header được tạo xong.
 
-```js
-const SHEET_NAME = 'RSVP';
-const SECRET = 'CHANGE-ME-to-a-long-random-string';
-
-const HEADERS = [
-  'Updated', 'Slug', 'Name', 'Attending', 'Guests',
-  'Seats allocated', 'Lucky number', 'Message',
-];
-
-function doPost(e) {
-  const lock = LockService.getScriptLock();
-  lock.waitLock(20000); // serialise concurrent replies
-
-  try {
-    const body = JSON.parse(e.postData.contents);
-
-    if (body.secret !== SECRET) {
-      return json({ ok: false, error: 'unauthorized' });
-    }
-
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    const sheet = ss.getSheetByName(SHEET_NAME) || ss.insertSheet(SHEET_NAME);
-
-    if (sheet.getLastRow() === 0) {
-      sheet.appendRow(HEADERS);
-      sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold');
-      sheet.setFrozenRows(1);
-    }
-
-    const row = [
-      new Date(),
-      body.slug || '',
-      body.name || '',
-      body.attending ? 'YES' : 'NO',
-      body.guestCount || 0,
-      body.seatsAllocated || '',
-      body.luckyNumber || '',
-      body.message || '',
-    ];
-
-    // Upsert on slug so a changed mind overwrites, never duplicates.
-    const slugs = sheet.getLastRow() > 1
-      ? sheet.getRange(2, 2, sheet.getLastRow() - 1, 1).getValues().flat()
-      : [];
-    const existing = slugs.indexOf(body.slug);
-
-    if (body.slug && existing !== -1) {
-      sheet.getRange(existing + 2, 1, 1, row.length).setValues([row]);
-    } else {
-      sheet.appendRow(row);
-    }
-
-    return json({ ok: true });
-  } catch (err) {
-    return json({ ok: false, error: String(err) });
-  } finally {
-    lock.releaseLock();
-  }
-}
-
-function json(obj) {
-  return ContentService
-    .createTextOutput(JSON.stringify(obj))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-```
-
-## 2. Deploy it
+## 2. Deploy Web App
 
 1. **Deploy → New deployment → ⚙️ → Web app**.
 2. *Execute as*: **Me**.
 3. *Who has access*: **Anyone**.
-   (Required — the website's server calls it anonymously. The `SECRET` is what
-   actually guards it.)
-4. **Deploy**, authorise when prompted, and copy the **Web app URL**.
+   (Bắt buộc — server của website gọi vào ẩn danh. `SECRET` mới là thứ canh cửa.)
+4. **Deploy**, cấp quyền, copy **Web app URL**.
 
-> Re-deploying after any script edit requires **Deploy → Manage deployments →
-> ✏️ → New version**, or the old code keeps running.
+> Mỗi lần sửa script phải **Deploy → Manage deployments → ✏️ → New version**,
+> không thì code cũ vẫn chạy.
 
-## 3. Point the site at it
+## 3. Trỏ website vào đó
 
-`.env.local` for development, and the same two variables in your Vercel project
-settings (**Settings → Environment Variables**) for production:
+`.env.local` cho máy local, và đúng hai biến này trong Vercel
+(**Settings → Environment Variables**) cho production:
 
 ```bash
 RSVP_WEBHOOK_URL="https://script.google.com/macros/s/AKfy…/exec"
-RSVP_SHARED_SECRET="the same long random string"
+RSVP_SHARED_SECRET="đúng chuỗi SECRET ở bước 1"
 ```
 
-Restart `npm run dev` after adding them.
+Chạy lại `npm run dev` sau khi thêm.
 
-## 4. Check it
+## 4. Kiểm tra
+
+Gõ một cái tên vào cột `Name` của tab `Guests`, rồi:
 
 ```bash
-curl -s -X POST http://localhost:3000/api/rsvp \
-  -H 'Content-Type: application/json' \
-  -d '{"slug":"james-carter","attending":true,"guestCount":2,"message":"Test"}'
+curl -s -X POST http://localhost:3000/api/rsvp -H 'Content-Type: application/json' -d '{"slug":"nguyen-van-an","attending":true,"guestCount":2,"message":"Test"}'
 ```
 
-Expect `{"ok":true,"storage":"sheet"}` and a new row in the sheet. If you get
-`"storage":"local"`, the env var isn't loaded — the reply was still saved, to
-`.rsvp-local.jsonl`, so nothing is lost.
+Mong đợi `{"ok":true,"storage":"sheet"}` và cột `Attending` của hàng đó đổi thành
+`YES`. Nếu ra `"storage":"local"` thì biến môi trường chưa nạp — phản hồi vẫn
+được giữ trong `.rsvp-local.jsonl`, không mất.
 
 ---
 
-## Behaviour worth knowing
+## Thêm khách sau khi site đã chạy
 
-- **Nothing is ever silently dropped.** If the webhook is missing or errors, the
-  reply is appended to `.rsvp-local.jsonl` and logged, and the guest sees a real
-  error rather than a false success.
-- **The server never trusts the browser** for identity. Name, seat allowance and
-  lucky number are re-read from `src/data/guests.js` using the slug, so a guest
-  cannot RSVP as someone else or claim more seats than they were given.
-- **Party size is clamped** to that invitation's `seats`.
+Gõ tên vào sheet là xong. Trong vòng **60 giây** link của người đó sống — website
+đọc lại danh sách mỗi phút. Muốn thấy link ngay lập tức để copy đi gửi thì bấm
+menu **Wedding → Tạo link cho khách mới** trong sheet.
+
+## Ảnh chụp dự phòng
+
+`src/data/guests.js` là bản sao danh sách khách nằm trong git, chỉ được dùng đến
+khi không đọc được sheet (chưa cấu hình webhook, hoặc Google trục trặc đúng lúc
+một server instance khởi động nguội). Cập nhật trước mỗi lần deploy:
+
+```bash
+npm run guests:snapshot
+```
+
+Không sửa tay file đó — lần chạy sau sẽ ghi đè.
+
+## Vài điều đáng biết
+
+- **Không bao giờ mất phản hồi.** Webhook lỗi thì RSVP được ghi vào
+  `.rsvp-local.jsonl` kèm log, và khách thấy thông báo lỗi thật chứ không phải
+  một lời cảm ơn giả.
+- **Server không tin trình duyệt** về danh tính. Tên và số ghế được đọc lại từ
+  sheet theo `slug`, nên khách không thể RSVP hộ người khác hay khai quá số chỗ.
+- **Đổi ý thì ghi đè**, không sinh hàng mới — mỗi khách đúng một hàng.
+- Khách vào thẳng `/rsvp` (không qua link riêng) vẫn trả lời được: họ tự gõ tên,
+  và một hàng mới được nối vào cuối sheet.

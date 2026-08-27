@@ -1,4 +1,4 @@
-import { getGuest } from "@/data/guests";
+import { getGuest } from "@/lib/guest-registry";
 import { defaultGuest } from "@/data/wedding";
 import { saveRsvp } from "@/lib/rsvp-store";
 
@@ -24,7 +24,7 @@ export async function POST(request) {
 
   // Resolve the invitation. An unknown slug is only allowed through as the
   // generic invitation, and then only with a typed-in name.
-  const guest = slug ? getGuest(slug) : null;
+  const guest = slug ? await getGuest(slug) : null;
   if (slug && !guest) {
     return Response.json({ error: "Unknown invitation." }, { status: 404 });
   }

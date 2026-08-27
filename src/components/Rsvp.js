@@ -85,20 +85,28 @@ export default function Rsvp({ guest }) {
         ) : (
           <Reveal delay={120} className={styles.formWrap}>
             <form className={styles.form} onSubmit={handleSubmit}>
-              <div className="field">
-                <label className="label" htmlFor="rsvp-name">
-                  Your name
-                </label>
-                <input
-                  id="rsvp-name"
-                  className="input"
-                  type="text"
-                  required
-                  autoComplete="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </div>
+              {personalised ? (
+                // Arrived through their own link: the name is already known,
+                // so it is shown as confirmation rather than asked for again.
+                <p className={styles.replyingAs}>
+                  Replying as <strong>{guest.name}</strong>
+                </p>
+              ) : (
+                <div className="field">
+                  <label className="label" htmlFor="rsvp-name">
+                    Your name
+                  </label>
+                  <input
+                    id="rsvp-name"
+                    className="input"
+                    type="text"
+                    required
+                    autoComplete="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
+                </div>
+              )}
 
               <fieldset className="field">
                 <legend className="label">Will you be joining us?</legend>

@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "guests:import": "node scripts/import-guests.mjs"
+    "guests:snapshot": "node scripts/snapshot-guests.mjs"
   },
   "dependencies": {
     "next": "16.3.2",

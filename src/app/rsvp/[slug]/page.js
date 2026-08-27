@@ -1,17 +1,20 @@
 import { notFound } from "next/navigation";
 import Invitation from "@/components/Invitation";
-import { allSlugs, getGuest } from "@/data/guests";
+import { allSlugs, getGuest } from "@/lib/guest-registry";
 import { couple, wedding } from "@/data/wedding";
 
-export function generateStaticParams() {
-  return allSlugs().map((slug) => ({ slug }));
+export async function generateStaticParams() {
+  return (await allSlugs()).map((slug) => ({ slug }));
 }
 
-export const dynamicParams = false;
+/** Same contract as /[slug]: names added after the build render on demand. */
+export const dynamicParams = true;
+
+export const revalidate = 60; // keep in sync with GUESTS_TTL_SECONDS
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const guest = getGuest(slug);
+  const guest = await getGuest(slug);
   if (!guest) return {};
 
   return {
@@ -23,7 +26,7 @@ export async function generateMetadata({ params }) {
 
 export default async function GuestRsvpPage({ params }) {
   const { slug } = await params;
-  const guest = getGuest(slug);
+  const guest = await getGuest(slug);
   if (!guest) notFound();
 
   return <Invitation guest={guest} bypassIntro={true} />;
