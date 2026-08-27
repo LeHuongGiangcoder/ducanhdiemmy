@@ -1,6 +1,7 @@
 import { cormorant, dfvnBigBang, tanAegean, tanPearl } from "./fonts";
 import { couple, wedding } from "@/data/wedding";
 import "./globals.css";
+import InAppBrowserWarning from "@/components/InAppBrowserWarning";
 
 export const metadata = {
   metadataBase: new URL("https://ducanhdiemmy.gloweb.site"),
@@ -32,7 +33,10 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${tanAegean.variable} ${tanPearl.variable} ${dfvnBigBang.variable} ${cormorant.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        <InAppBrowserWarning />
+        {children}
+      </body>
     </html>
   );
 }
