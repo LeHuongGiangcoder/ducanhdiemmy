@@ -22,7 +22,7 @@ export const wedding = {
   venue: {
     name: "Fairmont Hanoi",
     mark: "/assets/venue.webp",
-    hall: "Grand Ballroom, B1 Floor",
+    hall: "Grand Ballroom",
     address: "27–29 Ly Thai To, Hoan Kiem, Hanoi",
     mapUrl:
       "https://www.google.com/maps/search/?api=1&query=Fairmont+Hanoi",

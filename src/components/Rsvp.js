@@ -128,7 +128,7 @@ export default function Rsvp({ guest }) {
 
               {attending === true && seats > 1 && (
                 <fieldset className="field">
-                  <legend className="label">Number of guests?</legend>
+                  <legend className="label">Number of guests</legend>
                   <div className="choices">
                     {Array.from({ length: seats }, (_, i) => i + 1).map((count) => (
                       <label key={count} className="choice">
