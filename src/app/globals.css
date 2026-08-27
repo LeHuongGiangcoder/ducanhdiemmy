@@ -44,23 +44,34 @@
     #09203ae6 100%
   );
 
+  /* ---- Frame -----------------------------------------------------------
+     The invitation is a phone-shaped column, on every screen. On a desktop
+     window it is pinned to `--frame` wide and centred rather than stretched,
+     so the composition the whole design was drawn for is what everyone sees.
+
+     `--vw` is the unit that makes that work: every fluid size below measures
+     against the column, not the window. Using real `vw` would let type and
+     gutters grow to the desktop window while the column stayed narrow. */
+  --frame: 100vw;
+  --vw: 1vw;
+
   /* ---- Type ------------------------------------------------------------- */
   --font-heading: var(--font-display), "Cormorant Garamond", Georgia, serif;
   --font-couple-name: var(--font-couple), var(--font-display), Georgia, serif;
   --font-body: var(--font-body), Georgia, serif;
 
   /* Fluid scale. Mobile value → desktop ceiling. */
-  --t-couple: clamp(2.75rem, 12.5vw, 6rem);
-  --t-hero: clamp(2.5rem, 11vw, 4.5rem);
-  --t-h1: clamp(2.25rem, 9.5vw, 3.75rem);
-  --t-h2: clamp(1.75rem, 7vw, 2.75rem);
-  --t-h3: clamp(1.25rem, 5vw, 1.75rem);
-  --t-h4: clamp(1rem, 4.05vw, 1.25rem); /* list titles — sized to stay on one line */
-  --t-lede: clamp(1.125rem, 4.6vw, 1.5rem);
-  --t-body: clamp(1rem, 4.2vw, 1.1875rem);
-  --t-small: clamp(0.9375rem, 3.7vw, 1.0625rem);
-  --t-fine: clamp(0.8125rem, 3.2vw, 0.9375rem);
-  --t-eyebrow: clamp(0.6875rem, 2.9vw, 0.8125rem);
+  --t-couple: clamp(2.75rem, calc(12.5 * var(--vw)), 6rem);
+  --t-hero: clamp(2.5rem, calc(11 * var(--vw)), 4.5rem);
+  --t-h1: clamp(2.25rem, calc(9.5 * var(--vw)), 3.75rem);
+  --t-h2: clamp(1.75rem, calc(7 * var(--vw)), 2.75rem);
+  --t-h3: clamp(1.25rem, calc(5 * var(--vw)), 1.75rem);
+  --t-h4: clamp(1rem, calc(4.05 * var(--vw)), 1.25rem); /* list titles — sized to stay on one line */
+  --t-lede: clamp(1.125rem, calc(4.6 * var(--vw)), 1.5rem);
+  --t-body: clamp(1rem, calc(4.2 * var(--vw)), 1.1875rem);
+  --t-small: clamp(0.9375rem, calc(3.7 * var(--vw)), 1.0625rem);
+  --t-fine: clamp(0.8125rem, calc(3.2 * var(--vw)), 0.9375rem);
+  --t-eyebrow: clamp(0.6875rem, calc(2.9 * var(--vw)), 0.8125rem);
 
   --lh-tight: 1.06; /* display headings */
   --lh-snug: 1.3; /* sub-headings */
@@ -85,9 +96,9 @@
   /* ---- Layout rules ----------------------------------------------------- */
   --shell: 34rem; /* reading width — deliberately narrow, invitation-like */
   --shell-wide: 48rem;
-  --gutter: clamp(1.5rem, 7vw, 2.5rem); /* horizontal page padding */
-  --section-y: clamp(4.5rem, 16vw, 8rem); /* vertical section rhythm */
-  --section-y-tight: clamp(3rem, 11vw, 5rem);
+  --gutter: clamp(1.5rem, calc(7 * var(--vw)), 2.5rem); /* horizontal page padding */
+  --section-y: clamp(4.5rem, calc(16 * var(--vw)), 8rem); /* vertical section rhythm */
+  --section-y-tight: clamp(3rem, calc(11 * var(--vw)), 5rem);
   /* Fixed drop from the top of a screen-section to its heading. Every section
      uses the same value, so headings line up as you scroll between them
      instead of floating to wherever the content's centre happens to fall. */
@@ -102,7 +113,7 @@
   /* ---- Marks -----------------------------------------------------------
      One size for the couple's monogram wherever it appears (the intro gate,
      the closing screen), so the mark never changes weight between screens. */
-  --logo-size: clamp(3.25rem, 14vw, 4.5rem);
+  --logo-size: clamp(3.25rem, calc(14 * var(--vw)), 4.5rem);
 
   /* ---- Surface ---------------------------------------------------------- */
   --radius: 2px; /* almost square — luxury print, not app UI */
@@ -140,13 +151,40 @@ html {
   scroll-behavior: smooth;
 }
 
+/*
+ * Past this width the window is wider than any phone, so the column stops
+ * growing and `--vw` freezes at 1% of it (430 / 100). Below it, the column is
+ * the window and `--vw` is a real `vw` — the phone case is untouched.
+ */
+@media (min-width: 480px) {
+  :root {
+    --frame: 430px;
+    --vw: 4.3px;
+  }
+}
+
 html,
 body {
   max-width: 100vw;
   overflow-x: clip;
 }
 
+/* The ground the column sits on — only ever visible on a wide window. */
+html {
+  background: var(--navy-deep);
+}
+
+/*
+ * `body` IS the frame. Capping it here rather than in a wrapper keeps `body`
+ * the scroller, which is what mobile browsers watch to collapse their address
+ * bar — a wrapper that scrolls instead would cost that on the phones this is
+ * really built for. `margin-inline: auto` centres by layout, so the column
+ * lines up with the fixed elements below it without either side having to
+ * know how wide the scrollbar is.
+ */
 body {
+  max-width: var(--frame);
+  margin-inline: auto;
   min-height: 100svh;
   background: var(--bg);
   color: var(--ink);
@@ -869,7 +907,7 @@ legend.label {
   pointer-events: none;
   user-select: none;
   opacity: 0.5;
-  width: clamp(5.5rem, 26vw, 9rem);
+  width: clamp(5.5rem, calc(26 * var(--vw)), 9rem);
   height: auto;
 }
 .ornament--soft {
@@ -902,12 +940,12 @@ legend.label {
 
 /* Inline (in-flow) decorative mark, centred */
 .mark {
-  width: clamp(4rem, 20vw, 6rem);
+  width: clamp(4rem, calc(20 * var(--vw)), 6rem);
   margin-inline: auto;
   opacity: 0.9;
 }
 .mark--lg {
-  width: clamp(8rem, 46vw, 14rem);
+  width: clamp(8rem, calc(46 * var(--vw)), 14rem);
 }
 
 /* ==========================================================================

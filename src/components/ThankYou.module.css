@@ -50,7 +50,7 @@
   left: 50%;
   top: 85%;
   z-index: -1;
-  width: clamp(14rem, 80vw, 24rem);
+  width: clamp(14rem, calc(80 * var(--vw)), 24rem);
   height: auto;
   translate: -50% -50%;
   opacity: 0.06;

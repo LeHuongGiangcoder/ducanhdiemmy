@@ -53,7 +53,7 @@
   flex: none; /* a flex item would shrink back to the page width */
   width: min(115%, 36rem);
   /* Headroom for the wax seal, which straddles the top edge of the paper. */
-  padding-top: clamp(1.25rem, 5vw, 1.75rem);
+  padding-top: clamp(1.25rem, calc(5 * var(--vw)), 1.75rem);
   /*
    * Card-relative units for everything printed on the paper, so the swatches
    * keep their place in the artwork at any card size.

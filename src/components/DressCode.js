@@ -15,7 +15,7 @@ import styles from "./DressCode.module.css";
  */
 export default function DressCode() {
   return (
-    <section className={`section section--pattern-wine ${styles.section}`}>
+    <section id="dress-code" className={`section section--pattern-wine ${styles.section}`}>
       <div className={`shell stack center ${styles.shell}`}>
         <Reveal className="masthead">
           <p className="eyebrow">For the Occasion</p>

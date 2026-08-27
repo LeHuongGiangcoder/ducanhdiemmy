@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import DressCode from "./DressCode";
 import Hero from "./Hero";
 import Intro from "./Intro";
+import Menu from "./Menu";
 import MusicToggle from "./MusicToggle";
 import Rsvp from "./Rsvp";
 import ThankYou from "./ThankYou";
@@ -115,6 +116,7 @@ export default function Invitation({ guest }) {
         onToggle={toggleMusic}
         visible={gateGone && hasAudio}
       />
+      <Menu visible={gateGone} />
     </>
   );
 }

@@ -17,7 +17,7 @@
 /* Line-art cupid over the damask, sitting just above the one action. */
 .cherub {
   align-self: center;
-  width: clamp(4.5rem, 26vw, 8rem);
+  width: clamp(4.5rem, calc(26 * var(--vw)), 8rem);
   height: auto;
   margin-bottom: calc(-1 * var(--s-3));
   opacity: 0.66;

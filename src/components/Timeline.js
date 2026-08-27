@@ -48,7 +48,7 @@ export default function Timeline() {
   }, []);
 
   return (
-    <section className={`section section--screen section--pattern-navy ${styles.section}`}>
+    <section id="timeline" className={`section section--screen section--pattern-navy ${styles.section}`}>
       <div className={`shell stack center ${styles.shell}`}>
         <Reveal className="masthead">
           <p className="eyebrow">The Evening</p>

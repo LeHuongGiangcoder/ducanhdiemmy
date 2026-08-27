@@ -1,0 +1,72 @@
+.toggle {
+  position: fixed;
+  right: var(--s-4);
+  top: var(--s-4);
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.8);
+  transition:
+    opacity var(--dur) var(--ease),
+    transform var(--dur) var(--ease);
+}
+
+.on {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+}
+
+@media (min-width: 768px) {
+  .toggle {
+    right: var(--s-6);
+    top: var(--s-6);
+    width: 3.25rem;
+    height: 3.25rem;
+  }
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background-color: rgba(9, 32, 58, 0.95); /* matching --navy-deep */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur) var(--ease);
+}
+
+.overlayOpen {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-6);
+  text-align: center;
+}
+
+.link {
+  font-family: var(--font-heading);
+  font-size: var(--t-h3);
+  color: var(--cream-bright);
+  text-decoration: none;
+  transition: color var(--dur) var(--ease);
+}
+
+.link:hover,
+.link:focus-visible {
+  color: var(--gold);
+}

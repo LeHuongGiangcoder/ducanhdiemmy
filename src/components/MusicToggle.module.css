@@ -1,8 +1,24 @@
-.toggle {
+/*
+ * A band pinned across the foot of the column, with the button pushed to its
+ * right edge. The button can't carry `right:` itself — that would measure from
+ * the window, and on a wide screen it would drift off into the backdrop.
+ */
+.dock {
   position: fixed;
-  right: var(--s-4);
-  bottom: var(--s-4);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-width: var(--frame);
+  margin-inline: auto;
+  padding: var(--s-4);
+  display: flex;
+  justify-content: flex-end;
   z-index: 60;
+  pointer-events: none; /* the band is only a ruler; the button is the target */
+}
+
+.toggle {
+  pointer-events: auto;
   opacity: 0;
   pointer-events: none;
   transform: scale(0.8);
@@ -22,10 +38,11 @@
   place-items: center;
 }
 
-@media (min-width: 768px) {
+@container frame (min-width: 768px) {
+  .dock {
+    padding: var(--s-6);
+  }
   .toggle {
-    right: var(--s-6);
-    bottom: var(--s-6);
     width: 3.25rem;
     height: 3.25rem;
   }

@@ -160,7 +160,7 @@
 }
 
 .cherub {
-  width: clamp(9rem, 46vw, 15rem);
+  width: clamp(9rem, calc(46 * var(--vw)), 15rem);
   height: auto;
   opacity: 0.9;
 }
