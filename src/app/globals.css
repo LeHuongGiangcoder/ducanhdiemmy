@@ -58,6 +58,11 @@
   /* ---- Type ------------------------------------------------------------- */
   --font-heading: var(--font-display), "Cormorant Garamond", Georgia, serif;
   --font-couple-name: var(--font-couple), var(--font-display), Georgia, serif;
+  /* Display face for strings TAN Aegean can't set — Vietnamese tone marks. */
+  --font-heading-vn: var(--font-display-vn), "Cormorant Garamond", Georgia, serif;
+  /* DFVN Big Bang sits on a 699 cap-height against Aegean's 1000; without this
+     the same font-size renders visibly smaller. */
+  --font-heading-vn-scale: 1.42;
   --font-body: var(--font-body), Georgia, serif;
 
   /* Fluid scale. Mobile value → desktop ceiling. */
@@ -1072,4 +1077,14 @@ legend.label {
   .o-br {
     right: -3rem;
   }
+}
+
+/* Paired with displayFontClass() in src/lib/aegean.js, for user-supplied
+   strings outside the hero. */
+.font-display {
+  font-family: var(--font-heading);
+}
+
+.font-display-vn {
+  font-family: var(--font-heading-vn);
 }

@@ -73,7 +73,13 @@
 
   /* Sized from the video frame (see Hero.js) so the name always sits in
      proportion to the lettering already in the footage. */
-  font-size: clamp(0.95rem, var(--name-size, 1.3rem), 2rem);
+  /* --name-scale lets a fallback face correct for its own cap-height without
+     re-deriving the video-relative sizing above. */
+  font-size: clamp(
+    calc(0.95rem * var(--name-scale, 1)),
+    calc(var(--name-size, 1.3rem) * var(--name-scale, 1)),
+    calc(2rem * var(--name-scale, 1))
+  );
   line-height: 1;
   color: #fffaf2;
   text-shadow: 0 1px 14px #09203a4d;
@@ -98,12 +104,14 @@
   text-indent: 0.06em;
 }
 
-/* Cormorant italic — whole-string fallback for Vietnamese diacritics. */
+/* DFVN Big Bang — whole-string fallback for Vietnamese diacritics. Still a
+   display face, so a Vietnamese name reads as a name and not as body copy. */
 .guestFallback {
-  font-family: var(--font-body);
-  font-style: italic;
-  font-weight: 500;
-  letter-spacing: 0.01em;
+  font-family: var(--font-heading-vn);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-indent: 0.04em;
+  --name-scale: var(--font-heading-vn-scale, 1.42);
 }
 
 /* Optional private line for a specific guest. */

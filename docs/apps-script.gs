@@ -17,7 +17,7 @@ const SHEET_NAME = 'Guests Management';
 const SECRET = 'CHANGE-ME-to-a-long-random-string';
 
 /** Đổi thành domain thật sau khi deploy — chỉ dùng để dựng cột Link. */
-const SITE_ORIGIN = 'https://ducanhdiemmy.vercel.app';
+const SITE_ORIGIN = 'https://ducanhdiemmy.gloweb.site';
 
 const HEADERS = [
   'No', 'Name', 'Seats', 'Slug', 'Link',

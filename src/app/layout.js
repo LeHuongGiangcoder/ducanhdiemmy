@@ -1,4 +1,4 @@
-import { cormorant, tanAegean, tanPearl } from "./fonts";
+import { cormorant, dfvnBigBang, tanAegean, tanPearl } from "./fonts";
 import { couple, wedding } from "@/data/wedding";
 import "./globals.css";
 
@@ -30,7 +30,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${tanAegean.variable} ${tanPearl.variable} ${cormorant.variable}`}
+      className={`${tanAegean.variable} ${tanPearl.variable} ${dfvnBigBang.variable} ${cormorant.variable}`}
     >
       <body>{children}</body>
     </html>

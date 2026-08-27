@@ -7,7 +7,8 @@
  * name like "Nguyễn" half in Aegean and half in Cormorant, which looks broken.
  *
  * So: if a string contains even one unsupported character, we set the WHOLE
- * string in Cormorant instead. One deliberate typeface, never a mix.
+ * string in DFVN Big Bang instead — a display face with full Vietnamese
+ * coverage. One deliberate typeface, never a mix.
  *
  * Ranges below are extracted directly from the font's cmap table — regenerate
  * with fontTools if the font file is ever replaced.
@@ -32,8 +33,8 @@ export function isDisplaySafe(text) {
 
 /**
  * Class to put on a guest name / any user-supplied string.
- * Returns the display face when safe, and the body face when not.
+ * Returns TAN Aegean when safe, DFVN Big Bang when not.
  */
 export function displayFontClass(text) {
-  return isDisplaySafe(text) ? "font-display" : "font-body-fallback";
+  return isDisplaySafe(text) ? "font-display" : "font-display-vn";
 }

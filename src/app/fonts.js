@@ -23,6 +23,23 @@ export const tanPearl = localFont({
   fallback: ["Cormorant Garamond", "Georgia", "serif"],
 });
 
+/**
+ * DFVN Big Bang — display face for Vietnamese names.
+ *
+ * TAN Aegean has no stacked tone marks, so a name like "Chị Minh Anh" used to
+ * fall back to italic body copy and read as a different kind of text entirely.
+ * This face carries the full Vietnamese set in a display weight, so a Vietnamese
+ * name still looks like a name on an invitation.
+ */
+export const dfvnBigBang = localFont({
+  src: "../../public/font/DFVN Big Bang.otf",
+  variable: "--font-display-vn",
+  weight: "400",
+  style: "normal",
+  display: "swap",
+  fallback: ["Cormorant Garamond", "Georgia", "serif"],
+});
+
 /** Cormorant Garamond — body copy. Full Vietnamese coverage. */
 export const cormorant = localFont({
   src: [

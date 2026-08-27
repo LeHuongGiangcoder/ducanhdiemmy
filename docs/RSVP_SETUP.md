@@ -29,7 +29,8 @@ cột `Slug` trước.
 3. Dán toàn bộ nội dung [`docs/apps-script.gs`](apps-script.gs).
 4. Sửa ba hằng số ở đầu file:
    - `SECRET` — chuỗi ngẫu nhiên thật dài. Giữ lại, bước 3 cần đến.
-   - `SITE_ORIGIN` — domain thật của site, dùng để dựng cột `Link`.
+   - `SITE_ORIGIN` — domain thật của site (mặc định `https://ducanhdiemmy.gloweb.site`,
+     khớp với `metadataBase` trong src/app/layout.js), dùng để dựng cột `Link`.
    - `SHEET_NAME` — tên tab, phải khớp chính xác tên hiển thị dưới đáy sheet.
 5. Lưu, chọn hàm `setupSheet` rồi bấm **Run** một lần (cấp quyền khi Google hỏi).
    Tab và hàng header được tạo xong.
