@@ -29,7 +29,26 @@ const FIRST_ROW = 2; // hàng 1 là header
 const DEFAULT_SEATS = 2;
 /** Ô Lang để trống nghĩa là tiếng Anh — ngôn ngữ của video hero mặc định. */
 const DEFAULT_LANG = 'en';
-const LANGS = { en: 'en', vi: 'vi' };
+/*
+ * Chấp nhận mọi cách viết thường gặp. Ô Lang là dropdown, nhưng người ta vẫn
+ * dán đè hoặc gõ tay — và một ô ghi 'viet' mà lặng lẽ ra thiệp tiếng Anh là
+ * kiểu lỗi không ai phát hiện cho tới khi khách đã nhận link.
+ */
+const LANGS = {
+  en: 'en', eng: 'en', english: 'en', anh: 'en', 'tieng anh': 'en',
+  vi: 'vi', vn: 'vi', vie: 'vi', viet: 'vi', vietnamese: 'vi',
+  'viet nam': 'vi', 'tieng viet': 'vi',
+};
+
+/** Bỏ dấu để 'Tiếng Việt' và 'tieng viet' cùng tra được một chỗ. */
+function langKey_(value) {
+  return String(value)
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/gi, 'd')
+    .trim()
+    .toLowerCase();
+}
 
 /* ------------------------------------------------------------------ menu */
 
@@ -38,6 +57,7 @@ function onOpen() {
     .createMenu('Wedding')
     .addItem('Tạo link cho khách mới', 'generateLinks')
     .addItem('Dựng lại sheet (chạy 1 lần)', 'setupSheet')
+    .addItem('Kiểm tra dữ liệu gửi cho website', 'checkData')
     .addToUi();
 }
 
@@ -71,6 +91,34 @@ function setupSheet() {
     .setDataValidation(rule);
 
   SpreadsheetApp.getActiveSpreadsheet().toast('Sheet đã sẵn sàng.', 'Wedding');
+}
+
+/**
+ * Hiện đúng thứ website sẽ nhận được — không đoán nữa.
+ *
+ * Chạy từ menu nên dùng code MỚI NHẤT ĐÃ SAVE, còn website thì dùng bản đã
+ * Deploy. Nên nếu bảng này ghi `vi` mà thiệp vẫn ra tiếng Anh, lỗi nằm ở chỗ
+ * deployment chưa lên version mới, không phải ở dữ liệu trong sheet.
+ */
+function checkData() {
+  const sheet = sheet_();
+  const col = columns_(sheet);
+  syncGuests_(sheet, col);
+  const guests = readGuests_(sheet, col);
+
+  const lines = guests.slice(0, 12).map(function (g) {
+    return g.lang + '   ' + g.slug + '   ' + g.name;
+  });
+
+  const viCount = guests.filter(function (g) { return g.lang === 'vi'; }).length;
+  const message =
+    guests.length + ' khách — ' + viCount + ' tiếng Việt, ' +
+    (guests.length - viCount) + ' tiếng Anh\n\n' +
+    'lang  slug  name\n' + lines.join('\n') +
+    (guests.length > 12 ? '\n… còn ' + (guests.length - 12) + ' dòng' : '');
+
+  SpreadsheetApp.getUi().alert('Dữ liệu gửi cho website', message,
+    SpreadsheetApp.getUi().ButtonSet.OK);
 }
 
 /* -------------------------------------------------------------- endpoint */
@@ -242,7 +290,7 @@ function readGuests_(sheet, col) {
     .getValues()
     .map(function (row) {
       const seats = parseInt(row[col.seats - 1], 10);
-      const lang = String(row[col.lang - 1]).trim().toLowerCase();
+      const lang = langKey_(row[col.lang - 1]);
       return {
         slug: String(row[col.slug - 1]).trim(),
         name: String(row[col.name - 1]).trim(),
