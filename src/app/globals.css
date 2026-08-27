@@ -1079,6 +1079,24 @@ legend.label {
   }
 }
 
+/*
+ * The Vietnamese invitation never uses TAN.
+ *
+ * Neither TAN face carries Vietnamese tone marks, so any heading left on them
+ * came out glyph by glyph across two typefaces — "Trang trọng & Thanh lịch"
+ * and the timeline's event names were doing exactly that. Reaching for
+ * fallbackFontClass() at each call site had already missed several, and would
+ * keep missing whichever one gets added next.
+ *
+ * Redefining the face variables one level down fixes every consumer at once,
+ * CSS modules included, with no specificity fight: --font-heading and
+ * --font-couple-name are both built on these.
+ */
+[data-lang="vi"] {
+  --font-display: var(--font-display-vn);
+  --font-couple: var(--font-display-vn);
+}
+
 /* Paired with fallbackFontClass() in src/lib/aegean.js: applied only to a
    string the TAN faces cannot set, which in practice means Vietnamese. The
    size bump answers DFVN Big Bang's 699 cap-height against TAN's 1000 —

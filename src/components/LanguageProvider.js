@@ -39,7 +39,19 @@ export function LanguageProvider({ lang, children }) {
 
   return (
     <LanguageContext.Provider value={{ lang: active, t: getContent(active) }}>
-      {children}
+      {/*
+       * `data-lang` is what swaps the display face for the whole Vietnamese
+       * invitation (see globals.css). It sits on a wrapper rather than <html>
+       * because the root layout is shared and cannot see the guest — setting it
+       * from an effect would paint TAN Aegean first and correct it after.
+       *
+       * `display: contents` so this wrapper inherits into its children without
+       * adding a box: the sections are sized against the viewport and an extra
+       * block in the middle would be a layout change dressed up as a font fix.
+       */}
+      <div data-lang={active} style={{ display: "contents" }}>
+        {children}
+      </div>
     </LanguageContext.Provider>
   );
 }
