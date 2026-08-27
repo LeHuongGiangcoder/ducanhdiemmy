@@ -43,7 +43,7 @@ export default function ThankYou() {
       <div className="shell stack center">
         <Reveal className="masthead">
           <h2 className="h-1">{thankYou.headline}</h2>
-          <p className="body" style={{ whiteSpace: "pre-line" }}>{thankYou.body}</p>
+          <p className="body" style={{ whiteSpace: "pre-line", textWrap: "auto" }}>{thankYou.body}</p>
         </Reveal>
 
         {/* The sign-off block: the closing words, the names, the date. */}

@@ -28,7 +28,7 @@
    * It has to clear the dot — a 7px square turned on its corner, so ~5px of
    * it juts into each half — before either the time or the title starts.
    */
-  grid-template-columns: 4em var(--s-6) 1fr;
+  grid-template-columns: 4em var(--s-7) 1fr;
   align-items: start;
   padding-bottom: var(--row-gap);
 }
@@ -168,7 +168,7 @@
 @media (min-width: 768px) {
   .item {
     --row-gap: var(--s-9);
-    grid-template-columns: 5em var(--s-7) 1fr;
+    grid-template-columns: 5em var(--s-8) 1fr;
   }
   .time {
     font-size: var(--t-small);

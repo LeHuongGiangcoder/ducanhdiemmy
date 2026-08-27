@@ -61,7 +61,7 @@ export const dressCode = {
   headline: "Elegant & formal attire",
   paletteHeading: "Dress Palette",
   swatches: [
-    { name: "Midnight Blue", hex: "#0f2e4e" },
+    { name: "Midnight Blue", hex: "#0A1422" },
     { name: "Ocean Blue", hex: "#3d6285" },
     { name: "Black", hex: "#111111" },
     { name: "Ivory", hex: "#e8dcc8" },
@@ -70,7 +70,7 @@ export const dressCode = {
 
 export const thankYou = {
   headline: "Thank You",
-  body: "Some moments are made\nall the more meaningful\nby the people we share them with.\nThank you for being part of ours.",
+  body: "Some moments are made\nall the more meaningful\nby the people we share\u00A0them\u00A0with.\nThank you for being part of ours.",
   signoff: "With Love",
 };
 

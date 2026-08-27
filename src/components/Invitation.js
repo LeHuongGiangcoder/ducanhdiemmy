@@ -10,7 +10,12 @@ import ThankYou from "./ThankYou";
 import Timeline from "./Timeline";
 import Venue from "./Venue";
 
-const MUSIC_SRC = "/audio/rewrite-the-stars.mp4";
+/*
+ * Audio-only AAC, not the .mp4 the track was delivered in — that carried an
+ * H.264 video track interleaved with the sound, so the browser had to pull
+ * megabytes of unused video frames before it had enough audio to start.
+ */
+const MUSIC_SRC = "/audio/rewrite-the-stars.m4a";
 /** Must match --dur-gate in globals.css (the cross-dissolve length). */
 const GATE_MS = 1600;
 
