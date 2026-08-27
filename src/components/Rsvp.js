@@ -89,7 +89,7 @@ export default function Rsvp({ guest }) {
                 // Arrived through their own link: the name is already known,
                 // so it is shown as confirmation rather than asked for again.
                 <p className={styles.replyingAs}>
-                  Replying as <strong>{guest.name}</strong>
+                  For <strong>{guest.name}</strong>
                 </p>
               ) : (
                 <div className="field">
