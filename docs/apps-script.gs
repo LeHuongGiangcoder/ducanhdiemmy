@@ -7,7 +7,8 @@
  * Cài đặt: xem docs/RSVP_SETUP.md.
  */
 
-const SHEET_NAME = 'Guests';
+/** Phải khớp CHÍNH XÁC tên tab dưới đáy spreadsheet, kể cả khoảng trắng. */
+const SHEET_NAME = 'Guests Management';
 /**
  * Đổi thành một chuỗi ngẫu nhiên thật dài. Đây là thứ duy nhất canh cửa Web App
  * (Web App phải để "Anyone" mới gọi vào được), nên đừng commit giá trị thật lên

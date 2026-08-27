@@ -1,6 +1,6 @@
 # Google Sheet = nguồn duy nhất (20 phút)
 
-Một spreadsheet, một tab `Guests`. Cô dâu chú rể gõ tên khách vào đó; website
+Một spreadsheet, một tab `Guests Management`. Cô dâu chú rể gõ tên khách vào đó; website
 đọc lên để dựng link riêng cho từng người, và ghi phản hồi RSVP ngược lại đúng
 hàng của người đó. Không có chỗ nào khác phải sửa, không cần deploy lại.
 
@@ -27,11 +27,12 @@ cột `Slug` trước.
 1. Vào <https://sheets.new>, đặt tên `Duc Anh & Diem My — RSVP`.
 2. **Extensions → Apps Script**, xoá `myFunction` mẫu.
 3. Dán toàn bộ nội dung [`docs/apps-script.gs`](apps-script.gs).
-4. Sửa hai hằng số ở đầu file:
+4. Sửa ba hằng số ở đầu file:
    - `SECRET` — chuỗi ngẫu nhiên thật dài. Giữ lại, bước 3 cần đến.
    - `SITE_ORIGIN` — domain thật của site, dùng để dựng cột `Link`.
+   - `SHEET_NAME` — tên tab, phải khớp chính xác tên hiển thị dưới đáy sheet.
 5. Lưu, chọn hàm `setupSheet` rồi bấm **Run** một lần (cấp quyền khi Google hỏi).
-   Tab `Guests` và hàng header được tạo xong.
+   Tab và hàng header được tạo xong.
 
 ## 2. Deploy Web App
 
@@ -58,7 +59,7 @@ Chạy lại `npm run dev` sau khi thêm.
 
 ## 4. Kiểm tra
 
-Gõ một cái tên vào cột `Name` của tab `Guests`, rồi:
+Gõ một cái tên vào cột `Name`, rồi:
 
 ```bash
 curl -s -X POST http://localhost:3000/api/rsvp -H 'Content-Type: application/json' -d '{"slug":"nguyen-van-an","attending":true,"guestCount":2,"message":"Test"}'
