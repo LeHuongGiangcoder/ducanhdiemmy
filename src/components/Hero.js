@@ -98,14 +98,16 @@ export default function Hero({ guest, started, revealing }) {
     >
       <video
         className={styles.video}
-        src="/hero%20final.mp4"
         autoPlay
         loop
         muted
         playsInline
         preload="auto"
         aria-hidden="true"
-      />
+      >
+        <source src="/hero_mobile.mp4" media="(max-width: 768px)" type="video/mp4" />
+        <source src="/hero%20final.mp4" type="video/mp4" />
+      </video>
 
       {/* A frame-locked layer: percentages inside it are video coordinates. */}
       <div
