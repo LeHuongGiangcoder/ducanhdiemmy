@@ -27,7 +27,7 @@ export default function Ornament({
       aria-hidden="true"
       width={width}
       height={height}
-      sizes="(max-width: 767px) 40vw, 260px"
+      sizes="(max-width: 479px) 40vw, 172px"
       className={[
         inline ? "" : "ornament",
         inline ? "" : place,

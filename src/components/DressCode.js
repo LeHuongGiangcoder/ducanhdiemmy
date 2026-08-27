@@ -31,7 +31,7 @@ export default function DressCode() {
               aria-hidden="true"
               width={240}
               height={249}
-              sizes="(max-width: 767px) 20vw, 100px"
+              sizes="(max-width: 479px) 20vw, 86px"
               className={styles.seal}
             />
 
@@ -42,7 +42,7 @@ export default function DressCode() {
                 aria-hidden="true"
                 width={1100}
                 height={1069}
-                sizes="(max-width: 767px) 88vw, 26rem"
+                sizes="(max-width: 479px) 88vw, 378px"
                 className={styles.cardImage}
               />
 
@@ -77,7 +77,7 @@ export default function DressCode() {
           alt=""
           width={1600}
           height={523}
-          sizes="140vw"
+          sizes="(max-width: 479px) 140vw, 602px"
           className={styles.drape}
         />
       </div>

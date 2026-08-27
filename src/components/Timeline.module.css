@@ -165,7 +165,7 @@
   opacity: 0.9;
 }
 
-@media (min-width: 768px) {
+@container frame (min-width: 768px) {
   .item {
     --row-gap: var(--s-9);
     grid-template-columns: 5em var(--s-8) 1fr;

@@ -55,7 +55,7 @@ export default function Venue() {
               aria-hidden="true"
               width={1200}
               height={800}
-              sizes="(max-width: 767px) 100vw, 40rem"
+              sizes="(max-width: 479px) 100vw, 430px"
               className={styles.sketch}
               priority
             />

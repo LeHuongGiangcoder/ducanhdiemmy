@@ -163,6 +163,18 @@ html {
   }
 }
 
+/*
+ * The query container for every wide-screen branch below. It sits on `main`
+ * rather than `body` deliberately: `container-type` implies layout
+ * containment, which would make the element a containing block for
+ * `position: fixed` — and that would tear the intro gate and the music dock
+ * off the viewport and stretch them down the whole page.
+ */
+main {
+  container-type: inline-size;
+  container-name: frame;
+}
+
 html,
 body {
   max-width: 100vw;
@@ -1029,8 +1041,14 @@ legend.label {
    9. BREAKPOINT ADJUSTMENTS (mobile-first: only widen from here)
    ========================================================================== */
 
-@media (min-width: 768px) {
-  :root {
+/*
+ * These used to key off the window. They now key off the column, because on a
+ * desktop window the column stays phone-width — a viewport query would fire
+ * and lay out a 1440px design inside 430px. As written they are dormant while
+ * `--frame` is capped, and come back on their own if it is ever widened.
+ */
+@container frame (min-width: 768px) {
+  main {
     --track-eyebrow: 0.42em;
   }
   .ornament {

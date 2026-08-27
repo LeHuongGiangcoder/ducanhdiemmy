@@ -24,7 +24,7 @@ export default function ThankYou() {
           src="/assets/thankyou-bg.jpg"
           alt=""
           fill
-          sizes="100vw"
+          sizes="(max-width: 479px) 100vw, 430px"
           className={styles.backdropImage}
         />
       </div>
@@ -36,7 +36,7 @@ export default function ThankYou() {
         aria-hidden="true"
         width={876}
         height={900}
-        sizes="(max-width: 767px) 46vw, 220px"
+        sizes="(max-width: 479px) 46vw, 198px"
         className={styles.watermark}
       />
 

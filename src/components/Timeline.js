@@ -99,7 +99,7 @@ export default function Timeline() {
             aria-hidden="true"
             width={893}
             height={900}
-            sizes="(max-width: 767px) 52vw, 260px"
+            sizes="(max-width: 479px) 52vw, 224px"
             className={styles.cherub}
           />
         </Reveal>

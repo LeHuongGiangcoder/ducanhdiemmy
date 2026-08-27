@@ -30,7 +30,7 @@ export default function Intro({ onOpen, closing }) {
         aria-hidden="true"
         fill
         priority
-        sizes="100vw"
+        sizes="(max-width: 479px) 100vw, 430px"
         className={styles.bg}
       />
 
@@ -42,7 +42,7 @@ export default function Intro({ onOpen, closing }) {
             aria-hidden="true"
             width={876}
             height={900}
-            sizes="(max-width: 767px) 12vw, 60px"
+            sizes="(max-width: 479px) 12vw, 52px"
             priority
             className="monogram"
           />

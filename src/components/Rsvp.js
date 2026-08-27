@@ -153,7 +153,7 @@ export default function Rsvp({ guest }) {
                 aria-hidden="true"
                 width={800}
                 height={758}
-                sizes="(max-width: 767px) 28vw, 130px"
+                sizes="(max-width: 479px) 28vw, 121px"
                 className={styles.cherub}
               />
 

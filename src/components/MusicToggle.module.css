@@ -38,12 +38,3 @@
   place-items: center;
 }
 
-@container frame (min-width: 768px) {
-  .dock {
-    padding: var(--s-6);
-  }
-  .toggle {
-    width: 3.25rem;
-    height: 3.25rem;
-  }
-}
