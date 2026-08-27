@@ -22,6 +22,8 @@ const IN_APP = [
   "TikTok",
 ];
 
+const TITLE = "Mở bằng trình duyệt";
+
 /** The user agent cannot change while the page is open. */
 const subscribe = () => () => {};
 const detect = () => IN_APP.some((pattern) => navigator.userAgent.includes(pattern));
@@ -42,7 +44,7 @@ export default function InAppBrowserWarning() {
   return (
     <div className={styles.overlay}>
       <div className={styles.box}>
-        <h2 className={styles.title}>Mở bằng trình duyệt</h2>
+        <h2 className={styles.title}>{TITLE}</h2>
         <p className={styles.text}>
           Để trải nghiệm hình ảnh và âm thanh của thiệp mời tốt nhất, vui lòng
           bấm vào nút <strong>… (ba chấm)</strong> ở góc trên bên phải hoặc bên

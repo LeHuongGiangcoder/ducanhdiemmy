@@ -36,8 +36,11 @@
 }
 
 .title {
-  font-family: var(--font-heading);
-  font-size: var(--t-h3);
+  /* This warning only ever speaks Vietnamese, and TAN Aegean has no tone
+     marks — left on --font-heading the heading rendered glyph by glyph across
+     two typefaces. The multiplier answers DFVN Big Bang's shorter cap-height. */
+  font-family: var(--font-heading-vn);
+  font-size: calc(var(--t-h3) * var(--font-heading-vn-scale, 1.42));
   margin-bottom: var(--gap-heading-body);
   color: var(--accent);
 }
