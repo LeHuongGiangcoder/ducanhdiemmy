@@ -127,21 +127,23 @@ export default function Rsvp({ guest }) {
               </fieldset>
 
               {attending === true && seats > 1 && (
-                <div className="field">
-                  <label className="label" htmlFor="rsvp-count">
-                    Number of guests?
-                  </label>
-                  <input
-                    id="rsvp-count"
-                    className="input"
-                    type="number"
-                    min="1"
-                    max={seats}
-                    required
-                    value={guestCount}
-                    onChange={(e) => setGuestCount(Number(e.target.value))}
-                  />
-                </div>
+                <fieldset className="field">
+                  <legend className="label">Number of guests?</legend>
+                  <div className="choices">
+                    {Array.from({ length: seats }, (_, i) => i + 1).map((count) => (
+                      <label key={count} className="choice">
+                        <input
+                          type="radio"
+                          name="guestCount"
+                          checked={guestCount === count}
+                          onChange={() => setGuestCount(count)}
+                        />
+                        <span className="choice__mark" aria-hidden="true" />
+                        {String(count).padStart(2, "0")}
+                      </label>
+                    ))}
+                  </div>
+                </fieldset>
               )}
 
               {/* Cupid, aimed at the one thing left to do. */}
