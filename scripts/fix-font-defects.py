@@ -1,16 +1,21 @@
 """
-Dò và sửa các glyph tiếng Việt bị đặt dấu sai vị trí trong một font.
+Dò và sửa các lỗi vẽ chữ trong file font.
 
-    python3 scripts/fix-vietnamese-accents.py "public/font/DFVN Big Bang.otf"
+    python3 scripts/fix-font-defects.py "public/font/DFVN Big Bang.otf"
 
-VÌ SAO CẦN: DFVN Big Bang vẽ đúng gần như mọi ký tự, nhưng tám glyph mang dấu
-huyền — ằ Ằ ừ Ừ ờ Ờ ỳ Ỳ — có dấu bị ném ra ngoài ô chữ, lệch khoảng 400 đơn vị
-sang trái và 200 lên trên. Trên màn hình nó hiện thành một dấu huyền lơ lửng
-tách rời khỏi chữ. Tên người Việt dính lỗi này rất nhiều: Hằng, Bằng, Từ, Lời.
+DFVN Big Bang mang hai lỗi, cả hai đều chỉ lộ ra khi đã lên màn hình:
 
-CÁCH LÀM: với mỗi glyph nghi lỗi, lấy glyph cùng chữ gốc nhưng mang dấu sắc làm
-mốc — dấu sắc và dấu huyền luôn ngồi cùng một chỗ. Tách contour của dấu, dời cho
-khớp mốc. Không đụng tới contour của chữ gốc.
+1. DẤU HUYỀN ĐẶT SAI CHỖ — tám glyph ằ Ằ ừ Ừ ờ Ờ ỳ Ỳ có dấu bị ném ra ngoài ô
+   chữ, lệch chừng 400 đơn vị sang trái và 200 lên trên, hiện thành một dấu
+   huyền lơ lửng tách rời. Tên người Việt dính rất nhiều: Hằng, Bằng, Từ, Lời.
+   Sửa bằng cách lấy glyph cùng chữ gốc nhưng mang dấu sắc làm mốc — dấu sắc và
+   dấu huyền luôn ngồi cùng một chỗ — rồi dời contour của dấu cho khớp. Contour
+   của chữ gốc không bị đụng tới.
+
+2. SỐ 1 VẼ RA CHỮ D — ký tự '1' trỏ nhầm sang glyph `one.1`, mà outline của nó
+   trùng khít từng điểm với glyph `D`. Bản thân font có sẵn glyph `one` vẽ đúng
+   nhưng bị bỏ rơi, không ký tự nào trỏ tới. Sửa bằng cách trỏ lại cho đúng.
+   Lỗi này làm "17:45" hiện thành "D7:45".
 
 Chạy lại trên font đã sửa thì không tìm thấy gì và thoát — an toàn khi lặp.
 """
@@ -87,8 +92,38 @@ for stem, members in groups.items():
     if b and (b[0] < mx - 150 or b[3] > my + 120):
         suspects.append((members[GRAVE], members[ACUTE]))
 
+def fix_orphan_digit():
+    """Ký tự nào đang trỏ tới một glyph trùng khít với glyph của ký tự khác?"""
+    def path_of(name):
+        rec = RecordingPen()
+        gs[name].draw(rec)
+        return tuple(
+            (op, tuple(
+                (round(pt[0], 1), round(pt[1], 1)) if isinstance(pt, tuple) else pt
+                for pt in args
+            ))
+            for op, args in rec.value
+        )
+
+    for ch, correct in (("1", "one"),):
+        cur = cmap.get(ord(ch))
+        if not cur or cur == correct or correct not in font.getGlyphOrder():
+            continue
+        # Chỉ sửa khi đã chắc glyph hiện tại là bản sao của một chữ khác.
+        twins = [c for c, n in cmap.items()
+                 if n != cur and path_of(n) == path_of(cur)]
+        if not twins:
+            continue
+        for table in font["cmap"].tables:
+            if ord(ch) in table.cmap:
+                table.cmap[ord(ch)] = correct
+        print(f"  '{ch}': đang vẽ ra '{chr(twins[0])}' — trỏ lại sang glyph `{correct}`")
+
+
 if not suspects:
-    print("Không tìm thấy glyph nào lệch — font đã đúng.")
+    print("Không tìm thấy glyph dấu nào lệch.")
+    fix_orphan_digit()
+    font.save(path)
     sys.exit(0)
 
 # --- sửa --------------------------------------------------------------------
@@ -128,5 +163,7 @@ for ch, ref_ch in sorted(suspects):
     charstrings[broken] = pen.getCharString(old.private, old.globalSubrs)
     print(f"  {ch}  (mốc {ref_ch})  dời dấu dx={dx:+.0f} dy={dy:+.0f}")
 
+fix_orphan_digit()
+
 font.save(path)
-print(f"Đã sửa {len(suspects)} glyph và ghi đè {path}")
+print(f"Đã ghi đè {path}")

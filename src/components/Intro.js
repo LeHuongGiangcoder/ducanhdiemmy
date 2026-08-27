@@ -33,7 +33,8 @@ export default function Intro({ onOpen, closing }) {
         aria-hidden="true"
         fill
         priority
-        sizes="(max-width: 479px) 100vw, 430px"
+        quality={100}
+        sizes="(max-width: 479px) 100vw, (max-height: 1000px) 100vh, 100vw"
         className={styles.bg}
       />
 

@@ -104,12 +104,13 @@
   gap: var(--s-1);
   /* TAN Pearl — the face reserved for the couple's names. */
   font-family: var(--font-couple-name);
-  font-size: var(--t-h1);
+  font-size: calc(var(--t-h1) * 0.85);
+  font-weight: 300;
   line-height: var(--lh-tight);
   letter-spacing: var(--track-display);
   /* The one pure white in the cluster: the top of the hierarchy. */
   color: #ffffff;
-  text-shadow: 0 2px 18px #09203a8c;
+  text-shadow: 0 1px 12px #09203a8c;
 }
 
 /* The ampersand steps back so the two names read as the pair. */
