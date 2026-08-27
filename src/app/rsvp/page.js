@@ -1,10 +1,6 @@
-import Rsvp from "@/components/Rsvp";
+import Invitation from "@/components/Invitation";
 import { defaultGuest } from "@/data/wedding";
 
 export default function RsvpPage() {
-  return (
-    <main>
-      <Rsvp guest={defaultGuest} />
-    </main>
-  );
+  return <Invitation guest={defaultGuest} bypassIntro={true} />;
 }

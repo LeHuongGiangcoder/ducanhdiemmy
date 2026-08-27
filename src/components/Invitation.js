@@ -27,9 +27,9 @@ const GATE_MS = 1600;
  * "Save the Date" is doing three jobs at once: it starts the music, lifts the
  * intro curtain, and releases the scroll lock on the body.
  */
-export default function Invitation({ guest }) {
-  const [opened, setOpened] = useState(false); // gesture received
-  const [gateGone, setGateGone] = useState(false); // curtain finished lifting
+export default function Invitation({ guest, bypassIntro = false }) {
+  const [opened, setOpened] = useState(bypassIntro); // gesture received
+  const [gateGone, setGateGone] = useState(bypassIntro); // curtain finished lifting
   const [playing, setPlaying] = useState(false);
   // Until the audio file is supplied there is nothing to toggle, so the
   // control hides itself rather than sitting there doing nothing.

@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import Rsvp from "@/components/Rsvp";
+import Invitation from "@/components/Invitation";
 import { allSlugs, getGuest } from "@/data/guests";
 import { couple, wedding } from "@/data/wedding";
 
@@ -26,9 +26,5 @@ export default async function GuestRsvpPage({ params }) {
   const guest = getGuest(slug);
   if (!guest) notFound();
 
-  return (
-    <main>
-      <Rsvp guest={guest} />
-    </main>
-  );
+  return <Invitation guest={guest} bypassIntro={true} />;
 }
