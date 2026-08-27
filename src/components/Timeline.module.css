@@ -39,6 +39,12 @@
   color: var(--gold);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
+  /* Flush against the rail, so the times read as one edge rather than a ragged
+     left column of unequal digit widths. */
+  text-align: right;
+  /* Letter-spacing leaves a trail after the last digit — pull it back so the
+     right edge is optically flush. */
+  margin-right: -0.06em;
   
   align-self: start;
   padding-top: 0.25rem;
