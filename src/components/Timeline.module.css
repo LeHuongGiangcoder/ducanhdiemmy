@@ -39,12 +39,10 @@
   color: var(--gold);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
-  /*
-   * Baseline-aligned with the title beside it rather than nudged by a magic
-   * padding: the two run at different sizes and line-heights, so only a real
-   * baseline group keeps the digits sitting on the same line as the words.
-   */
-  align-self: baseline;
+  
+  align-self: start;
+  padding-top: 0.25rem;
+  
   opacity: 0.55;
   transition: opacity var(--dur) var(--ease);
 }
@@ -119,8 +117,7 @@
 /* ---- Copy --------------------------------------------------------------- */
 
 .detail {
-  /* Its first line joins the baseline group with the time — see `.time`. */
-  align-self: baseline;
+  align-self: start;
   display: flex;
   flex-direction: column;
   gap: var(--s-2);

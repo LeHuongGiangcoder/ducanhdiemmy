@@ -101,26 +101,24 @@
   left: 27%;
   right: 27%;
   /*
-   * Starts below the wax seal, which straddles the paper's top edge and hangs
-   * roughly 8% of the paper's height over it — the heading has to clear that,
-   * not sit behind it. The block still ends well above the fingers coming over
-   * the paper's lower edge at ~52%.
+   * The blank of the paper runs from 2% to ~46% down the artwork before the
+   * thumb comes over the lower edge. The seal ends at 8%, so the print starts
+   * just under it and the whole block is sized to land above the fingers.
    */
-  top: 15%;
-  height: 33%;
+  top: 11%;
   z-index: 1;
 
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 4.5cqw;
+  justify-content: flex-start;
+  gap: 2cqw;
 }
 
 /* Set on the paper, in the paper's own ink — not the section's cream on wine. */
 .paletteHeading {
   font-family: var(--font-heading);
-  font-size: 4.2cqw;
+  font-size: 3.9cqw;
   line-height: 1.1;
   letter-spacing: var(--track-display);
   font-weight: 400;
@@ -135,20 +133,20 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   justify-items: center;
-  gap: 4cqw 3.5cqw;
+  gap: 2cqw 3.5cqw;
 }
 
 .swatch {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2cqw;
+  gap: 1cqw;
   min-width: 0;
 }
 
 .chip {
-  width: 12cqw;
-  height: 12cqw;
+  width: 7.6cqw;
+  height: 7.6cqw;
   border-radius: var(--radius-pill);
   /* Vintage gold rim to separate from the background */
   box-shadow:
@@ -157,7 +155,7 @@
 }
 
 .swatchName {
-  font-size: 3.2cqw;
+  font-size: 2.8cqw;
   line-height: 1.2;
   font-style: italic;
   white-space: nowrap;
