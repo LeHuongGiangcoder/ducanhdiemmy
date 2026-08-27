@@ -1093,8 +1093,11 @@ legend.label {
  * --font-couple-name are both built on these.
  */
 [data-lang="vi"] {
-  --font-display: var(--font-display-vn);
-  --font-couple: var(--font-display-vn);
+  /* Override the composed variables, not --font-display underneath them: var()
+     is substituted where a property is declared, so --font-heading froze TAN
+     in at :root and would inherit down here already resolved. */
+  --font-heading: var(--font-heading-vn);
+  --font-couple-name: var(--font-heading-vn);
 }
 
 /* Paired with fallbackFontClass() in src/lib/aegean.js: applied only to a

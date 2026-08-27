@@ -27,7 +27,8 @@ export default function ThankYou() {
           src="/assets/thankyou-bg.jpg"
           alt=""
           fill
-          sizes="(max-width: 479px) 100vw, 430px"
+          quality={100}
+          sizes="(max-width: 479px) 100vw, (max-height: 1000px) 100vh, 100vw"
           className={styles.backdropImage}
         />
       </div>
