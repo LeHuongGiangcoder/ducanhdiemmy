@@ -156,7 +156,9 @@ function syncGuests_(sheet) {
       changed = true;
     }
 
-    const link = SITE_ORIGIN + '/' + slug;
+    // Dấu / thừa ở cuối SITE_ORIGIN sinh ra link //slug — vẫn tới nơi, nhưng
+    // qua một cú redirect 308 mà trình duyệt trong app không phải lúc nào cũng theo.
+    const link = SITE_ORIGIN.replace(/\/+$/, '') + '/' + slug;
     if (row[COL.link - 1] !== link) {
       row[COL.link - 1] = link;
       changed = true;
