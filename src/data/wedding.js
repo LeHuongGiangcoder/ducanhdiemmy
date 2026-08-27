@@ -1,12 +1,13 @@
 /**
- * Single source of truth for every piece of wedding content.
- * Edit here — no section component hardcodes copy.
+ * Structural facts about the wedding — the same in every language.
+ *
+ * Wording lives in src/data/content.js, one entry per language. Anything that
+ * would have to be repeated identically in both dictionaries belongs here
+ * instead, so the two can never drift apart.
  */
 
 export const couple = {
-  groom: "Duc Anh",
-  bride: "Diem My",
-  // Full names as they appear burnt into "hero final.mp4".
+  // Full names as they appear burnt into the hero video.
   groomFull: "Vu Trung Duc Anh",
   brideFull: "Nguyen Tat Diem My",
   initials: "D.A & D.M",
@@ -14,71 +15,31 @@ export const couple = {
 };
 
 export const wedding = {
-  // Taken from the card composed into "hero final.mp4": FRIDAY | OCTOBER 02 | 17:45 | 2026
+  // Taken from the card composed into the hero video: FRIDAY | OCTOBER 02 | 17:45 | 2026
   date: "2026-10-02T17:45:00+07:00",
   dateLabel: "Friday, 02 October 2026",
   dateShort: "02 · 10 · 2026",
   timeLabel: "17:45",
   venue: {
+    // A proper noun and a hotel's own room name — untranslated in both versions.
     name: "Fairmont Hanoi",
     mark: "/assets/venue.webp",
     hall: "Grand Ballroom",
-    address: "27–29 Ly Thai To, Hoan Kiem, Hanoi",
-    mapUrl:
-      "https://www.google.com/maps/search/?api=1&query=Fairmont+Hanoi",
+    mapUrl: "https://www.google.com/maps/search/?api=1&query=Fairmont+Hanoi",
   },
 };
 
-export const timeline = [
-  {
-    time: "17:45",
-    title: "Welcome Reception",
-    subtitle: "Drinks, canapés, live music & photographs",
-  },
-  { time: "18:45", title: "Wedding Ceremony" },
-  {
-    time: "19:15",
-    title: "Dinner Reception",
-    subtitle: "Dinner, curated wines & spirits, live performances & lucky draws",
-  },
-  {
-    time: "20:30",
-    title: "Evening Celebration",
-    subtitle: "Games, gifts & special moments",
-  },
-  {
-    time: "21:30",
-    title: "DJ & After Party",
-    subtitle: "Music, drinks & dancing",
-  },
-];
+/** Running order. Titles and detail lines are per-language, in content.js. */
+export const timelineTimes = ["17:45", "18:45", "19:15", "20:30", "21:30"];
 
-/** Small print under the timeline. */
-export const timelineNote =
-  "Please keep your lucky number close throughout the evening.";
-
-export const dressCode = {
-  headline: "Elegant & Formal attire",
-  paletteHeading: "Dress Palette",
-  swatches: [
-    { name: "Midnight\nBlue", hex: "#0A1422" },
-    { name: "Ocean\nBlue", hex: "#3d6285" },
-    { name: "Black", hex: "#111111" },
-    { name: "Ivory", hex: "#e8dcc8" },
-  ],
-};
-
-export const thankYou = {
-  headline: "Thank You",
-  body: "Some moments are made\nall the more meaningful\nby the people we share\u00A0them\u00A0with.\nThank you for being part of ours.",
-  signoff: "With Love",
-};
+/** Swatch colours. Their names are per-language, in content.js. */
+export const dressPalette = ["#0A1422", "#3d6285", "#111111", "#e8dcc8"];
 
 /** Fallback used at `/` — anyone opening the site without a personal link. */
 export const defaultGuest = {
   slug: "",
-  salutation: "Dear",
   name: "Honoured Guest",
   seats: 2,
   luckyNumber: null,
+  lang: "en",
 };

@@ -1,5 +1,7 @@
 import Image from "next/image";
-import { couple, thankYou, wedding } from "@/data/wedding";
+import { couple, wedding } from "@/data/wedding";
+import { useContent } from "./LanguageProvider";
+import { fallbackFontClass } from "@/lib/aegean";
 import Reveal from "./Reveal";
 import styles from "./ThankYou.module.css";
 
@@ -17,6 +19,7 @@ import styles from "./ThankYou.module.css";
  * rather than a second copy of it.
  */
 export default function ThankYou() {
+  const { t } = useContent();
   return (
     <section className={`section section--screen ${styles.section}`}>
       <div className={styles.backdrop} aria-hidden="true">
@@ -42,8 +45,8 @@ export default function ThankYou() {
 
       <div className="shell stack center">
         <Reveal className="masthead">
-          <h2 className="h-1">{thankYou.headline}</h2>
-          <p className="body" style={{ whiteSpace: "pre-line", textWrap: "auto" }}>{thankYou.body}</p>
+          <h2 className={`h-1 ${fallbackFontClass(t.thankYou.headline)}`}>{t.thankYou.headline}</h2>
+          <p className="body" style={{ whiteSpace: "pre-line", textWrap: "auto" }}>{t.thankYou.body}</p>
         </Reveal>
 
         {/* The sign-off block: the closing words, the names, the date. */}
@@ -51,7 +54,7 @@ export default function ThankYou() {
           <div className="rule-mark" aria-hidden="true">
             <span className="rule-mark__dot" />
           </div>
-          <p className="eyebrow">{thankYou.signoff}</p>
+          <p className={`eyebrow ${fallbackFontClass(t.thankYou.signoff)}`}>{t.thankYou.signoff}</p>
           <p className={`h-2 ${styles.signature}`}>{couple.initials}</p>
           <p className="eyebrow">{wedding.dateShort}</p>
         </Reveal>

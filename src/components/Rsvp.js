@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { useState } from "react";
 import Ornament from "./Ornament";
+import { useContent } from "./LanguageProvider";
+import { fallbackFontClass } from "@/lib/aegean";
 import Reveal from "./Reveal";
 import styles from "./Rsvp.module.css";
 
@@ -12,6 +14,7 @@ import styles from "./Rsvp.module.css";
  * anyone who arrived through a personal link.
  */
 export default function Rsvp({ guest }) {
+  const { t } = useContent();
   const personalised = Boolean(guest.slug);
   const seats = guest.seats ?? 2;
 
@@ -24,7 +27,7 @@ export default function Rsvp({ guest }) {
   async function handleSubmit(event) {
     event.preventDefault();
     if (attending === null) {
-      setError("Please let us know if you can join us.");
+      setError(t.rsvp.errorAttending);
       return;
     }
 
@@ -44,7 +47,7 @@ export default function Rsvp({ guest }) {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Something went wrong.");
+      if (!res.ok) throw new Error(data.error ?? t.rsvp.errorGeneric);
       setStatus("done");
     } catch (err) {
       setStatus("error");
@@ -56,9 +59,9 @@ export default function Rsvp({ guest }) {
     <section id="rsvp" className="section section--screen section--pattern-wine">
       <div className="shell stack center">
         <Reveal className="masthead">
-          <p className="eyebrow">Kindly Reply</p>
-          <h2 className="h-1">R.S.V.P.</h2>
-          <p className="body">We would be delighted to have you join us.</p>
+          <p className={`eyebrow ${fallbackFontClass(t.rsvp.eyebrow)}`}>{t.rsvp.eyebrow}</p>
+          <h2 className={`h-1 ${fallbackFontClass(t.rsvp.title)}`}>{t.rsvp.title}</h2>
+          <p className="body">{t.rsvp.intro}</p>
         </Reveal>
 
         {status === "done" ? (
@@ -71,14 +74,14 @@ export default function Rsvp({ guest }) {
             />
             <p className="lede">
               {attending
-                ? "Wonderful — a glass will be waiting for you."
-                : "Thank you for letting us know. You will be missed."}
+                ? t.rsvp.thanksAccept
+                : t.rsvp.thanksDecline}
             </p>
             {guest.luckyNumber && attending ? (
               <p className="body">
-                Your lucky number is{" "}
-                <span className={styles.lucky}>{guest.luckyNumber}</span> — please
-                keep it until the end of the celebration.
+                {t.rsvp.luckyPrefix}{" "}
+                <span className={styles.lucky}>{guest.luckyNumber}</span>{" "}
+                {t.rsvp.luckySuffix}
               </p>
             ) : null}
           </Reveal>
@@ -89,12 +92,14 @@ export default function Rsvp({ guest }) {
                 // Arrived through their own link: the name is already known,
                 // so it is shown as confirmation rather than asked for again.
                 <p className={styles.replyingAs}>
-                  For <strong>{guest.name}</strong>
+                  {/* Vietnamese drops the prefix — the name stands alone. */}
+                  {t.rsvp.forPrefix ? `${t.rsvp.forPrefix} ` : ""}
+                  <strong>{guest.name}</strong>
                 </p>
               ) : (
                 <div className="field">
                   <label className="label" htmlFor="rsvp-name">
-                    Your name
+                    {t.rsvp.nameLabel}
                   </label>
                   <input
                     id="rsvp-name"
@@ -109,7 +114,7 @@ export default function Rsvp({ guest }) {
               )}
 
               <fieldset className="field">
-                <legend className="label">Will you be joining us?</legend>
+                <legend className="label">{t.rsvp.attendingLegend}</legend>
                 <div className="choices">
                   <label className="choice">
                     <input
@@ -119,7 +124,7 @@ export default function Rsvp({ guest }) {
                       onChange={() => setAttending(true)}
                     />
                     <span className="choice__mark" aria-hidden="true" />
-                    Joyfully accept
+                    {t.rsvp.accept}
                   </label>
                   <label className="choice">
                     <input
@@ -129,14 +134,14 @@ export default function Rsvp({ guest }) {
                       onChange={() => setAttending(false)}
                     />
                     <span className="choice__mark" aria-hidden="true" />
-                    Regretfully decline
+                    {t.rsvp.decline}
                   </label>
                 </div>
               </fieldset>
 
               {attending === true && seats > 1 && (
                 <fieldset className="field">
-                  <legend className="label">Number of guests</legend>
+                  <legend className="label">{t.rsvp.guestsLegend}</legend>
                   <div className="choices">
                     {Array.from({ length: seats }, (_, i) => i + 1).map((count) => (
                       <label key={count} className="choice">
@@ -170,7 +175,7 @@ export default function Rsvp({ guest }) {
                 className={`btn btn--primary ${styles.submit}`}
                 disabled={status === "sending"}
               >
-                {status === "sending" ? "Sending…" : "Send Response"}
+                {status === "sending" ? t.rsvp.sending : t.rsvp.submit}
               </button>
 
               {error ? (
@@ -178,7 +183,7 @@ export default function Rsvp({ guest }) {
                   {error}
                 </p>
               ) : (
-                <p className="form-note">Kindly reply by 20 September.</p>
+                <p className="form-note">{t.rsvp.deadline}</p>
               )}
             </form>
           </Reveal>

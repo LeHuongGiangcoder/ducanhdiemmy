@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { wedding } from "@/data/wedding";
+import { useContent } from "./LanguageProvider";
+import { fallbackFontClass } from "@/lib/aegean";
 import Reveal from "./Reveal";
 import styles from "./Venue.module.css";
 
@@ -16,6 +18,7 @@ import styles from "./Venue.module.css";
  * than on a card, so nothing competes with the drawing.
  */
 export default function Venue() {
+  const { t } = useContent();
   const { venue } = wedding;
   const ref = useRef(null);
   const [shown, setShown] = useState(false);
@@ -42,8 +45,8 @@ export default function Venue() {
     <section id="venue" className={`section section--screen section--pattern-navy ${styles.section}`}>
       <div className={`shell stack center ${styles.shell}`}>
         <Reveal className="masthead">
-          <p className="eyebrow">The Celebration</p>
-          <h2 className="h-1">Venue</h2>
+          <p className={`eyebrow ${fallbackFontClass(t.venue.eyebrow)}`}>{t.venue.eyebrow}</p>
+          <h2 className={`h-1 ${fallbackFontClass(t.venue.title)}`}>{t.venue.title}</h2>
         </Reveal>
 
 
@@ -64,7 +67,7 @@ export default function Venue() {
           <div className={styles.details}>
             <span className={styles.venueName}>{venue.name}</span>
             <span className={styles.venueHall}>{venue.hall}</span>
-            <span className={styles.venueAddress}>{venue.address}</span>
+            <span className={styles.venueAddress}>{t.venue.address}</span>
           </div>
 
           <a
@@ -73,7 +76,7 @@ export default function Venue() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            View on Google Maps
+            {t.venue.mapLink}
           </a>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { unstable_cache } from "next/cache";
+import { normaliseLang } from "@/data/content";
 import { snapshot } from "@/data/guests";
 
 /**
@@ -98,14 +99,15 @@ async function fetchFromSheet() {
   return body.guests.map(normalise).filter((g) => g.slug && g.name);
 }
 
-/** The sheet only carries name/seats/slug; everything else takes a default. */
+/** The sheet carries name/seats/slug/lang; everything else takes a default. */
 function normalise(row) {
   const seats = Number.parseInt(row.seats, 10);
   return {
     slug: String(row.slug ?? "").trim(),
-    salutation: String(row.salutation ?? "").trim() || "Dear",
     name: String(row.name ?? "").trim(),
     seats: Number.isFinite(seats) && seats > 0 ? seats : 2,
+    // A blank Lang cell means English — the language the hero video is cut in.
+    lang: normaliseLang(row.lang),
     luckyNumber: String(row.luckyNumber ?? "").trim() || null,
     note: String(row.note ?? "").trim() || undefined,
   };

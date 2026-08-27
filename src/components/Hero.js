@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { isDisplaySafe } from "@/lib/aegean";
+import { useContent } from "./LanguageProvider";
 import styles from "./Hero.module.css";
 
 /**
@@ -38,11 +39,22 @@ const SLOT_BOTTOM = 0.4891;
 const SLOT_HEIGHT = SLOT_BOTTOM - SLOT_TOP;
 
 /*
+ * The Vietnamese card is the same composition with its own type set into it,
+ * so the slot lands in the same place. Measured against the footage — if a
+ * future re-cut moves the line, these are the three numbers to re-measure,
+ * and only the affected language changes.
+ */
+const SLOT = {
+  en: { top: SLOT_TOP, height: SLOT_HEIGHT, x: 0.5113 },
+  vi: { top: SLOT_TOP, height: SLOT_HEIGHT, x: 0.5113 },
+};
+
+/*
  * The card composed into the video is not centred in its own frame — it sits
  * slightly right. The "Dear" line spans px 508–597, a centre of 0.5113, so the
- * slot is nudged by the same 1.13% to hang the guest's name directly under it.
+ * slot is nudged by the same 1.13% to hang the guest's name directly under it
+ * (see the `x` in SLOT above).
  */
-const SLOT_X = 0.5113;
 /** Name size as a fraction of the frame, so it tracks the video's own type. */
 const NAME_SIZE = 0.025;
 
@@ -59,6 +71,8 @@ const SLOT_FILL = 0.7;
 const MIN_FIT = 0.62;
 
 export default function Hero({ guest, started, revealing }) {
+  const { lang, t } = useContent();
+  const slot = SLOT[lang] ?? SLOT.en;
   const stageRef = useRef(null);
   const nameRef = useRef(null);
   const [box, setBox] = useState(null);
@@ -118,7 +132,7 @@ export default function Hero({ guest, started, revealing }) {
     const fit = () => {
       if (cancelled || !nameRef.current) return;
       const el = nameRef.current;
-      const budget = box.height * SLOT_HEIGHT * SLOT_FILL;
+      const budget = box.height * slot.height * SLOT_FILL;
 
       let scale = 1;
       el.style.setProperty("--name-fit", "1");
@@ -137,7 +151,7 @@ export default function Hero({ guest, started, revealing }) {
     return () => {
       cancelled = true;
     };
-  }, [box, guest.name]);
+  }, [box, guest.name, slot.height]);
 
   return (
     <section id="home"
@@ -152,6 +166,7 @@ export default function Hero({ guest, started, revealing }) {
         .join(" ")}
     >
       <video
+        key={t.hero.src}
         className={styles.video}
         autoPlay
         loop
@@ -170,7 +185,7 @@ export default function Hero({ guest, started, revealing }) {
          * real (0.9 MB against 7 MB) but it was being taken out of the one
          * thing a guest looks at.
          */}
-        <source src="/hero%20final.mp4" type="video/mp4" />
+        <source src={t.hero.src} type="video/mp4" />
       </video>
 
       {/* A frame-locked layer: percentages inside it are video coordinates. */}
@@ -186,7 +201,7 @@ export default function Hero({ guest, started, revealing }) {
                 // Type scales with the footage, not the viewport, so the name
                 // keeps the same relationship to the video's own lettering.
                 "--name-size": `${box.height * NAME_SIZE}px`,
-                "--slot-shift": `${box.width * (SLOT_X - 0.5)}px`,
+                "--slot-shift": `${box.width * (slot.x - 0.5)}px`,
               }
             : undefined
         }
@@ -199,8 +214,8 @@ export default function Hero({ guest, started, revealing }) {
         <div
           className={styles.slot}
           style={{
-            top: `${SLOT_TOP * 100}%`,
-            height: `${SLOT_HEIGHT * 100}%`,
+            top: `${slot.top * 100}%`,
+            height: `${slot.height * 100}%`,
           }}
         >
           <h1
@@ -214,7 +229,7 @@ export default function Hero({ guest, started, revealing }) {
               .join(" ")}
           >
             <span className="sr-only">
-              {guest.salutation} {guest.name}.{" "}
+              {t.hero.salutation} {guest.name}.{" "}
             </span>
             <span aria-hidden="true">{guest.name}</span>
           </h1>

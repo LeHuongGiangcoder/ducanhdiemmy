@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import Invitation from "@/components/Invitation";
 import { allSlugs, getGuest } from "@/lib/guest-registry";
-import { couple, wedding } from "@/data/wedding";
+import { wedding } from "@/data/wedding";
+import { getContent } from "@/data/content";
 
 /**
  * Every guest in the sheet is prerendered at build time, so the invitations
@@ -26,8 +27,11 @@ export async function generateMetadata({ params }) {
   const guest = await getGuest(slug);
   if (!guest) return {};
 
+  // The tab title speaks the guest's language too.
+  const t = getContent(guest.lang);
+
   return {
-    title: `${guest.salutation} ${guest.name} — ${couple.groom} & ${couple.bride}`,
+    title: `${t.hero.salutation} ${guest.name} — ${t.intro.groom} & ${t.intro.bride}`,
     description: `${wedding.dateLabel} · ${wedding.venue.name}`,
     robots: { index: false, follow: false },
   };

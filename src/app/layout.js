@@ -1,14 +1,18 @@
 import { cormorant, dfvnBigBang, tanAegean, tanPearl } from "./fonts";
-import { couple, wedding } from "@/data/wedding";
+import { wedding } from "@/data/wedding";
+import { DEFAULT_LANG, getContent } from "@/data/content";
 import "./globals.css";
 import InAppBrowserWarning from "@/components/InAppBrowserWarning";
 
+/* The shared link has no guest, so it carries the default language. */
+const site = getContent(DEFAULT_LANG).intro;
+
 export const metadata = {
   metadataBase: new URL("https://ducanhdiemmy.gloweb.site"),
-  title: `${couple.groom} & ${couple.bride} — Wedding Invitation`,
+  title: `${site.groom} & ${site.bride} — Wedding Invitation`,
   description: `Join us at ${wedding.venue.name} on ${wedding.dateLabel}. (Please view on mobile)`,
   openGraph: {
-    title: `${couple.groom} & ${couple.bride}`,
+    title: `${site.groom} & ${site.bride}`,
     description: `${wedding.dateLabel} · ${wedding.venue.name} (Please view on mobile)`,
     type: "website",
     images: ["/social_preview_v2.jpg"],

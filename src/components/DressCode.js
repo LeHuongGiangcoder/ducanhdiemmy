@@ -1,5 +1,7 @@
 import Image from "next/image";
-import { dressCode } from "@/data/wedding";
+import { dressPalette } from "@/data/wedding";
+import { useContent } from "./LanguageProvider";
+import { fallbackFontClass } from "@/lib/aegean";
 import Reveal from "./Reveal";
 import styles from "./DressCode.module.css";
 
@@ -14,13 +16,14 @@ import styles from "./DressCode.module.css";
  * of this section down into the navy of the timeline below.
  */
 export default function DressCode() {
+  const { t } = useContent();
   return (
     <section id="dress-code" className={`section section--pattern-wine ${styles.section}`}>
       <div className={`shell stack center ${styles.shell}`}>
         <Reveal className="masthead">
-          <p className="eyebrow">For the Occasion</p>
-          <h2 className="h-1">Dress code</h2>
-          <p className={styles.headline}>{dressCode.headline}</p>
+          <p className={`eyebrow ${fallbackFontClass(t.dressCode.eyebrow)}`}>{t.dressCode.eyebrow}</p>
+          <h2 className={`h-1 ${fallbackFontClass(t.dressCode.title)}`}>{t.dressCode.title}</h2>
+          <p className={styles.headline}>{t.dressCode.headline}</p>
         </Reveal>
 
         <Reveal delay={120} className={styles.palette}>
@@ -49,18 +52,22 @@ export default function DressCode() {
               {/* Printed in the blank of the paper, above the glove. */}
               <div className={styles.printed}>
                 <h3 className={styles.paletteHeading}>
-                  {dressCode.paletteHeading}
+                  {t.dressCode.paletteHeading}
                 </h3>
 
                 <ul className={styles.swatches}>
-                  {dressCode.swatches.map((s) => (
-                    <li key={s.name} className={styles.swatch}>
+                  {/* Colour and name are held apart: the hex is the same in
+                      every language, the name is not. */}
+                  {dressPalette.map((hex, i) => (
+                    <li key={hex} className={styles.swatch}>
                       <span
                         className={styles.chip}
-                        style={{ background: s.hex }}
+                        style={{ background: hex }}
                         aria-hidden="true"
                       />
-                      <span className={styles.swatchName}>{s.name}</span>
+                      <span className={styles.swatchName}>
+                        {t.dressCode.swatches[i]}
+                      </span>
                     </li>
                   ))}
                 </ul>

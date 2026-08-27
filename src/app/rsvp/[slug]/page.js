@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import Invitation from "@/components/Invitation";
 import { allSlugs, getGuest } from "@/lib/guest-registry";
-import { couple, wedding } from "@/data/wedding";
+import { wedding } from "@/data/wedding";
+import { getContent } from "@/data/content";
 
 export async function generateStaticParams() {
   return (await allSlugs()).map((slug) => ({ slug }));
@@ -17,8 +18,11 @@ export async function generateMetadata({ params }) {
   const guest = await getGuest(slug);
   if (!guest) return {};
 
+  // The tab title speaks the guest's language too.
+  const t = getContent(guest.lang);
+
   return {
-    title: `R.S.V.P. — ${guest.salutation} ${guest.name}`,
+    title: `${t.rsvp.title} — ${guest.name}`,
     description: `${wedding.dateLabel} · ${wedding.venue.name}`,
     robots: { index: false, follow: false },
   };

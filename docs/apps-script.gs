@@ -2,13 +2,14 @@
  * Đức Anh & Diễm My — guest list + RSVP, một tab duy nhất.
  *
  * Sheet vừa là nguồn danh sách khách (site đọc lên), vừa là nơi RSVP đổ về
- * (site ghi xuống). Cô dâu chú rể chỉ gõ hai cột: Name và Seats.
+ * (site ghi xuống). Cô dâu chú rể chỉ gõ ba cột: Name, Seats, Lang.
  *
  * Cài đặt: xem docs/RSVP_SETUP.md.
  */
 
 /** Phải khớp CHÍNH XÁC tên tab dưới đáy spreadsheet, kể cả khoảng trắng. */
 const SHEET_NAME = 'Guests Management';
+
 /**
  * Đổi thành một chuỗi ngẫu nhiên thật dài. Đây là thứ duy nhất canh cửa Web App
  * (Web App phải để "Anyone" mới gọi vào được), nên đừng commit giá trị thật lên
@@ -20,17 +21,15 @@ const SECRET = 'CHANGE-ME-to-a-long-random-string';
 const SITE_ORIGIN = 'https://ducanhdiemmy.gloweb.site';
 
 const HEADERS = [
-  'No', 'Name', 'Seats', 'Slug', 'Link',
+  'No', 'Name', 'Seats', 'Lang', 'Slug', 'Link',
   'Attending', 'Guests', 'Message', 'Updated',
 ];
 
-// 1-based column positions, khớp với HEADERS ở trên.
-const COL = {
-  no: 1, name: 2, seats: 3, slug: 4, link: 5,
-  attending: 6, guests: 7, message: 8, updated: 9,
-};
 const FIRST_ROW = 2; // hàng 1 là header
 const DEFAULT_SEATS = 2;
+/** Ô Lang để trống nghĩa là tiếng Anh — ngôn ngữ của video hero mặc định. */
+const DEFAULT_LANG = 'en';
+const LANGS = { en: 'en', vi: 'vi' };
 
 /* ------------------------------------------------------------------ menu */
 
@@ -44,7 +43,8 @@ function onOpen() {
 
 /** Chạy tay khi vừa thêm khách và muốn thấy link ngay. */
 function generateLinks() {
-  const n = syncGuests_(sheet_());
+  const sheet = sheet_();
+  const n = syncGuests_(sheet, columns_(sheet));
   SpreadsheetApp.getActiveSpreadsheet().toast(n + ' khách đã có link.', 'Wedding');
 }
 
@@ -55,9 +55,21 @@ function setupSheet() {
     .setValues([HEADERS])
     .setFontWeight('bold');
   sheet.setFrozenRows(1);
-  sheet.setColumnWidth(COL.name, 220);
-  sheet.setColumnWidth(COL.link, 320);
-  sheet.setColumnWidth(COL.message, 320);
+
+  const col = columns_(sheet);
+  sheet.setColumnWidth(col.name, 220);
+  sheet.setColumnWidth(col.link, 320);
+  sheet.setColumnWidth(col.message, 320);
+
+  // Ô Lang thành dropdown en/vi để khỏi gõ sai.
+  const rule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(['en', 'vi'], true)
+    .setAllowInvalid(false)
+    .setHelpText('en = thiệp tiếng Anh, vi = thiệp tiếng Việt. Trống = en.')
+    .build();
+  sheet.getRange(FIRST_ROW, col.lang, sheet.getMaxRows() - 1, 1)
+    .setDataValidation(rule);
+
   SpreadsheetApp.getActiveSpreadsheet().toast('Sheet đã sẵn sàng.', 'Wedding');
 }
 
@@ -80,15 +92,16 @@ function doPost(e) {
     }
 
     const sheet = sheet_();
+    const col = columns_(sheet);
     // Khách mới gõ tay vào sheet chưa có slug — bù trước khi đọc hoặc ghi,
     // để cô dâu chú rể không phải nhớ bấm menu.
-    syncGuests_(sheet);
+    syncGuests_(sheet, col);
 
     if (body.action === 'guests') {
-      return json({ ok: true, guests: readGuests_(sheet) });
+      return json({ ok: true, guests: readGuests_(sheet, col) });
     }
 
-    return json(writeRsvp_(sheet, body));
+    return json(writeRsvp_(sheet, col, body));
   } catch (err) {
     return json({ ok: false, error: String(err) });
   } finally {
@@ -111,6 +124,35 @@ function sheet_() {
   return sheet;
 }
 
+/**
+ * Vị trí từng cột, tra theo TÊN ở hàng 1 chứ không theo thứ tự cố định.
+ *
+ * Nghĩa là kéo cột đi chỗ khác hay chèn thêm cột vào giữa, script vẫn chạy
+ * đúng — miễn chữ ở hàng 1 giữ nguyên. Cột nào chưa tồn tại (sheet dựng trước
+ * khi có `Lang`) thì được tạo thêm vào cuối, kèm chữ header, nên sheet cũ tự
+ * nâng cấp mà không mất dữ liệu.
+ */
+function columns_(sheet) {
+  const width = Math.max(sheet.getLastColumn(), 1);
+  const header = sheet.getRange(1, 1, 1, width).getValues()[0]
+    .map(function (h) { return String(h).trim().toLowerCase(); });
+
+  const col = {};
+  let next = header.length + 1;
+
+  HEADERS.forEach(function (name) {
+    const at = header.indexOf(name.toLowerCase());
+    if (at !== -1) {
+      col[name.toLowerCase()] = at + 1;
+    } else {
+      sheet.getRange(1, next).setValue(name).setFontWeight('bold');
+      col[name.toLowerCase()] = next;
+      next++;
+    }
+  });
+  return col;
+}
+
 /** Số hàng dữ liệu hiện có (không tính header). */
 function dataRows_(sheet) {
   return Math.max(0, sheet.getLastRow() - 1);
@@ -122,45 +164,46 @@ function dataRows_(sheet) {
  * Slug đã tồn tại thì KHÔNG bao giờ đổi — link đã gửi cho khách phải sống mãi,
  * kể cả khi sau này sửa lại chính tả cái tên.
  */
-function syncGuests_(sheet) {
+function syncGuests_(sheet, col) {
   const rows = dataRows_(sheet);
   if (rows === 0) return 0;
 
-  const range = sheet.getRange(FIRST_ROW, 1, rows, HEADERS.length);
+  const width = sheet.getLastColumn();
+  const range = sheet.getRange(FIRST_ROW, 1, rows, width);
   const values = range.getValues();
 
   const taken = {};
   values.forEach(function (row) {
-    const slug = String(row[COL.slug - 1]).trim();
+    const slug = String(row[col.slug - 1]).trim();
     if (slug) taken[slug] = true;
   });
 
   let changed = false;
   let counted = 0;
 
-  values.forEach(function (row, i) {
-    const name = String(row[COL.name - 1]).trim();
+  values.forEach(function (row) {
+    const name = String(row[col.name - 1]).trim();
     if (!name) return; // hàng trống ở giữa danh sách — bỏ qua
     counted++;
 
-    if (row[COL.no - 1] !== counted) {
-      row[COL.no - 1] = counted;
+    if (row[col.no - 1] !== counted) {
+      row[col.no - 1] = counted;
       changed = true;
     }
 
-    let slug = String(row[COL.slug - 1]).trim();
+    let slug = String(row[col.slug - 1]).trim();
     if (!slug) {
       slug = uniqueSlug_(slugify_(name), taken);
       taken[slug] = true;
-      row[COL.slug - 1] = slug;
+      row[col.slug - 1] = slug;
       changed = true;
     }
 
     // Dấu / thừa ở cuối SITE_ORIGIN sinh ra link //slug — vẫn tới nơi, nhưng
     // qua một cú redirect 308 mà trình duyệt trong app không phải lúc nào cũng theo.
     const link = SITE_ORIGIN.replace(/\/+$/, '') + '/' + slug;
-    if (row[COL.link - 1] !== link) {
-      row[COL.link - 1] = link;
+    if (row[col.link - 1] !== link) {
+      row[col.link - 1] = link;
       changed = true;
     }
   });
@@ -191,18 +234,20 @@ function slugify_(value) {
     .replace(/^-+|-+$/g, '');
 }
 
-function readGuests_(sheet) {
+function readGuests_(sheet, col) {
   const rows = dataRows_(sheet);
   if (rows === 0) return [];
 
-  return sheet.getRange(FIRST_ROW, 1, rows, HEADERS.length)
+  return sheet.getRange(FIRST_ROW, 1, rows, sheet.getLastColumn())
     .getValues()
     .map(function (row) {
-      const seats = parseInt(row[COL.seats - 1], 10);
+      const seats = parseInt(row[col.seats - 1], 10);
+      const lang = String(row[col.lang - 1]).trim().toLowerCase();
       return {
-        slug: String(row[COL.slug - 1]).trim(),
-        name: String(row[COL.name - 1]).trim(),
+        slug: String(row[col.slug - 1]).trim(),
+        name: String(row[col.name - 1]).trim(),
         seats: seats > 0 ? seats : DEFAULT_SEATS,
+        lang: LANGS[lang] || DEFAULT_LANG,
       };
     })
     .filter(function (g) { return g.slug && g.name; });
@@ -212,40 +257,37 @@ function readGuests_(sheet) {
  * Ghi phản hồi vào đúng hàng của khách. Đổi ý thì ghi đè, không sinh hàng mới.
  * Khách vào thẳng /rsvp (không qua link riêng) thì nối thêm một hàng mới.
  */
-function writeRsvp_(sheet, body) {
+function writeRsvp_(sheet, col, body) {
   const slug = String(body.slug || '').trim();
-  const answer = [
-    body.attending ? 'YES' : 'NO',
-    body.guestCount || 0,
-    body.message || '',
-    new Date(),
-  ];
+  const answer = {};
+  answer[col.attending] = body.attending ? 'YES' : 'NO';
+  answer[col.guests] = body.guestCount || 0;
+  answer[col.message] = body.message || '';
+  answer[col.updated] = new Date();
 
   const rows = dataRows_(sheet);
   const slugs = rows > 0
-    ? sheet.getRange(FIRST_ROW, COL.slug, rows, 1).getValues()
+    ? sheet.getRange(FIRST_ROW, col.slug, rows, 1).getValues()
     : [];
 
   for (let i = 0; i < slugs.length; i++) {
     if (slug && String(slugs[i][0]).trim() === slug) {
-      sheet.getRange(FIRST_ROW + i, COL.attending, 1, 4).setValues([answer]);
-      return { ok: true, row: FIRST_ROW + i };
+      const at = FIRST_ROW + i;
+      // Từng ô một: bốn cột trả lời không nhất thiết nằm cạnh nhau nữa.
+      Object.keys(answer).forEach(function (c) {
+        sheet.getRange(at, Number(c)).setValue(answer[c]);
+      });
+      return { ok: true, row: at };
     }
   }
 
   // Không khớp slug nào: khách tự vào, chỉ có cái tên họ gõ.
-  const row = [];
-  row[COL.no - 1] = '';
-  row[COL.name - 1] = body.name || '';
-  row[COL.seats - 1] = '';
-  row[COL.slug - 1] = '';
-  row[COL.link - 1] = '';
-  row[COL.attending - 1] = answer[0];
-  row[COL.guests - 1] = answer[1];
-  row[COL.message - 1] = answer[2];
-  row[COL.updated - 1] = answer[3];
-  sheet.appendRow(row);
-  return { ok: true, row: sheet.getLastRow() };
+  const at = sheet.getLastRow() + 1;
+  sheet.getRange(at, col.name).setValue(body.name || '');
+  Object.keys(answer).forEach(function (c) {
+    sheet.getRange(at, Number(c)).setValue(answer[c]);
+  });
+  return { ok: true, row: at };
 }
 
 function json(obj) {

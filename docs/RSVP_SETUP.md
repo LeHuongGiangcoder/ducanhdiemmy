@@ -9,12 +9,17 @@ hàng của người đó. Không có chỗ nào khác phải sửa, không cầ
 | `No` | tự sinh | số thứ tự |
 | `Name` | **bạn gõ** | tên hiện trên thiệp — có dấu tiếng Việt thoải mái |
 | `Seats` | **bạn gõ** | số chỗ tối đa của thiệp này (bỏ trống = 2) |
+| `Lang` | **bạn chọn** | `vi` = thiệp tiếng Việt, `en` = tiếng Anh. **Bỏ trống = `en`** |
 | `Slug` | tự sinh | phần đuôi URL, sinh từ tên |
 | `Link` | tự sinh | link để gửi cho khách — copy thẳng từ đây |
 | `Attending` | website ghi | `YES` / `NO` |
 | `Guests` | website ghi | số người khách xác nhận |
 | `Message` | website ghi | lời nhắn của khách |
 | `Updated` | website ghi | lúc khách trả lời gần nhất |
+
+Cột được tra theo **tên ở hàng 1**, không theo vị trí — bạn kéo cột đi chỗ khác
+hay chèn thêm cột vào giữa, script vẫn chạy đúng. Cột nào thiếu sẽ được tạo
+thêm vào cuối khi script chạy lần đầu.
 
 `Slug` sinh ra một lần rồi **không bao giờ tự đổi** — link đã gửi cho khách sống
 mãi, kể cả khi sau này sửa lại chính tả cái tên. Muốn tự đặt link, cứ gõ tay vào
@@ -100,3 +105,21 @@ Không sửa tay file đó — lần chạy sau sẽ ghi đè.
 - **Đổi ý thì ghi đè**, không sinh hàng mới — mỗi khách đúng một hàng.
 - Khách vào thẳng `/rsvp` (không qua link riêng) vẫn trả lời được: họ tự gõ tên,
   và một hàng mới được nối vào cuối sheet.
+
+## Hai ngôn ngữ
+
+Mỗi khách nhận thiệp bằng đúng ngôn ngữ ghi ở cột `Lang`. Không có hai website,
+không có hai bản build — cùng một trang, đổi từ điển nội dung theo từng khách.
+
+Bản tiếng Việt dùng video hero riêng (`hero final viet.mp4`) và font DFVN Big
+Bang cho những dòng có dấu, vì TAN Aegean không vẽ được dấu tiếng Việt.
+
+Muốn xem thử bản kia mà không phải sửa sheet: thêm `?lang=vi` (hoặc `?lang=en`)
+vào cuối link bất kỳ.
+
+```
+https://ducanhdiemmy.gloweb.site/mr-quoc-tran?lang=vi
+```
+
+Vài tiêu đề giữ nguyên tiếng Anh trong bản Việt theo yêu cầu: `Dress code`,
+`Timeline`, `R.S.V.P.`. Muốn dịch nốt thì sửa `src/data/content.js`.

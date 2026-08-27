@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import { couple, wedding } from "@/data/wedding";
+import { useContent } from "./LanguageProvider";
+import { fallbackFontClass } from "@/lib/aegean";
 import styles from "./Intro.module.css";
 
 /**
@@ -17,12 +19,13 @@ import styles from "./Intro.module.css";
  * are the same gesture.
  */
 export default function Intro({ onOpen, closing }) {
+  const { t } = useContent();
   return (
     <div
       className={`${styles.intro} ${closing ? styles.closing : ""}`}
       role="dialog"
       aria-modal="true"
-      aria-label={`Wedding invitation — ${couple.groom} and ${couple.bride}`}
+      aria-label={`${t.intro.groom} & ${t.intro.bride}`}
     >
       <Image
         src="/assets/intro-sunset.jpg"
@@ -47,12 +50,12 @@ export default function Intro({ onOpen, closing }) {
             className="monogram"
           />
 
-          <p className={styles.eyebrow}>Save the Date</p>
+          <p className={styles.eyebrow}>{t.intro.eyebrow}</p>
 
           <p className={styles.names}>
-            <span>{couple.groom}</span>
+            <span className={fallbackFontClass(t.intro.groom)}>{t.intro.groom}</span>
             <span className={styles.amp}>&</span>
-            <span>{couple.bride}</span>
+            <span className={fallbackFontClass(t.intro.bride)}>{t.intro.bride}</span>
           </p>
 
           {/* The date itself — the promise the gate is asking to be kept. */}
@@ -67,7 +70,7 @@ export default function Intro({ onOpen, closing }) {
             className={`btn btn--primary ${styles.cta}`}
             onClick={onOpen}
           >
-            Open Invitation
+            {t.intro.cta}
           </button>
 
           {/* Tells the guest the button is the way in. */}

@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { timeline, timelineNote } from "@/data/wedding";
+import { timelineTimes } from "@/data/wedding";
+import { useContent } from "./LanguageProvider";
+import { fallbackFontClass } from "@/lib/aegean";
 import Reveal from "./Reveal";
 import styles from "./Timeline.module.css";
 
@@ -17,6 +19,9 @@ const TRIGGER = 0.72;
  * from its own dot down to the next one, and fills as the guest scrolls past.
  */
 export default function Timeline() {
+  const { t } = useContent();
+  // Times are language-neutral; titles are not. Zipped by position.
+  const items = timelineTimes.map((time, i) => ({ time, ...t.timeline.items[i] }));
   const dots = useRef([]);
   const [active, setActive] = useState(-1);
 
@@ -51,17 +56,17 @@ export default function Timeline() {
     <section id="timeline" className={`section section--screen section--pattern-navy ${styles.section}`}>
       <div className={`shell stack center ${styles.shell}`}>
         <Reveal className="masthead">
-          <p className="eyebrow">The Evening</p>
-          <h2 className="h-1">Timeline</h2>
+          <p className={`eyebrow ${fallbackFontClass(t.timeline.eyebrow)}`}>{t.timeline.eyebrow}</p>
+          <h2 className={`h-1 ${fallbackFontClass(t.timeline.title)}`}>{t.timeline.title}</h2>
         </Reveal>
 
         <ol className={styles.list}>
-          {timeline.map((item, i) => (
+          {items.map((item, i) => (
             <li
               key={item.time}
               className={styles.item}
               data-on={i <= active ? "true" : "false"}
-              data-last={i === timeline.length - 1 ? "true" : "false"}
+              data-last={i === items.length - 1 ? "true" : "false"}
             >
               <span className={styles.time}>{item.time}</span>
 
@@ -89,7 +94,7 @@ export default function Timeline() {
         </ol>
 
         <Reveal delay={80} className={styles.note}>
-          <p className="fine">{timelineNote}</p>
+          <p className="fine">{t.timeline.note}</p>
         </Reveal>
 
         <Reveal delay={120}>

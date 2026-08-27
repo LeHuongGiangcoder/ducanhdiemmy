@@ -12,26 +12,26 @@
 export const snapshot = [
   {
     slug: "mr-nguyen-van-an",
-    salutation: "Dear",
     name: "Mr. Nguyễn Văn An",
     seats: 2,
+    lang: "en",
   },
   {
     slug: "ms-tran-thi-bao-ngoc",
-    salutation: "Dear",
     name: "Ms. Trần Thị Bảo Ngọc",
     seats: 1,
+    lang: "en",
   },
   {
     slug: "mr-and-mrs-le",
-    salutation: "Dear",
     name: "Mr. & Mrs. Le",
     seats: 4,
+    lang: "en",
   },
   {
     slug: "james-carter",
-    salutation: "Dear",
     name: "James Carter",
     seats: 2,
+    lang: "en",
   },
 ];

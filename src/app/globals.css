@@ -1079,12 +1079,20 @@ legend.label {
   }
 }
 
-/* Paired with displayFontClass() in src/lib/aegean.js, for user-supplied
-   strings outside the hero. */
-.font-display {
-  font-family: var(--font-heading);
-}
-
+/* Paired with fallbackFontClass() in src/lib/aegean.js: applied only to a
+   string the TAN faces cannot set, which in practice means Vietnamese. The
+   size bump answers DFVN Big Bang's 699 cap-height against TAN's 1000 —
+   without it a Vietnamese heading reads a third smaller than its English
+   counterpart at the same font-size. */
 .font-display-vn {
   font-family: var(--font-heading-vn);
+  font-size: calc(1em * var(--font-heading-vn-scale, 1.42));
+}
+
+/* Eyebrows are set in caps on wide tracking, where a full cap-height match
+   turns the label into the loudest thing in the masthead — and pushes a line
+   like "TRANG PHỤC DỰ TIỆC" onto two lines above the heading it introduces. */
+.eyebrow.font-display-vn {
+  --font-heading-vn-scale: 1.15;
+  letter-spacing: 0.16em;
 }

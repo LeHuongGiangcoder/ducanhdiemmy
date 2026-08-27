@@ -1,5 +1,6 @@
 "use client";
 
+import { useContent } from "./LanguageProvider";
 import styles from "./MusicToggle.module.css";
 
 /**
@@ -8,13 +9,14 @@ import styles from "./MusicToggle.module.css";
  * mobile browsers refuse it.
  */
 export default function MusicToggle({ playing, onToggle, visible }) {
+  const { t } = useContent();
   return (
     <div className={styles.dock}>
       <button
         type="button"
         onClick={onToggle}
         className={`btn-icon ${styles.toggle} ${visible ? styles.on : ""}`}
-        aria-label={playing ? "Pause music" : "Play music"}
+        aria-label={playing ? t.music.pause : t.music.play}
         aria-pressed={playing}
       >
         <span className={styles.disc} aria-hidden="true">

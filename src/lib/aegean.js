@@ -32,9 +32,17 @@ export function isDisplaySafe(text) {
 }
 
 /**
- * Class to put on a guest name / any user-supplied string.
- * Returns TAN Aegean when safe, DFVN Big Bang when not.
+ * Class for any string that might carry Vietnamese — a guest's name, a heading
+ * in the Vietnamese invitation.
+ *
+ * Returns nothing when the display faces can set the string, so the element
+ * keeps whatever the design already gave it (TAN Pearl for the couple's names,
+ * TAN Aegean for headings). Only when a character is missing does it step in
+ * and swap the whole string to DFVN Big Bang.
+ *
+ * TAN Pearl and TAN Aegean are missing exactly the same Vietnamese characters,
+ * so one test covers both.
  */
-export function displayFontClass(text) {
-  return isDisplaySafe(text) ? "font-display" : "font-display-vn";
+export function fallbackFontClass(text) {
+  return isDisplaySafe(text) ? "" : "font-display-vn";
 }

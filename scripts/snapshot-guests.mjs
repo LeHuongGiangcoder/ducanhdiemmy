@@ -48,9 +48,9 @@ const rows = guests
     return [
       "  {",
       `    slug: ${JSON.stringify(g.slug)},`,
-      `    salutation: ${JSON.stringify(g.salutation || "Dear")},`,
       `    name: ${JSON.stringify(g.name)},`,
       `    seats: ${Number.isFinite(seats) && seats > 0 ? seats : 2},`,
+      `    lang: ${JSON.stringify(g.lang === "vi" ? "vi" : "en")},`,
       "  },",
     ].join("\n");
   })

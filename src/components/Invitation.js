@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import DressCode from "./DressCode";
+import { LanguageProvider } from "./LanguageProvider";
 import Hero from "./Hero";
 import Intro from "./Intro";
 import Menu from "./Menu";
@@ -91,7 +92,7 @@ export default function Invitation({ guest, bypassIntro = false }) {
   }, []);
 
   return (
-    <>
+    <LanguageProvider lang={guest.lang}>
       <audio
         ref={audioRef}
         src={MUSIC_SRC}
@@ -117,7 +118,7 @@ export default function Invitation({ guest, bypassIntro = false }) {
         visible={gateGone && hasAudio}
       />
       <Menu visible={gateGone} />
-    </>
+    </LanguageProvider>
   );
 }
 

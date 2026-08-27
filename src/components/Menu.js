@@ -1,17 +1,15 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useContent } from "./LanguageProvider";
+import { fallbackFontClass } from "@/lib/aegean";
 import styles from "./Menu.module.css";
 
-const LINKS = [
-  { href: "#home", label: "Home" },
-  { href: "#venue", label: "Venue" },
-  { href: "#dress-code", label: "Dress Code" },
-  { href: "#timeline", label: "Timeline" },
-  { href: "#rsvp", label: "R.S.V.P." },
-];
+/** Targets only — the labels are per-language, matched by position. */
+const LINKS = ["#home", "#venue", "#dress-code", "#timeline", "#rsvp"];
 
 export default function Menu({ visible }) {
+  const { t } = useContent();
   const [open, setOpen] = useState(false);
 
   const toggleMenu = useCallback(() => {
@@ -52,7 +50,7 @@ export default function Menu({ visible }) {
         type="button"
         onClick={toggleMenu}
         className={`btn-icon ${styles.toggle} ${visible ? styles.on : ""}`}
-        aria-label={open ? "Close menu" : "Open menu"}
+        aria-label={open ? t.menu.close : t.menu.open}
         aria-expanded={open}
       >
         <span className={styles.icon} aria-hidden="true">
@@ -72,15 +70,15 @@ export default function Menu({ visible }) {
 
       <div className={`${styles.overlay} ${open ? styles.overlayOpen : ""}`} aria-hidden={!open}>
         <nav className={styles.nav}>
-          {LINKS.map((link) => (
+          {LINKS.map((href, i) => (
             <a
-              key={link.href}
-              href={link.href}
-              onClick={(e) => scrollTo(e, link.href)}
-              className={styles.link}
+              key={href}
+              href={href}
+              onClick={(e) => scrollTo(e, href)}
+              className={`${styles.link} ${fallbackFontClass(t.menu.links[i])}`}
               tabIndex={open ? 0 : -1}
             >
-              {link.label}
+              {t.menu.links[i]}
             </a>
           ))}
         </nav>
