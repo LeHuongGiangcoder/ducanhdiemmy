@@ -70,7 +70,7 @@ export const dressCode = {
 
 export const thankYou = {
   headline: "Thank You",
-  body: "Some moments are made all the more meaningful by the people we share them with. Thank you for being part of ours.",
+  body: "Some moments are made\nall the more meaningful\nby the people we share them with.\nThank you for being part of ours.",
   signoff: "With Love",
 };
 
