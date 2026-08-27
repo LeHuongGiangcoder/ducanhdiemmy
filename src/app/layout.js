@@ -5,10 +5,10 @@ import "./globals.css";
 export const metadata = {
   metadataBase: new URL("https://ducanhdiemmy.gloweb.site"),
   title: `${couple.groom} & ${couple.bride} — Wedding Invitation`,
-  description: `Join us at ${wedding.venue.name} on ${wedding.dateLabel}.\n\n(Please view on mobile.)`,
+  description: `Join us at ${wedding.venue.name} on ${wedding.dateLabel}.`,
   openGraph: {
     title: `${couple.groom} & ${couple.bride}`,
-    description: `${wedding.dateLabel} · ${wedding.venue.name}\n\n(Please view on mobile.)`,
+    description: `${wedding.dateLabel} · ${wedding.venue.name}`,
     type: "website",
     images: ["/social_preview_v2.jpg"],
   },

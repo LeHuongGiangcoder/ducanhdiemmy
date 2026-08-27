@@ -53,7 +53,7 @@
      against the column, not the window. Using real `vw` would let type and
      gutters grow to the desktop window while the column stayed narrow. */
   --frame: 100vw;
-  --vw: 1vw;
+  --vw: calc(var(--frame) / 100); /* derived — only ever set --frame */
 
   /* ---- Type ------------------------------------------------------------- */
   --font-heading: var(--font-display), "Cormorant Garamond", Georgia, serif;
@@ -153,13 +153,13 @@ html {
 
 /*
  * Past this width the window is wider than any phone, so the column stops
- * growing and `--vw` freezes at 1% of it (430 / 100). Below it, the column is
- * the window and `--vw` is a real `vw` — the phone case is untouched.
+ * growing — and `--vw`, being 1% of it, freezes with it. Below this the column
+ * is the window and `--vw` resolves to a real `vw`: the phone case is
+ * untouched, down to the computed pixel.
  */
 @media (min-width: 480px) {
   :root {
     --frame: 430px;
-    --vw: 4.3px;
   }
 }
 
