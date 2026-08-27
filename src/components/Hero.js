@@ -160,7 +160,16 @@ export default function Hero({ guest, started, revealing }) {
         preload="auto"
         aria-hidden="true"
       >
-        <source src="/hero_mobile.mp4" media="(max-width: 768px)" type="video/mp4" />
+        {/*
+         * One source, the full-resolution one, on every device.
+         *
+         * There used to be a 320x568 file behind `media="(max-width: 768px)"`.
+         * A phone that reports 393pt of width paints it on ~1170 physical
+         * pixels, so that file arrived upscaled nearly 4x and the card read as
+         * soft — the couple's own names among the worst of it. The saving was
+         * real (0.9 MB against 7 MB) but it was being taken out of the one
+         * thing a guest looks at.
+         */}
         <source src="/hero%20final.mp4" type="video/mp4" />
       </video>
 
