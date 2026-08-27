@@ -85,7 +85,7 @@ export default function Hero({ guest, started, revealing }) {
   }, []);
 
   return (
-    <section
+    <section id="home"
       ref={stageRef}
       className={[
         styles.hero,
