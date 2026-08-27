@@ -8,7 +8,12 @@
  */
 
 const SHEET_NAME = 'Guests';
-const SECRET = 'anhducanhchidiemmywedding';
+/**
+ * Đổi thành một chuỗi ngẫu nhiên thật dài. Đây là thứ duy nhất canh cửa Web App
+ * (Web App phải để "Anyone" mới gọi vào được), nên đừng commit giá trị thật lên
+ * git — chỉ dán vào Apps Script và vào biến môi trường RSVP_SHARED_SECRET.
+ */
+const SECRET = 'CHANGE-ME-to-a-long-random-string';
 
 /** Đổi thành domain thật sau khi deploy — chỉ dùng để dựng cột Link. */
 const SITE_ORIGIN = 'https://ducanhdiemmy.vercel.app';
