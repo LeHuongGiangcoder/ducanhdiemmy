@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { snapshot } from "@/data/guests";
 
 /**
@@ -8,10 +9,16 @@ import { snapshot } from "@/data/guests";
  * same Apps Script Web App that receives RSVPs answers the read, so there is
  * one URL and one secret to configure (see docs/RSVP_SETUP.md).
  *
+ * The read goes through unstable_cache, not a hand-rolled timer. That is not
+ * only about hit rate: an uncached fetch inside a page that exports
+ * `revalidate` throws "Page changed from static to dynamic at runtime" the
+ * first time an invitation is rendered on demand. Cached data keeps the
+ * invitation pages prerenderable, which is what makes them fast.
+ *
  * Availability matters more than freshness here — a guest tapping their link
  * must never see a 404 because Google was slow. Three levels of fallback:
  *
- *   1. in-process cache, refreshed every TTL_MS
+ *   1. the Next data cache, refreshed every GUESTS_TTL_SECONDS
  *   2. the last good response, however old, if the sheet read fails
  *   3. src/data/guests.js — a snapshot committed to git, so even a cold
  *      instance during a Google outage still serves every invitation
@@ -22,21 +29,28 @@ const SECRET = process.env.RSVP_SHARED_SECRET;
 
 /** Matches `export const revalidate` on the invitation pages. */
 export const GUESTS_TTL_SECONDS = 60;
-const TTL_MS = GUESTS_TTL_SECONDS * 1000;
 
-let cache = { at: 0, list: null };
+/**
+ * Shared by every render in a build and by every request after it, so
+ * generateStaticParams and the page body can never disagree about who exists.
+ */
+const readSheet = unstable_cache(fetchFromSheet, ["guest-registry"], {
+  revalidate: GUESTS_TTL_SECONDS,
+  tags: ["guests"],
+});
+
+/** Survives a failed refresh; only ever holds a list the sheet really returned. */
+let lastGood = null;
 
 export async function getGuests() {
-  if (cache.list && Date.now() - cache.at < TTL_MS) return cache.list;
-
   if (!ENDPOINT) return snapshot; // sheet not wired up yet
   try {
-    const list = await fetchFromSheet();
-    cache = { at: Date.now(), list };
+    const list = await readSheet();
+    lastGood = list;
     return list;
   } catch (error) {
     console.error("[guests] sheet read failed", error);
-    return cache.list ?? snapshot;
+    return lastGood ?? snapshot;
   }
 }
 
@@ -56,7 +70,7 @@ async function fetchFromSheet() {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ action: "guests", secret: SECRET }),
-    // This module does its own caching; Next must not layer another on top.
+    // unstable_cache above owns the caching; this fetch is the cache miss.
     cache: "no-store",
     signal: AbortSignal.timeout(10_000),
   });
