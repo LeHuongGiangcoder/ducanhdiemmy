@@ -61,8 +61,8 @@ export const dressCode = {
   headline: "Elegant & formal attire",
   paletteHeading: "Dress Palette",
   swatches: [
-    { name: "Midnight Blue", hex: "#0A1422" },
-    { name: "Ocean Blue", hex: "#3d6285" },
+    { name: "Midnight\nBlue", hex: "#0A1422" },
+    { name: "Ocean\nBlue", hex: "#3d6285" },
     { name: "Black", hex: "#111111" },
     { name: "Ivory", hex: "#e8dcc8" },
   ],
