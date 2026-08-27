@@ -11,6 +11,18 @@
 
 export const snapshot = [
   {
+    slug: "long-name-test",
+    salutation: "Dear",
+    name: "Mr. Jason Lau & Ms. Dung Dang",
+    seats: 2,
+  },
+  {
+    slug: "long-vn-test",
+    salutation: "Dear",
+    name: "Ông Nguyễn Văn Thành & Bà Trần Thị Phương Loan",
+    seats: 4,
+  },
+  {
     slug: "mr-nguyen-van-an",
     salutation: "Dear",
     name: "Mr. Nguyễn Văn An",

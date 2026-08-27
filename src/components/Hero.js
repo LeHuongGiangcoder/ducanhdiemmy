@@ -46,8 +46,19 @@ const SLOT_X = 0.5113;
 /** Name size as a fraction of the frame, so it tracks the video's own type. */
 const NAME_SIZE = 0.025;
 
+/*
+ * How much of the slot a name may occupy. The slot is the whole gap between
+ * "Dear" and the wishes line; a name that fills it edge to edge reads as
+ * colliding with both even while it technically fits, so long names are given
+ * air rather than the last pixel.
+ */
+const SLOT_FILL = 0.82;
+/** Never shrink past this — below it the name stops reading as the same card. */
+const MIN_FIT = 0.62;
+
 export default function Hero({ guest, started, revealing }) {
   const stageRef = useRef(null);
+  const nameRef = useRef(null);
   const [box, setBox] = useState(null);
   const nameSafe = isDisplaySafe(guest.name);
 
@@ -83,6 +94,48 @@ export default function Hero({ guest, started, revealing }) {
     observer.observe(stage);
     return () => observer.disconnect();
   }, []);
+
+  /**
+   * Shrink a name that outgrows its slot.
+   *
+   * "Mr. Jason Lau & Ms. Dung Dang" is two and a half times the length of
+   * "James Carter" and wraps to two lines, which fills the gap the video left
+   * for one. Rather than guess a size from character count — which breaks the
+   * moment a name is in the other typeface, or carries a wide glyph — the
+   * rendered height is measured and the size divided down until it fits.
+   *
+   * Two passes: shrinking can un-wrap a line, which changes the height it was
+   * solving for. It converges immediately in practice; the loop is the guard.
+   */
+  useEffect(() => {
+    const name = nameRef.current;
+    if (!name || !box) return;
+
+    let cancelled = false;
+
+    const fit = () => {
+      if (cancelled || !nameRef.current) return;
+      const el = nameRef.current;
+      const budget = box.height * SLOT_HEIGHT * SLOT_FILL;
+
+      let scale = 1;
+      el.style.setProperty("--name-fit", "1");
+      for (let pass = 0; pass < 2; pass++) {
+        const height = el.scrollHeight;
+        if (height <= budget) break;
+        scale = Math.max(MIN_FIT, scale * (budget / height));
+        el.style.setProperty("--name-fit", String(scale));
+      }
+    };
+
+    fit();
+    // Metrics change when the real face swaps in for the fallback, so measure
+    // again once it has — otherwise a long name is fitted to the wrong font.
+    document.fonts?.ready.then(fit).catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [box, guest.name]);
 
   return (
     <section id="home"
@@ -140,6 +193,7 @@ export default function Hero({ guest, started, revealing }) {
           }}
         >
           <h1
+            ref={nameRef}
             className={[
               styles.guestName,
               nameSafe ? styles.guestDisplay : styles.guestFallback,
