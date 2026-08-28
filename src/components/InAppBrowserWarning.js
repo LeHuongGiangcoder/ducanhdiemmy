@@ -16,14 +16,16 @@ import styles from "./InAppBrowserWarning.module.css";
  *
  *   Android — a webview can hand a URL to Chrome through an `intent://` URL.
  *             This works, and it is attempted automatically.
- *   iOS     — there is no supported way for an app's webview to open Safari.
- *             Apple does not expose one. The `x-safari-https:` scheme is
- *             honoured by some hosts and ignored by others; it is tried once
- *             because it costs nothing, and then the guest is asked.
+ *   iOS     — nothing works, and attempting it is worse than not. Apple
+ *             exposes no way for an app's webview to open Safari.
+ *             `x-safari-https:` was tried here on the assumption that an
+ *             unknown scheme would simply be ignored; Zalo instead navigated
+ *             away to its own handler and left guests on "the server stopped
+ *             responding", off the invitation entirely. iOS gets instructions
+ *             and a copy-link button, and no button that promises more.
  *
- * So the button is not a fallback for the automatic path — on iOS it *is* the
- * path, and it has to be a real tap either way, since webviews block
- * navigation to another app that no gesture asked for.
+ * The Android button is not a fallback for the automatic path: a webview blocks
+ * navigation to another app that no gesture asked for, so the tap matters.
  */
 
 /** Substrings these apps put in their user agent. */
@@ -57,10 +59,11 @@ function openInBrowser() {
     return;
   }
 
-  if (isIOS()) {
-    window.location.href = `x-safari-https://${host}${pathname}${search}`;
-    return;
-  }
+  // Nothing is attempted on iOS. `x-safari-https:` looked free — a scheme the
+  // webview does not know should be ignored — but Zalo navigates away to its
+  // own handler and strands the guest on "the server stopped responding",
+  // off the invitation entirely. Doing nothing is strictly better than that.
+  if (isIOS()) return;
 
   window.open(href, "_blank", "noopener");
 }
@@ -110,18 +113,29 @@ export default function InAppBrowserWarning() {
           bị vỡ khung hình hoặc mất tiếng.
         </p>
 
-        <button type="button" className={styles.action} onClick={openInBrowser}>
-          {isAndroid() ? "Mở bằng Chrome" : "Mở bằng Safari"}
-        </button>
-
-        <p className={styles.hint}>
-          Nếu nút trên không mở được, bấm nút <strong>… (ba chấm)</strong> ở góc
-          màn hình rồi chọn <strong>“Mở bằng trình duyệt”</strong>.
-        </p>
-
-        <button type="button" className={styles.copy} onClick={copyLink}>
-          {copied ? "Đã chép link ✓" : "Chép link để dán vào trình duyệt"}
-        </button>
+        {isAndroid() ? (
+          <>
+            <button type="button" className={styles.action} onClick={openInBrowser}>
+              Mở bằng Chrome
+            </button>
+            <p className={styles.hint}>
+              Nếu nút trên không mở được, bấm nút <strong>… (ba chấm)</strong> ở
+              góc màn hình rồi chọn <strong>“Mở bằng trình duyệt”</strong>.
+            </p>
+          </>
+        ) : (
+          /* iOS has no button that can do this, so the copy is the action and
+             the menu is the instruction — no button that promises otherwise. */
+          <>
+            <p className={styles.hint}>
+              Bấm nút <strong>… (ba chấm)</strong> ở góc dưới bên phải, rồi chọn{" "}
+              <strong>“Mở bằng Safari”</strong>.
+            </p>
+            <button type="button" className={styles.action} onClick={copyLink}>
+              {copied ? "Đã chép link ✓" : "Hoặc chép link"}
+            </button>
+          </>
+        )}
       </div>
     </div>
   );
