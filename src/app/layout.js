@@ -1,4 +1,5 @@
 import { cormorant, dfvnBigBang, tanAegean, tanPearl } from "./fonts";
+import InAppBrowserWarning from "@/components/InAppBrowserWarning";
 import { wedding } from "@/data/wedding";
 import { DEFAULT_LANG, getContent } from "@/data/content";
 import "./globals.css";
@@ -37,6 +38,7 @@ export default function RootLayout({ children }) {
     >
       <body>
         {children}
+        <InAppBrowserWarning />
       </body>
     </html>
   );

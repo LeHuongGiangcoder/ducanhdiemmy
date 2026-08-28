@@ -206,6 +206,9 @@ html {
 body {
   max-width: var(--frame);
   margin-inline: auto;
+  /* vh first: a WebView too old for svh drops the whole declaration and the
+     section collapses to its content instead of filling the screen. */
+  min-height: 100vh;
   min-height: 100svh;
   background: var(--bg);
   color: var(--ink);
@@ -289,6 +292,9 @@ select {
   padding-inline: 0;
 }
 .section--full {
+  /* vh first: a WebView too old for svh drops the whole declaration and the
+     section collapses to its content instead of filling the screen. */
+  min-height: 100vh;
   min-height: 100svh;
   display: grid;
   place-items: center;
@@ -302,6 +308,9 @@ select {
  * viewport instead of clipping its content.
  */
 .section--screen {
+  /* vh first: a WebView too old for svh drops the whole declaration and the
+     section collapses to its content instead of filling the screen. */
+  min-height: 100vh;
   min-height: 100svh;
   display: grid;
   align-content: start; /* heading pinned to --section-head-offset, not centred */

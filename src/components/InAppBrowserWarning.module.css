@@ -71,3 +71,43 @@
     transform: translateY(-5px) translateX(5px);
   }
 }
+
+/* The button is the whole point on iOS, where nothing can happen without a
+   real tap, so it is styled as the primary action rather than an afterthought. */
+.action {
+  display: block;
+  width: 100%;
+  margin-top: var(--s-5);
+  padding: 0.9rem 1.5rem;
+  font-family: var(--font-body);
+  font-size: var(--t-small);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--navy-deep);
+  background: var(--gold);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.hint {
+  margin-top: var(--s-4);
+  font-family: var(--font-body);
+  font-size: var(--t-fine);
+  line-height: 1.5;
+  opacity: 0.8;
+}
+
+/* Last resort for a webview that blocks the scheme outright and shows no menu. */
+.copy {
+  margin-top: var(--s-4);
+  padding: 0.5rem 0.75rem;
+  font-family: var(--font-body);
+  font-size: var(--t-fine);
+  color: var(--gold);
+  background: none;
+  border: none;
+  border-bottom: 1px solid currentColor;
+  cursor: pointer;
+}

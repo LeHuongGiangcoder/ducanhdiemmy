@@ -1,5 +1,8 @@
 .hero {
   position: relative;
+  /* vh first: a WebView too old for svh drops the whole declaration and the
+     section collapses to its content instead of filling the screen. */
+  min-height: 100vh;
   min-height: 100svh;
   background: var(--navy-deep);
   overflow: hidden;
