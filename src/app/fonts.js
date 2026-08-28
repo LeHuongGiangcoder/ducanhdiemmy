@@ -32,7 +32,9 @@ export const tanPearl = localFont({
  * name still looks like a name on an invitation.
  */
 export const dfvnBigBang = localFont({
-  src: "../../public/font/DFVN Big Bang.otf",
+  // No space in the filename: it ends up in the font URL, and an older
+  // in-app webview handling %20 badly means the face silently never arrives.
+  src: "../../public/font/dfvn-big-bang.otf",
   variable: "--font-display-vn",
   weight: "400",
   style: "normal",

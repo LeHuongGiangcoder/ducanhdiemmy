@@ -1,7 +1,7 @@
 """
 Dò và sửa các lỗi vẽ chữ trong file font.
 
-    python3 scripts/fix-font-defects.py "public/font/DFVN Big Bang.otf"
+    python3 scripts/fix-font-defects.py "public/font/dfvn-big-bang.otf"
 
 DFVN Big Bang mang hai lỗi, cả hai đều chỉ lộ ra khi đã lên màn hình:
 

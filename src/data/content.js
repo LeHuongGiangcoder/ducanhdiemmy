@@ -121,7 +121,7 @@ const vi = {
       { title: "Lễ Thành Hôn" },
       { title: "Khai Tiệc", subtitle: "Tiệc tối, rượu vang & rượu mạnh tuyển chọn, biểu diễn trực tiếp & bốc thăm may mắn" },
       { title: "Chương Trình Giao Lưu", subtitle: "Trò chơi, quà tặng & những khoảnh khắc đặc biệt" },
-      { title: "DJ & After Party", subtitle: "Âm nhạc, đồ uống & quẩy" },
+      { title: "DJ & After Party", subtitle: "Âm nhạc, đồ uống & dancing" },
     ],
     note: "Vui lòng giữ số may mắn bên mình\ntrong suốt buổi tiệc.",
   },
