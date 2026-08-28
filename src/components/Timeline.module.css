@@ -39,7 +39,10 @@
 
 .time {
   font-family: var(--font-heading);
-  font-size: var(--t-fine);
+  /* One step up from --t-fine, and half a weight heavier: the times are the
+     spine of this section and were reading as a caption beside the events. */
+  font-size: var(--t-small);
+  font-weight: 500;
   letter-spacing: 0.06em;
   color: var(--gold);
   font-variant-numeric: tabular-nums;
@@ -150,6 +153,17 @@
   font-style: italic;
   color: var(--cream);
   text-wrap: pretty;
+}
+
+/*
+ * Vietnamese sets longer than the English it was translated from — "Tiệc tối,
+ * rượu vang & rượu mạnh tuyển chọn…" runs a line further than "Dinner, curated
+ * wines & spirits…" — and was breaking hard against the right edge. Pull the
+ * column in so the ragged edge has somewhere to be.
+ */
+[data-lang="vi"] .title,
+[data-lang="vi"] .subtitle {
+  padding-right: var(--s-6);
 }
 
 .note {

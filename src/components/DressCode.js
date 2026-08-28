@@ -21,7 +21,7 @@ export default function DressCode() {
     <section id="dress-code" className={`section section--pattern-wine ${styles.section}`}>
       <div className={`shell stack center ${styles.shell}`}>
         <Reveal className="masthead">
-          <p className={`eyebrow ${fallbackFontClass(t.dressCode.eyebrow)}`}>{t.dressCode.eyebrow}</p>
+          <p className="eyebrow">{t.dressCode.eyebrow}</p>
           <h2 className={`h-1 ${fallbackFontClass(t.dressCode.title)}`}>{t.dressCode.title}</h2>
           <p className={styles.headline}>{t.dressCode.headline}</p>
         </Reveal>

@@ -45,7 +45,7 @@ export default function Venue() {
     <section id="venue" className={`section section--screen section--pattern-navy ${styles.section}`}>
       <div className={`shell stack center ${styles.shell}`}>
         <Reveal className="masthead">
-          <p className={`eyebrow ${fallbackFontClass(t.venue.eyebrow)}`}>{t.venue.eyebrow}</p>
+          <p className="eyebrow">{t.venue.eyebrow}</p>
           <h2 className={`h-1 ${fallbackFontClass(t.venue.title)}`}>{t.venue.title}</h2>
         </Reveal>
 

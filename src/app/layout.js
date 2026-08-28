@@ -2,8 +2,6 @@ import { cormorant, dfvnBigBang, tanAegean, tanPearl } from "./fonts";
 import { wedding } from "@/data/wedding";
 import { DEFAULT_LANG, getContent } from "@/data/content";
 import "./globals.css";
-import InAppBrowserWarning from "@/components/InAppBrowserWarning";
-
 /* The shared link has no guest, so it carries the default language. */
 const site = getContent(DEFAULT_LANG).intro;
 
@@ -38,7 +36,6 @@ export default function RootLayout({ children }) {
       className={`${tanAegean.variable} ${tanPearl.variable} ${dfvnBigBang.variable} ${cormorant.variable}`}
     >
       <body>
-        <InAppBrowserWarning />
         {children}
       </body>
     </html>

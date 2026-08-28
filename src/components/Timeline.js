@@ -56,7 +56,7 @@ export default function Timeline() {
     <section id="timeline" className={`section section--screen section--pattern-navy ${styles.section}`}>
       <div className={`shell stack center ${styles.shell}`}>
         <Reveal className="masthead">
-          <p className={`eyebrow ${fallbackFontClass(t.timeline.eyebrow)}`}>{t.timeline.eyebrow}</p>
+          <p className="eyebrow">{t.timeline.eyebrow}</p>
           <h2 className={`h-1 ${fallbackFontClass(t.timeline.title)}`}>{t.timeline.title}</h2>
         </Reveal>
 
@@ -94,7 +94,7 @@ export default function Timeline() {
         </ol>
 
         <Reveal delay={80} className={styles.note}>
-          <p className="fine">{t.timeline.note}</p>
+          <p className="fine" style={{ whiteSpace: "pre-line" }}>{t.timeline.note}</p>
         </Reveal>
 
         <Reveal delay={120}>

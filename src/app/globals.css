@@ -63,7 +63,11 @@
   /* DFVN Big Bang sits on a 699 cap-height against Aegean's 1000; without this
      the same font-size renders visibly smaller. */
   --font-heading-vn-scale: 1.42;
-  --font-body: var(--font-body), Georgia, serif;
+  /* The face variable is --font-text, not --font-body: a custom property that
+     references itself is invalid per spec, so `--font-body: var(--font-body)…`
+     computed to nothing and every rule reading it — body copy, eyebrows, the
+     RSVP form — silently fell back to the browser's default serif. */
+  --font-body: var(--font-text), "Cormorant Garamond", Georgia, serif;
 
   /* Fluid scale. Mobile value → desktop ceiling. */
   --t-couple: clamp(2.75rem, calc(12.5 * var(--vw)), 6rem);
@@ -1100,20 +1104,15 @@ legend.label {
   --font-couple-name: var(--font-heading-vn);
 }
 
-/* Paired with fallbackFontClass() in src/lib/aegean.js: applied only to a
-   string the TAN faces cannot set, which in practice means Vietnamese. The
-   size bump answers DFVN Big Bang's 699 cap-height against TAN's 1000 —
-   without it a Vietnamese heading reads a third smaller than its English
-   counterpart at the same font-size. */
+/* Paired with fallbackFontClass() in src/lib/aegean.js: applied to a string the
+   TAN faces cannot set, which in practice means Vietnamese.
+   
+   Face only, no size. It used to carry `font-size: calc(1em * 1.42)` to answer
+   DFVN Big Bang's shorter cap-height, but `em` inside font-size resolves
+   against the PARENT, so the declaration did not scale the heading — it
+   replaced it. "Địa điểm" came out at 22.7px against the 36px of the "Timeline"
+   beside it, and every Vietnamese heading was sized by whatever happened to
+   contain it. Sizes belong to .h-1 … .h-4 and nothing else may set them. */
 .font-display-vn {
   font-family: var(--font-heading-vn);
-  font-size: calc(1em * var(--font-heading-vn-scale, 1.42));
-}
-
-/* Eyebrows are set in caps on wide tracking, where a full cap-height match
-   turns the label into the loudest thing in the masthead — and pushes a line
-   like "TRANG PHỤC DỰ TIỆC" onto two lines above the heading it introduces. */
-.eyebrow.font-display-vn {
-  --font-heading-vn-scale: 1.15;
-  letter-spacing: 0.16em;
 }

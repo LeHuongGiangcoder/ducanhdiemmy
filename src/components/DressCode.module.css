@@ -123,7 +123,10 @@
   font-size: 3.9cqw;
   line-height: 1.1;
   letter-spacing: var(--track-display);
-  font-weight: 400;
+  /* Both display faces ship a single weight, so this is a synthetic bold. It
+     is doing real work here: the label sits on a photographed card in low
+     contrast, where 400 reads as a smudge rather than a heading. */
+  font-weight: 600;
   white-space: nowrap;
   color: #5c4736;
 }

@@ -55,7 +55,7 @@ export default function ThankYou() {
           <div className="rule-mark" aria-hidden="true">
             <span className="rule-mark__dot" />
           </div>
-          <p className={`eyebrow ${fallbackFontClass(t.thankYou.signoff)}`}>{t.thankYou.signoff}</p>
+          <p className="eyebrow">{t.thankYou.signoff}</p>
           <p className={`h-2 ${styles.signature}`}>{couple.initials}</p>
           <p className="eyebrow">{wedding.dateShort}</p>
         </Reveal>

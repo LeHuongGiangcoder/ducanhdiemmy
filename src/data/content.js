@@ -97,7 +97,7 @@ const vi = {
     cta: "Mở thiệp mời",
   },
   hero: {
-    src: "/hero%20final%20viet.mp4",
+    src: "/hero%20final%20viet.mp4?v=2",
     salutation: "Trân trọng kính mời",
   },
   venue: {
@@ -123,7 +123,7 @@ const vi = {
       { title: "Chương Trình Giao Lưu", subtitle: "Trò chơi, quà tặng & những khoảnh khắc đặc biệt" },
       { title: "DJ & After Party", subtitle: "Âm nhạc, đồ uống & quẩy" },
     ],
-    note: "Vui lòng giữ số may mắn bên mình trong suốt buổi tiệc.",
+    note: "Vui lòng giữ số may mắn bên mình\ntrong suốt buổi tiệc.",
   },
   rsvp: {
     eyebrow: "Xác nhận tham dự",

@@ -54,7 +54,7 @@ export const cormorant = localFont({
       style: "italic",
     },
   ],
-  variable: "--font-body",
+  variable: "--font-text",
   display: "swap",
   fallback: ["Georgia", "serif"],
 });
