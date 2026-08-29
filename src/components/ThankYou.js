@@ -24,7 +24,7 @@ export default function ThankYou() {
     <section className={`section section--screen ${styles.section}`}>
       <div className={styles.backdrop} aria-hidden="true">
         <Image
-          src="/assets/thankyou-bg.png"
+          src="/assets/thankyou-bg.jpg"
           alt=""
           fill
           quality={90}
