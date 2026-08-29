@@ -167,7 +167,7 @@
 }
 
 .note {
-  max-width: 30ch;
+  max-width: min(36ch, 100%);
   text-align: center;
   color: var(--cream);
   opacity: 0.75;

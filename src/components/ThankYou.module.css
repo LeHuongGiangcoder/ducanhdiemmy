@@ -7,8 +7,7 @@
   background-color: var(--navy-deep);
   /*
    * The one section that does not pin its heading to `--section-head-offset`.
-   * With no scrim over the photograph the copy has to find its own ground, and
-   * centring the block puts it on the water below the horizon while keeping
+   * Centring the block puts it on the water below the horizon while keeping
    * the screen balanced — dropped any lower it pooled at the bottom.
    */
   align-content: center;
@@ -27,10 +26,51 @@
 .backdropImage {
   object-fit: cover;
   /*
-   * Framed low: without a scrim the copy has to find its own dark ground, and
-   * that is the water below the horizon, not the sky.
+   * Framed low: the copy wants the water below the horizon under it, not the
+   * sky. The scrim below does the lifting, but the framing still matters —
+   * over the sunset band no survivable amount of scrim would keep the type
+   * legible without flattening the photograph into a grey plate.
    */
   object-position: center 22%;
+}
+
+/*
+ * The scrim.
+ *
+ * This section used to run the photograph untinted, which worked while the
+ * artwork was a dark, heavily compressed re-encode. The restored original is a
+ * far brighter, far more detailed frame — the water carries live specular
+ * highlights now — and cream type at 70% opacity had nothing left to sit on.
+ *
+ * Two layers rather than one flat wash, so the photograph survives:
+ *
+ *  - a radial pool centred on the copy block, densest where the words are and
+ *    gone by the edges, so the sunset keeps its light at the corners;
+ *  - a gentle vertical wash that steadies the top and settles the bottom into
+ *    the section's own navy, so the bleed has no visible seam.
+ *
+ * Tinted with --navy-deep rather than black: a neutral black scrim greys the
+ * warm end of the sunset, while the navy reads as dusk over the same water.
+ */
+.backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      118% 58% at 50% 48%,
+      rgb(9 32 58 / 0.74) 0%,
+      rgb(9 32 58 / 0.58) 42%,
+      rgb(9 32 58 / 0.22) 74%,
+      rgb(9 32 58 / 0) 100%
+    ),
+    linear-gradient(
+      to bottom,
+      rgb(9 32 58 / 0.42) 0%,
+      rgb(9 32 58 / 0.14) 26%,
+      rgb(9 32 58 / 0.24) 62%,
+      rgb(9 32 58 / 0.58) 100%
+    );
 }
 
 /* ---- Content ------------------------------------------------------------ */
@@ -77,4 +117,63 @@
  */
 [data-lang="vi"] .signature {
   font-size: calc(var(--t-h2) * var(--font-heading-vn-scale, 1.42));
+}
+
+/* ---- Type over the photograph ------------------------------------------ */
+
+/*
+ * Everything below answers one problem: this is the only screen whose type has
+ * a photograph under it rather than a flat ground, so the section has to buy
+ * back the contrast the other sections get for free. The scrim does most of
+ * that; these rules do the rest, on the type itself.
+ *
+ * The shadow is legibility, not decoration — a wide, very soft navy halo that
+ * never reads as a drop shadow, only as the type sitting a little forward of
+ * the water. Anything tighter than this shows up as an edge.
+ */
+.section :global(.h-1),
+.section :global(.body),
+.section :global(.eyebrow),
+.section .signature {
+  text-shadow:
+    0 1px 2px rgb(9 32 58 / 0.5),
+    0 2px 18px rgb(9 32 58 / 0.62);
+}
+
+/*
+ * The headline carries a second, warm halo on top of the navy one. It picks up
+ * the sunset behind it rather than fighting it, which is what keeps the mark
+ * from looking pasted onto the photograph — kept under 0.2 alpha and spread
+ * wide, so it reads as light coming off the words, never as a glow effect.
+ */
+.section :global(.h-1) {
+  text-shadow:
+    0 1px 2px rgb(9 32 58 / 0.5),
+    0 2px 18px rgb(9 32 58 / 0.62),
+    0 0 52px rgb(244 236 223 / 0.18),
+    0 0 96px rgb(198 167 95 / 0.14);
+}
+
+/*
+ * Body copy defaults to --ink-soft, cream at 70%. That is right on a flat navy
+ * ground and too thin over water: the 30% the token gives away is exactly the
+ * contrast this section cannot spare. 90% keeps the copy subordinate to the
+ * headline without letting the photograph through it.
+ *
+ * Cormorant is a light-boned face besides, so the same rule takes it off 400 —
+ * a variable axis, so no extra file is fetched for the weight.
+ */
+.section :global(.body) {
+  color: rgb(232 220 200 / 0.9);
+  font-weight: 500;
+}
+
+/*
+ * Vietnamese stacks tone marks above the letterform, and those marks are the
+ * first thing the water eats — they are thin, they sit clear of the x-height,
+ * and they land on the brightest part of the frame. One step further up the
+ * weight axis puts them back.
+ */
+[data-lang="vi"] .section :global(.body) {
+  font-weight: 550;
 }
