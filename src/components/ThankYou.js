@@ -57,7 +57,7 @@ export default function ThankYou() {
           </div>
           <p className="eyebrow">{t.thankYou.signoff}</p>
           <p className={`h-2 ${styles.signature}`}>{couple.initials}</p>
-          <p className="eyebrow">{wedding.dateShort}</p>
+          <p className="eyebrow date-text">{wedding.dateShort}</p>
         </Reveal>
       </div>
     </section>

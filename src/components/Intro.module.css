@@ -131,7 +131,7 @@
   align-items: center;
   gap: var(--s-3);
   /* Held to one line: the rules only work with the date unbroken between them. */
-  font-size: var(--t-fine);
+  font-size: var(--t-date);
   white-space: nowrap;
   text-transform: uppercase;
   letter-spacing: var(--track-eyebrow);
