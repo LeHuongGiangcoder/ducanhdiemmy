@@ -173,11 +173,40 @@
   padding-right: var(--s-6);
 }
 
+/*
+ * The closing note. The Vietnamese copy carries its own line break (a \n, set
+ * with white-space: pre-line) because the client asked for exactly two lines,
+ * so nothing here may re-wrap it while its lines still fit.
+ *
+ * Two things had to change for that to hold on a real phone, where it was
+ * coming out in three lines while Chrome at the same 375px showed two:
+ *
+ * 1. The measure is capped on the paragraph, in `em`, not on this wrapper in
+ *    `ch`. `ch` is the width of "0" in the element it is declared on — and
+ *    that was this div, which carries no text: 16px upright Cormorant, while
+ *    the note itself sets 14px italic. The cap was being computed from a font
+ *    the reader never sees. `em` on the paragraph tracks the real type.
+ *
+ * 2. text-wrap is forced back to `wrap`. .fine asks for `pretty`, and Safari
+ *    implements it as a whole-paragraph optimiser rather than Chrome's
+ *    last-lines-only pass — it is free to even out the ragged edge across the
+ *    forced break and hand back three balanced lines instead of the two the
+ *    copy asks for. Plain greedy wrapping cannot do that: it breaks only when
+ *    a line genuinely does not fit.
+ */
 .note {
-  max-width: min(36ch, 100%);
+  max-width: 100%;
   text-align: center;
   color: var(--cream);
   opacity: 0.75;
+}
+
+.note :global(.fine) {
+  /* 22em ≈ 308px at the note's 14px — room for the English note, which has no
+     break of its own, while the longest Vietnamese line needs 12.4em. */
+  max-width: 22em;
+  margin-inline: auto;
+  text-wrap: wrap;
 }
 
 .cherub {
