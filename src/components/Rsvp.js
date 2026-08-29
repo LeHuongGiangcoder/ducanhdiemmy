@@ -60,7 +60,7 @@ export default function Rsvp({ guest }) {
       <div className="shell stack center">
         <Reveal className="masthead">
           <p className="eyebrow">{t.rsvp.eyebrow}</p>
-          <h2 className={`h-1 ${fallbackFontClass(t.rsvp.title)}`}>{t.rsvp.title}</h2>
+          <h2 className={`h-1 display-caps ${fallbackFontClass(t.rsvp.title)}`}>{t.rsvp.title}</h2>
           <p className="body">{t.rsvp.intro}</p>
         </Reveal>
 

@@ -104,7 +104,9 @@
   gap: var(--s-1);
   /* TAN Pearl — the face reserved for the couple's names. */
   font-family: var(--font-couple-name);
-  font-size: calc(var(--t-h1) * 0.85);
+  /* Not .h-couple, so the DFVN correction has to be multiplied in by hand.
+     --display-vn-scale resolves to the Pearl ratio because of the rule below. */
+  font-size: calc(var(--t-h1) * 0.85 * var(--display-vn-scale));
   font-weight: 300;
   line-height: var(--lh-tight);
   letter-spacing: var(--track-display);
@@ -214,4 +216,15 @@
       0 12px 38px -14px #09203ab3,
       0 0 38px -8px rgb(255 255 255 / 0.6);
   }
+}
+
+/*
+ * The names are TAN Pearl, not TAN Aegean, so they take the Pearl→DFVN ratio
+ * rather than the heading one this element would otherwise inherit from
+ * [data-lang="vi"]. Set here for the same reason globals.css sets it on
+ * .h-couple: var() resolves at the declaring element, so overriding the
+ * --vn-scale-* token this far down would come too late.
+ */
+[data-lang="vi"] .names {
+  --display-vn-scale: var(--vn-scale-couple);
 }

@@ -123,14 +123,11 @@
 }
 
 /*
- * DFVN Big Bang stands in for TAN Pearl in the Vietnamese version, and sits on
- * a 699 cap-height against Pearl's 1000 — at the same font-size the signature
- * reads a third shorter than the English one closing the same invitation.
- * Same multiplier the other Vietnamese display type uses.
+ * The size correction used to be applied here by hand. It now rides on .h-2
+ * via --display-vn-scale, and the element carries `display-caps` because the
+ * initials are all capitals — so this rule would double-apply it. See the
+ * optical-size block in globals.css.
  */
-[data-lang="vi"] .signature {
-  font-size: calc(var(--t-h2) * var(--font-heading-vn-scale, 1.42));
-}
 
 /* ---- Type over the photograph ------------------------------------------ */
 

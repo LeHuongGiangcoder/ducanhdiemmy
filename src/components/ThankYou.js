@@ -56,7 +56,7 @@ export default function ThankYou() {
             <span className="rule-mark__dot" />
           </div>
           <p className="eyebrow">{t.thankYou.signoff}</p>
-          <p className={`h-2 ${styles.signature}`}>{couple.initials}</p>
+          <p className={`h-2 display-caps ${styles.signature}`}>{couple.initials}</p>
           <p className="eyebrow date-text">{wedding.dateShort}</p>
         </Reveal>
       </div>

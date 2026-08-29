@@ -60,9 +60,44 @@
   --font-couple-name: var(--font-couple), var(--font-display), Georgia, serif;
   /* Display face for strings TAN Aegean can't set — Vietnamese tone marks. */
   --font-heading-vn: var(--font-display-vn), "Cormorant Garamond", Georgia, serif;
-  /* DFVN Big Bang sits on a 699 cap-height against Aegean's 1000; without this
-     the same font-size renders visibly smaller. */
-  --font-heading-vn-scale: 1.42;
+  /* ---- Optical size match: DFVN Big Bang against the TAN faces -----------
+   *
+   * Measured off the font files with fontTools, normalised to a 1000 upm:
+   *
+   *                   cap-height   x-height
+   *   TAN Aegean          1000        665
+   *   TAN Pearl           1000        728
+   *   DFVN Big Bang        700        547
+   *
+   * At one font-size DFVN therefore sets ~30% smaller caps than either TAN
+   * face, which is why an untouched Vietnamese heading reads small next to the
+   * English one. There is no single correct correction, because DFVN is not a
+   * uniformly smaller face — it is a face with small caps and a large
+   * x-height. Matching caps (1000/700 = 1.43) overshoots the lowercase by 14%;
+   * matching x-heights (1.25) undershoots every capital by 13%.
+   *
+   * So the value depends on what the string is made of, and each token below
+   * is the letter-mix-weighted blend of the two ratios for one case. The
+   * weights come from the actual headings in src/data/content.js — 27 capitals
+   * to 84 lowercase across the Vietnamese set.
+   */
+
+  /* Title Case against TAN Aegean — every section heading. */
+  --vn-scale-title: 1.29;
+  /* Title Case against TAN Pearl, whose larger x-height needs less lifting —
+     the couple's names. */
+  --vn-scale-couple: 1.36;
+  /* All-caps strings, where only cap-height is in play and the two TAN faces
+     agree: 1000/700. "R.S.V.P." and the sign-off initials. */
+  --vn-scale-caps: 1.43;
+
+  /*
+   * The multiplier every display size is written against. 1 everywhere the TAN
+   * faces are in use; the rules further down raise it wherever DFVN takes over,
+   * whether that is the whole Vietnamese invitation or a single Vietnamese
+   * name inside the English one.
+   */
+  --display-vn-scale: 1;
   /* The face variable is --font-text, not --font-body: a custom property that
      references itself is invalid per spec, so `--font-body: var(--font-body)…`
      computed to nothing and every rule reading it — body copy, eyebrows, the
@@ -425,30 +460,42 @@ select {
   text-wrap: balance;
 }
 
+/*
+ * Every display size is multiplied by --display-vn-scale, which is 1 unless
+ * DFVN has taken over the element (see the rules at the foot of this file).
+ * The multiplication lives here, on the size classes, and nowhere else: the
+ * scale cannot be applied on the face rule instead, because `em` inside
+ * font-size resolves against the PARENT — `.font-display-vn { font-size:
+ * calc(1em * s) }` does not scale a heading, it replaces its size with a
+ * multiple of whatever happened to contain it. That bug is in this file's
+ * history; see the note on .font-display-vn.
+ */
+
 /* Couple names only — TAN Pearl is reserved for this. */
 .h-couple {
   font-family: var(--font-couple-name);
-  font-size: var(--t-couple);
+  font-size: calc(var(--t-couple) * var(--display-vn-scale));
   line-height: 1;
 }
 
 .h-hero {
-  font-size: var(--t-hero);
+  font-size: calc(var(--t-hero) * var(--display-vn-scale));
 }
 .h-1 {
-  font-size: var(--t-h1);
+  font-size: calc(var(--t-h1) * var(--display-vn-scale));
 }
 .h-2 {
-  font-size: var(--t-h2);
+  font-size: calc(var(--t-h2) * var(--display-vn-scale));
 }
 .h-3 {
-  font-size: var(--t-h3);
+  font-size: calc(var(--t-h3) * var(--display-vn-scale));
   line-height: var(--lh-snug);
 }
 .h-4 {
-  font-size: var(--t-h4);
+  font-size: calc(var(--t-h4) * var(--display-vn-scale));
   line-height: var(--lh-snug);
 }
+
 
 .eyebrow {
   font-family: var(--font-body);
@@ -1121,6 +1168,35 @@ legend.label {
      in at :root and would inherit down here already resolved. */
   --font-heading: var(--font-heading-vn);
   --font-couple-name: var(--font-heading-vn);
+  /* The face swap is wholesale, so the size correction has to be too. This is
+     what was missing: the scale existed but only two components ever applied
+     it, so every .h-1 … .h-4 in the Vietnamese invitation ran 29% short. */
+  --display-vn-scale: var(--vn-scale-title);
+}
+
+/*
+ * The couple's names are set in TAN Pearl, not TAN Aegean, and Pearl's larger
+ * x-height needs less lifting to meet DFVN.
+ */
+[data-lang="vi"] .h-couple,
+.h-couple.font-display-vn {
+  --display-vn-scale: var(--vn-scale-couple);
+}
+
+/*
+ * All-caps display strings take the cap-height ratio instead of the blended
+ * one — with no lowercase in the string there is nothing for the blend to
+ * average against. Nothing in CSS can detect that a string is all capitals, so
+ * the markup opts in.
+ *
+ * --display-vn-scale is set here rather than the --vn-scale-* token it reads,
+ * because var() substitutes where a property is DECLARED: by the time this
+ * element inherits --display-vn-scale from [data-lang="vi"], that value has
+ * already resolved to --vn-scale-title. Same trap as --font-heading above.
+ */
+[data-lang="vi"] .display-caps,
+.font-display-vn.display-caps {
+  --display-vn-scale: var(--vn-scale-caps);
 }
 
 /* Paired with fallbackFontClass() in src/lib/aegean.js: applied to a string the
@@ -1131,7 +1207,13 @@ legend.label {
    against the PARENT, so the declaration did not scale the heading — it
    replaced it. "Địa điểm" came out at 22.7px against the 36px of the "Timeline"
    beside it, and every Vietnamese heading was sized by whatever happened to
-   contain it. Sizes belong to .h-1 … .h-4 and nothing else may set them. */
+   contain it. Sizes belong to .h-1 … .h-4 and nothing else may set them.
+
+   The size correction now travels as --display-vn-scale, which the .h-* rules
+   multiply into their own font-size, so it survives this constraint. Setting
+   it here covers the case [data-lang="vi"] cannot: a Vietnamese guest name
+   inside the English invitation. */
 .font-display-vn {
   font-family: var(--font-heading-vn);
+  --display-vn-scale: var(--vn-scale-title);
 }

@@ -118,7 +118,12 @@
   font-weight: 400;
   letter-spacing: 0.04em;
   text-indent: 0.04em;
-  --name-scale: var(--font-heading-vn-scale, 1.42);
+  /* A guest's name is Title Case against TAN Aegean — the same case the
+     section headings are in, so it takes the same measured ratio. This rule
+     keeps its own multiplier rather than reading --display-vn-scale, because
+     the name's size is built by the clamp above out of --name-size, not out of
+     any --t-* token, and --name-fit still has to compose with it. */
+  --name-scale: var(--vn-scale-title);
 }
 
 /* Optional private line for a specific guest. */
