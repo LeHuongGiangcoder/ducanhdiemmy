@@ -50,7 +50,10 @@ const en = {
       { title: "Evening Celebration", subtitle: "Games, gifts & special moments" },
       { title: "DJ & After Party", subtitle: "Music, drinks & dancing" },
     ],
-    note: "Please keep your lucky number close throughout the evening.",
+    /* The break is deliberate and matches the Vietnamese note: the closing
+       phrase gets the second line to itself in both versions. Rendered with
+       white-space: pre-line — see .note in Timeline.module.css. */
+    note: "Please keep your lucky number close\nthroughout the evening.",
   },
   rsvp: {
     eyebrow: "Kindly Reply",
