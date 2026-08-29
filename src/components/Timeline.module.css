@@ -160,8 +160,13 @@
  * rượu vang & rượu mạnh tuyển chọn…" runs a line further than "Dinner, curated
  * wines & spirits…" — and was breaking hard against the right edge. Pull the
  * column in so the ragged edge has somewhere to be.
+ *
+ * The subtitles only. The titles used to sit here too, back when a Vietnamese
+ * .h-4 rendered ~30% under its intended size and had room to spare; corrected
+ * to the size it was always meant to be, the longest of them ("Chương Trình
+ * Giao Lưu") needs 243px against the 215px this padding left it, and wrapped.
+ * --t-h4 is chosen to hold these on one line, so the padding gives way.
  */
-[data-lang="vi"] .title,
 [data-lang="vi"] .subtitle {
   padding-right: var(--s-6);
 }
