@@ -161,11 +161,13 @@
  * wines & spirits…" — and was breaking hard against the right edge. Pull the
  * column in so the ragged edge has somewhere to be.
  *
- * The subtitles only. The titles used to sit here too, back when a Vietnamese
- * .h-4 rendered ~30% under its intended size and had room to spare; corrected
- * to the size it was always meant to be, the longest of them ("Chương Trình
- * Giao Lưu") needs 243px against the 215px this padding left it, and wrapped.
- * --t-h4 is chosen to hold these on one line, so the padding gives way.
+ * The subtitles only — they are what the rule was written for, and the example
+ * above is one of them. The titles used to sit here too, back when a Vietnamese
+ * .h-4 rendered ~30% under its intended size and had room to spare. At the size
+ * it was always meant to be, the longest of them — "Chương Trình Giao Lưu",
+ * 243px — no longer fits the 215px column at 375px wide whatever this padding
+ * does, so it wraps to two lines and takes the full column to break in.
+ * --t-h4's "stays on one line" holds for every other title in both languages.
  */
 [data-lang="vi"] .subtitle {
   padding-right: var(--s-6);
