@@ -202,9 +202,12 @@
 }
 
 .note :global(.fine) {
-  /* 22em ≈ 308px at the note's 14px — room for the English note, which has no
-     break of its own, while the longest Vietnamese line needs 12.4em. */
-  max-width: 22em;
+  /* 19em ≈ 266px at the note's 14px. Chosen from both languages at once: the
+     English note has no break of its own and runs 21.3em, so the cap has to
+     land under that to keep it the two lines it has always been; the longest
+     Vietnamese line is 12.4em, which leaves it half its own width again in
+     headroom before anything could re-wrap it. */
+  max-width: 19em;
   margin-inline: auto;
   text-wrap: wrap;
 }
