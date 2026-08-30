@@ -72,10 +72,10 @@ export default function Rsvp({ guest }) {
               inline
               tone="ornament--strong"
             />
-            <p className="lede">
+            <p className="lede" style={{ whiteSpace: "pre-line" }}>
               {attending
-                ? t.rsvp.thanksAccept
-                : t.rsvp.thanksDecline}
+                ? t.rsvp.thanksAccept(name)
+                : t.rsvp.thanksDecline(name)}
             </p>
             {guest.luckyNumber && attending ? (
               <p className="body">
