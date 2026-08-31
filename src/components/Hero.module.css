@@ -70,7 +70,16 @@
 
 .guestName {
   margin: 0;
-  width: 100%;
+  /*
+   * The slot is measured off the video's rendered frame, and on a phone taller
+   * than 9:16 that frame is wider than the screen — 457px of slot inside a
+   * 375px viewport. Left at width:100% a shrunken two-line name un-wraps into
+   * one line that runs off both edges of the screen. Capping the measure at the
+   * visible width keeps a long name wrapped, and wrapped is what the extra
+   * leading below is for. On a viewport wide enough that the frame no longer
+   * overflows, 100% is the smaller of the two and this cap does nothing.
+   */
+  width: min(100%, 84vw);
   text-align: center;
   text-wrap: balance;
 
@@ -86,8 +95,11 @@
     ) * var(--name-fit, 1)
   );
   /* Names long enough to wrap need the second line clear of the first's
-     descenders; a single line is centred in the slot either way. */
-  line-height: 1.14;
+     descenders. TAN Aegean has tall ascenders and a deep descender on 'g'/'y',
+     so at 1.14 "Mr. Jason Lau & / Ms. Dung Dang" reads as two lines touching.
+     1.3 opens the gap; the fit loop in Hero.js takes the extra height back out
+     of the size, so the name still clears the wishes line below. */
+  line-height: 1.3;
   color: #fffaf2;
   text-shadow: 0 1px 14px #09203a4d;
 
