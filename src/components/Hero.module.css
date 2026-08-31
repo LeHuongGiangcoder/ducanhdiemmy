@@ -136,6 +136,14 @@
      the name's size is built by the clamp above out of --name-size, not out of
      any --t-* token, and --name-fit still has to compose with it. */
   --name-scale: var(--vn-scale-title);
+  /*
+   * Vietnamese stacks a diacritic above the letter and sometimes a second one
+   * below (Ô, ễ, ấ over the line; ọ, ị under it), so two lines of it close the
+   * same optical gap that 1.3 opens for Latin — "…Bảo Ngọc / & Bà Trần Thị…"
+   * still reads as touching. The extra leading is bought back by the fit loop
+   * in Hero.js, which sizes the name to the slot it measures.
+   */
+  line-height: 1.45;
 }
 
 /* Optional private line for a specific guest. */
