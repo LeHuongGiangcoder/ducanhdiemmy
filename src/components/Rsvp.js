@@ -77,6 +77,13 @@ export default function Rsvp({ guest }) {
                 ? t.rsvp.thanksAccept(name)
                 : t.rsvp.thanksDecline(name)}
             </p>
+            {personalised && attending ? (
+              <p className="body">
+                {guest.table
+                  ? t.rsvp.tableAssigned(guest.name, guest.table)
+                  : t.rsvp.tablePending(guest.name)}
+              </p>
+            ) : null}
             {guest.luckyNumber && attending ? (
               <p className="body">
                 {t.rsvp.luckyPrefix}{" "}

@@ -71,6 +71,9 @@ const en = {
     deadline: "Kindly reply by 20 September.",
     luckyPrefix: "Your lucky number is",
     luckySuffix: "— please keep it close throughout the evening.",
+    /** Seating, shown once the reply is in. */
+    tableAssigned: (name, table) => `${name}, your table is ${table}.`,
+    tablePending: (name) => `${name}, your table will be updated soon.`,
     thanksAccept: (name) => `Thank you for your kind response.\nWe look forward to sharing this special occasion with you.`,
     thanksDecline: (name) => `Thank you for your kind response.\nWe are sorry that you will not be able to share this special occasion with us.`,
     errorGeneric: "Something went wrong.",
@@ -143,6 +146,8 @@ const vi = {
     deadline: "Vui lòng phản hồi trước ngày 20.09.2026.",
     luckyPrefix: "Số may mắn của bạn là",
     luckySuffix: "— vui lòng giữ bên mình trong suốt buổi tiệc.",
+    tableAssigned: (name, table) => `Số bàn của ${name} là ${table}.`,
+    tablePending: (name) => `Số bàn của ${name} sẽ được cập nhật sớm.`,
     thanksAccept: (name) => `Trân trọng cảm ơn ${name} đã dành thời gian phản hồi.\nThật vui khi được sẻ chia ngày đặc biệt này cùng những người chúng tôi yêu quý.`,
     thanksDecline: (name) => `Trân trọng cảm ơn ${name} đã dành thời gian phản hồi.\nDù không thể đón tiếp Quý vị trong ngày vui, chúng tôi vẫn vô cùng trân quý tình cảm và lời chúc của Quý vị dành cho hai chúng tôi.`,
     errorGeneric: "Đã có lỗi xảy ra.",

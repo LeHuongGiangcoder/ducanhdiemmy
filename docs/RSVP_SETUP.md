@@ -10,6 +10,7 @@ hàng của người đó. Không có chỗ nào khác phải sửa, không cầ
 | `Name` | **bạn gõ** | tên hiện trên thiệp — có dấu tiếng Việt thoải mái |
 | `Seats` | **bạn gõ** | số chỗ tối đa của thiệp này (bỏ trống = 2) |
 | `Lang` | **bạn chọn** | `vi` = thiệp tiếng Việt, `en` = tiếng Anh. **Bỏ trống = `en`** |
+| `Table` | **bạn gõ** | số bàn, hiện trong lời cảm ơn sau khi khách xác nhận. Bỏ trống = khách thấy "sẽ được cập nhật sớm" |
 | `Slug` | tự sinh | phần đuôi URL, sinh từ tên |
 | `Link` | tự sinh | link để gửi cho khách — copy thẳng từ đây |
 | `Attending` | website ghi | `YES` / `NO` |

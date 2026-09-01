@@ -102,10 +102,14 @@ async function fetchFromSheet() {
 /** The sheet carries name/seats/slug/lang; everything else takes a default. */
 function normalise(row) {
   const seats = Number.parseInt(row.seats, 10);
+  // The Seats cell doubles as the table assignment. Kept as written (and null
+  // while blank) so the thank-you note can tell "not seated yet" from a table.
+  const table = String(row.table ?? row.seats ?? "").trim();
   return {
     slug: String(row.slug ?? "").trim(),
     name: String(row.name ?? "").trim(),
     seats: Number.isFinite(seats) && seats > 0 ? seats : 2,
+    table: table || null,
     // A blank Lang cell means English — the language the hero video is cut in.
     lang: normaliseLang(row.lang),
     luckyNumber: String(row.luckyNumber ?? "").trim() || null,

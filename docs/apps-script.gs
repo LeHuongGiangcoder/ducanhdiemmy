@@ -2,7 +2,7 @@
  * Đức Anh & Diễm My — guest list + RSVP, một tab duy nhất.
  *
  * Sheet vừa là nguồn danh sách khách (site đọc lên), vừa là nơi RSVP đổ về
- * (site ghi xuống). Cô dâu chú rể chỉ gõ ba cột: Name, Seats, Lang.
+ * (site ghi xuống). Cô dâu chú rể chỉ gõ bốn cột: Name, Lang, Table, Seats.
  *
  * Cài đặt: xem docs/RSVP_SETUP.md.
  */
@@ -21,7 +21,7 @@ const SECRET = 'CHANGE-ME-to-a-long-random-string';
 const SITE_ORIGIN = 'https://ducanhdiemmy.gloweb.site';
 
 const HEADERS = [
-  'No', 'Name', 'Seats', 'Lang', 'Slug', 'Link',
+  'No', 'Name', 'Seats', 'Lang', 'Table', 'Slug', 'Link',
   'Attending', 'Guests', 'Message', 'Updated',
 ];
 
@@ -296,6 +296,9 @@ function readGuests_(sheet, col) {
         name: String(row[col.name - 1]).trim(),
         seats: seats > 0 ? seats : DEFAULT_SEATS,
         lang: LANGS[lang] || DEFAULT_LANG,
+        // Ô trống được giữ nguyên là chuỗi rỗng: site cần phân biệt "chưa xếp
+        // bàn" (hiện 'sẽ cập nhật sớm') với một số bàn đã có.
+        table: String(row[col.table - 1]).trim(),
       };
     })
     .filter(function (g) { return g.slug && g.name; });
