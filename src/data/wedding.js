@@ -42,4 +42,9 @@ export const defaultGuest = {
   seats: 2,
   luckyNumber: null,
   lang: "en",
+  table: null,
+  // No row in the sheet, so no code to ask for and no reply to look up.
+  hasCode: false,
+  attending: null,
+  guestCount: 0,
 };

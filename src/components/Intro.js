@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 import { couple, wedding } from "@/data/wedding";
 import { useContent } from "./LanguageProvider";
 import { fallbackFontClass } from "@/lib/aegean";
@@ -17,9 +18,59 @@ import styles from "./Intro.module.css";
  *
  * Pressing the button also unlocks audio playback, so the music and the reveal
  * are the same gesture.
+ *
+ * On a personal invitation the button is preceded by the guest's code — the
+ * three-digit number from their row of the sheet, printed on what they were
+ * sent. The code is checked on the server (POST /api/access), so it is never
+ * part of this page and a forwarded link doesn't open by itself.
+ *
+ * The audio is primed before that check, not after: iOS only lets playback
+ * start inside the gesture itself, and an `await` in between loses it.
  */
-export default function Intro({ onOpen, closing }) {
+export default function Intro({ onOpen, onPrimeAudio, closing, slug, requireCode = false }) {
   const { t } = useContent();
+  const [code, setCode] = useState("");
+  const [checking, setChecking] = useState(false);
+  const [error, setError] = useState("");
+
+  async function submit(event) {
+    event.preventDefault();
+    if (closing || checking) return;
+
+    // Same gesture as the tap — anything after the first await is too late.
+    onPrimeAudio?.();
+
+    if (!requireCode) {
+      onOpen();
+      return;
+    }
+
+    const typed = code.trim();
+    if (!typed) {
+      setError(t.intro.codeErrorEmpty);
+      return;
+    }
+
+    setChecking(true);
+    setError("");
+    try {
+      const res = await fetch("/api/access", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug, code: typed }),
+      });
+      if (res.ok) {
+        onOpen();
+        return;
+      }
+      setError(res.status === 401 ? t.intro.codeErrorWrong : t.intro.codeErrorNetwork);
+    } catch {
+      setError(t.intro.codeErrorNetwork);
+    } finally {
+      setChecking(false);
+    }
+  }
+
   return (
     <div
       className={`${styles.intro} ${closing ? styles.closing : ""}`}
@@ -66,18 +117,58 @@ export default function Intro({ onOpen, closing }) {
             <span className={styles.dateRule} aria-hidden="true" />
           </p>
 
-          <button
-            type="button"
-            className={`btn btn--primary ${styles.cta}`}
-            onClick={onOpen}
-          >
-            {t.intro.cta}
-          </button>
+          <form className={styles.gate} onSubmit={submit} noValidate>
+            {requireCode && (
+              <div className={styles.codeField}>
+                <label className={styles.codeLabel} htmlFor="intro-code">
+                  {t.intro.codeLabel}
+                </label>
+                <input
+                  id="intro-code"
+                  className={styles.codeInput}
+                  type="text"
+                  /* Numeric keypad on a phone, without the spinner and the
+                     leading-zero stripping a number input would bring. */
+                  inputMode="numeric"
+                  autoComplete="off"
+                  maxLength={6}
+                  placeholder={t.intro.codePlaceholder}
+                  aria-describedby="intro-code-note"
+                  aria-invalid={error ? "true" : undefined}
+                  value={code}
+                  onChange={(e) => {
+                    setCode(e.target.value.replace(/\D/g, ""));
+                    if (error) setError("");
+                  }}
+                />
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className={`btn btn--primary ${styles.cta}`}
+              disabled={checking}
+            >
+              {checking ? t.intro.codeChecking : t.intro.cta}
+            </button>
+
+            {requireCode && (
+              <p
+                id="intro-code-note"
+                className={error ? styles.codeError : styles.codeNote}
+                role={error ? "alert" : undefined}
+              >
+                {error || t.intro.codeHint}
+              </p>
+            )}
+          </form>
 
           {/* Tells the guest the button is the way in. */}
-          <p className={styles.hint}>
-            <span className={styles.hintChevron} aria-hidden="true" />
-          </p>
+          {!requireCode && (
+            <p className={styles.hint}>
+              <span className={styles.hintChevron} aria-hidden="true" />
+            </p>
+          )}
         </div>
       </div>
     </div>

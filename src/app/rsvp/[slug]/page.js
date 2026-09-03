@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Invitation from "@/components/Invitation";
-import { allSlugs, getGuest } from "@/lib/guest-registry";
+import { allSlugs, getGuest, publicGuest } from "@/lib/guest-registry";
 import { wedding } from "@/data/wedding";
 import { getContent } from "@/data/content";
 
@@ -33,5 +33,5 @@ export default async function GuestRsvpPage({ params }) {
   const guest = await getGuest(slug);
   if (!guest) notFound();
 
-  return <Invitation guest={guest} bypassIntro={true} />;
+  return <Invitation guest={publicGuest(guest)} bypassIntro={true} />;
 }

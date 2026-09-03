@@ -49,6 +49,8 @@ const rows = guests
       "  {",
       `    slug: ${JSON.stringify(g.slug)},`,
       `    name: ${JSON.stringify(g.name)},`,
+      // The access code, so the gate still works during a sheet outage.
+      `    code: ${JSON.stringify(String(g.code ?? "").trim())},`,
       `    seats: ${Number.isFinite(seats) && seats > 0 ? seats : 2},`,
       `    lang: ${JSON.stringify(g.lang === "vi" ? "vi" : "en")},`,
       "  },",

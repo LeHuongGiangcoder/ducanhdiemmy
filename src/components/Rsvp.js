@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
-import Ornament from "./Ornament";
+import { useCallback, useEffect, useState } from "react";
+import RsvpConfirmation from "./RsvpConfirmation";
 import { useContent } from "./LanguageProvider";
 import { fallbackFontClass } from "@/lib/aegean";
 import Reveal from "./Reveal";
@@ -12,17 +12,77 @@ import styles from "./Rsvp.module.css";
  * RSVP. The guest's slug rides along with the submission so the response is
  * filed against their invitation automatically — no "who are you?" field for
  * anyone who arrived through a personal link.
+ *
+ * The section has two faces. A guest who hasn't replied gets the form; one who
+ * has gets their answer back, with their table on it. Which of the two is
+ * decided by the sheet, not by this browser: the reply may have been sent from
+ * a different phone, and the table is assigned by the couple days later. So the
+ * row is re-read on mount and again after every send, uncached — see
+ * /api/rsvp/status. The copy of the row that came down with the page is used
+ * for the first paint, so the card is right immediately and only sharpens.
  */
 export default function Rsvp({ guest }) {
   const { t } = useContent();
   const personalised = Boolean(guest.slug);
   const seats = guest.seats ?? 2;
 
-  const [attending, setAttending] = useState(null);
-  const [guestCount, setGuestCount] = useState(1);
+  // The reply on file, as far as we know. null = none, so show the form.
+  const [reply, setReply] = useState(() =>
+    guest.attending === null || guest.attending === undefined
+      ? null
+      : {
+          attending: guest.attending,
+          guestCount: guest.guestCount || 1,
+          table: guest.table ?? "",
+          name: guest.name,
+        },
+  );
+  // Set when the guest asks to change an answer already on file: the card gives
+  // way to the form until they send again.
+  const [editing, setEditing] = useState(false);
+
+  const [attending, setAttending] = useState(guest.attending ?? null);
+  const [guestCount, setGuestCount] = useState(guest.guestCount || 1);
   const [name, setName] = useState(personalised ? guest.name : "");
-  const [status, setStatus] = useState("idle"); // idle | sending | done | error
+  const [status, setStatus] = useState("idle"); // idle | sending | error
   const [error, setError] = useState("");
+
+  /**
+   * The row as it stands right now — the only source for the table number.
+   * Returns null when there is nothing newer to show (no reply on file, or the
+   * read failed), in which case whatever came down with the page still stands.
+   */
+  const readStatus = useCallback(async () => {
+    if (!personalised) return null;
+    try {
+      const res = await fetch(
+        `/api/rsvp/status?slug=${encodeURIComponent(guest.slug)}`,
+        { cache: "no-store" },
+      );
+      if (!res.ok) return null;
+      const data = await res.json();
+      if (data.attending === null || data.attending === undefined) return null;
+      return {
+        attending: data.attending,
+        guestCount: data.guestCount || 1,
+        table: data.table ?? "",
+        name: data.name || guest.name,
+      };
+    } catch {
+      // Offline, or the sheet is slow — not worth an error in front of a guest.
+      return null;
+    }
+  }, [personalised, guest.slug, guest.name]);
+
+  useEffect(() => {
+    let cancelled = false;
+    readStatus().then((fresh) => {
+      if (!cancelled && fresh) setReply(fresh);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [readStatus]);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -48,12 +108,22 @@ export default function Rsvp({ guest }) {
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? t.rsvp.errorGeneric);
-      setStatus("done");
+
+      setStatus("idle");
+      setEditing(false);
+      // Show the answer straight away, then let the sheet correct it — a table
+      // may already be waiting on the row this reply just landed in.
+      setReply({ attending, guestCount, table: guest.table ?? "", name });
+      readStatus().then((fresh) => {
+        if (fresh) setReply(fresh);
+      });
     } catch (err) {
       setStatus("error");
       setError(err.message);
     }
   }
+
+  const showCard = reply && !editing;
 
   return (
     <section id="rsvp" className="section section--screen section--pattern-wine">
@@ -64,34 +134,16 @@ export default function Rsvp({ guest }) {
           <p className="body">{t.rsvp.intro}</p>
         </Reveal>
 
-        {status === "done" ? (
-          <Reveal className={`${styles.thanks} stack stack--snug center`}>
-            <Ornament
-              src="/assets/seal.webp"
-              className="mark"
-              inline
-              tone="ornament--strong"
-            />
-            <p className="lede" style={{ whiteSpace: "pre-line" }}>
-              {attending
-                ? t.rsvp.thanksAccept(name)
-                : t.rsvp.thanksDecline(name)}
-            </p>
-            {personalised && attending ? (
-              <p className="body">
-                {guest.table
-                  ? t.rsvp.tableAssigned(guest.name, guest.table)
-                  : t.rsvp.tablePending(guest.name)}
-              </p>
-            ) : null}
-            {guest.luckyNumber && attending ? (
-              <p className="body">
-                {t.rsvp.luckyPrefix}{" "}
-                <span className={styles.lucky}>{guest.luckyNumber}</span>{" "}
-                {t.rsvp.luckySuffix}
-              </p>
-            ) : null}
-          </Reveal>
+        {showCard ? (
+          <RsvpConfirmation
+            guest={guest}
+            reply={reply}
+            onEdit={() => {
+              setEditing(true);
+              setAttending(reply.attending);
+              setGuestCount(reply.guestCount || 1);
+            }}
+          />
         ) : (
           <Reveal delay={120} className={styles.formWrap}>
             <form className={styles.form} onSubmit={handleSubmit}>

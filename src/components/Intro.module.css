@@ -198,10 +198,108 @@
   }
 }
 
+/* --- The way in ---------------------------------------------------------
+ * The code field and the button as one block, so the gap between them is the
+ * cluster's own rhythm rather than two separate margins.
+ */
+.gate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-4);
+  width: 100%;
+}
+
+/* The rule under the digits is a short one — the button sets its own width,
+   so the constraint belongs to the field rather than to the block. */
+.codeField {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-3);
+  width: 100%;
+  max-width: 11rem;
+  margin-top: var(--s-4);
+}
+
+/* Same small caps as .label in the design system, but in the gate's palette:
+   everything here sits on a bright photograph and needs its own shadow. */
+.codeLabel {
+  font-size: var(--t-eyebrow);
+  text-transform: uppercase;
+  letter-spacing: var(--track-eyebrow);
+  text-indent: var(--track-eyebrow);
+  color: var(--cream);
+  text-shadow: 0 1px 12px #09203a99;
+}
+
+/*
+ * Three digits, set as display type on a single rule — a written entry, not an
+ * app field. Wide tracking with a matching indent so the group stays optically
+ * centred over the rule despite the trailing space of the last letter.
+ */
+.codeInput {
+  width: 100%;
+  padding: var(--s-2) 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #ffffff66;
+  border-radius: 0;
+  font-family: var(--font-heading);
+  font-size: var(--t-h3);
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+  text-align: center;
+  color: #ffffff;
+  text-shadow: 0 1px 12px #09203a8c;
+  transition:
+    border-color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease);
+}
+
+.codeInput::placeholder {
+  color: #ffffff59;
+}
+
+.codeInput:focus {
+  outline: none;
+  border-bottom-color: var(--gold-bright);
+  box-shadow: 0 1px 0 0 var(--gold-bright);
+}
+
+/* Reads like the hint it replaced — the quietest line on the screen. */
+.codeNote,
+.codeError {
+  margin-top: calc(-1 * var(--s-1));
+  font-size: var(--t-fine);
+  font-style: italic;
+  text-align: center;
+  text-wrap: balance;
+  text-shadow:
+    0 1px 3px #09203ab3,
+    0 2px 14px #09203acc;
+}
+
+.codeNote {
+  color: var(--cream-bright);
+  opacity: 0.82;
+}
+
+.codeError {
+  color: #ffd4d4;
+}
+
 /* A slow breath, so the button reads as live rather than decorative. */
 .cta {
-  margin-top: var(--s-4);
+  /* The gate's own gap carries the drop when a code field sits above it. */
+  margin-top: 0;
   animation: cta-breathe 3.6s var(--ease-inout) 1.6s infinite;
+}
+
+/* Without a field above it the button is the only thing in the block, so it
+   takes back the drop from the date that the field would otherwise provide. */
+.gate:not(:has(.codeField)) .cta {
+  margin-top: var(--s-4);
 }
 
 @keyframes cta-breathe {

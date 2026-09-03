@@ -6,17 +6,22 @@ hàng của người đó. Không có chỗ nào khác phải sửa, không cầ
 
 | Cột | Ai điền | Ý nghĩa |
 |-----|---------|---------|
-| `No` | tự sinh | số thứ tự |
+| `No` | tự sinh | số thứ tự **và là mã khách nhập để mở thiệp** — 3 chữ số (`001`, `002`…) |
 | `Name` | **bạn gõ** | tên hiện trên thiệp — có dấu tiếng Việt thoải mái |
 | `Seats` | **bạn gõ** | số chỗ tối đa của thiệp này (bỏ trống = 2) |
 | `Lang` | **bạn chọn** | `vi` = thiệp tiếng Việt, `en` = tiếng Anh. **Bỏ trống = `en`** |
-| `Table` | **bạn gõ** | số bàn, hiện trong lời cảm ơn sau khi khách xác nhận. Bỏ trống = khách thấy "sẽ được cập nhật sớm" |
+| `Table` | **bạn gõ** | số bàn, hiện trong thẻ phản hồi sau khi khách xác nhận. Bỏ trống = khách thấy "sẽ được cập nhật" |
 | `Slug` | tự sinh | phần đuôi URL, sinh từ tên |
 | `Link` | tự sinh | link để gửi cho khách — copy thẳng từ đây |
 | `Attending` | website ghi | `YES` / `NO` |
 | `Guests` | website ghi | số người khách xác nhận |
 | `Message` | website ghi | lời nhắn của khách |
 | `Updated` | website ghi | lúc khách trả lời gần nhất |
+
+Script chỉ ghi đúng ba cột `No` / `Slug` / `Link`, mỗi cột một lần — nên **công
+thức bạn để ở các cột khác (ví dụ `Lang`, `Table` lấy bằng `IMPORTRANGE`) không
+bị xoá** mỗi lần link được sinh ra. Xem [Kéo `Lang` / `Table` từ sheet
+khác](#kéo-lang--table-từ-sheet-khác) nếu muốn dùng công thức.
 
 Cột được tra theo **tên ở hàng 1**, không theo vị trí — bạn kéo cột đi chỗ khác
 hay chèn thêm cột vào giữa, script vẫn chạy đúng. Cột nào thiếu sẽ được tạo
@@ -77,6 +82,67 @@ Mong đợi `{"ok":true,"storage":"sheet"}` và cột `Attending` của hàng đ
 được giữ trong `.rsvp-local.jsonl`, không mất.
 
 ---
+
+## Mã mở thiệp
+
+Cột `No` vừa là số thứ tự vừa là **mã riêng của từng khách**, luôn 3 chữ số
+(`001`, `002`, …) và được lưu dạng text để số 0 ở đầu không bị Sheets cắt mất.
+
+Khách mở link riêng sẽ thấy một ô nhập mã trước khi thiệp mở ra. Gõ đúng mã ghi
+trên thiệp giấy thì thiệp mở; sai thì không. Mã **không nằm trong mã nguồn
+trang** — trình duyệt gửi mã lên `/api/access` và server so với sheet, đọc trực
+tiếp không qua cache, nên khách vừa được thêm vào sheet là vào được ngay.
+
+`001` và `1` được coi là một, để khách gõ kiểu nào cũng vào được. Hàng nào chưa
+có `No` thì thiệp mở thẳng bằng link, không hỏi mã — mất mã không bao giờ được
+phép khoá khách ở ngoài.
+
+## Thẻ phản hồi và số bàn
+
+Sau khi gửi phản hồi, khách thấy một thẻ thay cho form, ở một trong ba trạng thái:
+
+| Trạng thái | Khi nào | Hiện gì |
+|---|---|---|
+| có bàn | `Attending` = YES và cột `Table` đã có số | số bàn, cỡ lớn |
+| chờ xếp bàn | `Attending` = YES, `Table` còn trống | "Sẽ được cập nhật" |
+| không dự | `Attending` = NO | "Không thể tham dự" |
+
+Số bàn được đọc lại từ sheet **mỗi lần khách mở thiệp**, qua
+`/api/rsvp/status` (không cache). Nên cứ điền cột `Table` bất cứ lúc nào — khách
+mở lại link cũ là thấy số mới, không cần deploy lại và không phải gửi lại link.
+
+Thẻ có nút **Cập nhật phản hồi**: khách bấm là quay lại form với lựa chọn cũ đã
+được chọn sẵn, gửi lại thì **ghi đè lên chính hàng đó**, không sinh hàng mới.
+
+## Kéo `Lang` / `Table` từ sheet khác
+
+Không bắt buộc. Chỉ dùng khi danh sách gốc (tên, ngôn ngữ, số bàn) được quản ở
+một spreadsheet khác và bạn không muốn gõ lại sang đây:
+
+```
+C2:  =ARRAYFORMULA(IF(B2:B="";"";IFNA(VLOOKUP(B2:B;IMPORTRANGE("<id sheet gốc>";"'Danh sách khách'!F:G");2;FALSE);"")))
+D2:  =ARRAYFORMULA(IF(B2:B="";"";IFNA(VLOOKUP(B2:B;IMPORTRANGE("<id sheet gốc>";"'Danh sách khách'!F:J");5;FALSE);"")))
+```
+
+Dò theo **tên** ở cột `B` sang cột F của sheet gốc, lấy về G (ngôn ngữ) cho `C`
+và J (số bàn) cho `D`.
+
+Bốn điều cần nhớ:
+
+- **Chỉ đặt công thức ở đúng ô C2 và D2.** Nó tự đổ xuống cả cột. Gõ đè một giá
+  trị vào giữa cột là cả cột hỏng (`#REF!`).
+- **Giữ nguyên `IFNA(…;"")`.** Cột `Table` được hiện thẳng cho khách làm số bàn
+  của họ, nên tên không dò được phải ra ô trống (khách thấy "sẽ được cập nhật"),
+  tuyệt đối không phải một chữ báo lỗi.
+- **Tên phải khớp từng ký tự** giữa hai sheet, kể cả `Mr.`/`Ms.`, dấu tiếng Việt
+  và khoảng trắng thừa. Lệch một chữ là ô trống mà không có gì báo — khách sẽ
+  nhận thiệp tiếng Anh (vì `Lang` trống mặc định là `en`) và không thấy số bàn.
+  Muốn soi thì thêm một cột phụ ngoài rìa: `=IF(B2="";"";IF(C2="";"⚠ không dò được";""))`.
+- **`IMPORTRANGE` làm số bàn chậm hơn.** Site đọc sheet này không qua cache,
+  nhưng bản thân ô `D` chỉ làm mới theo nhịp của `IMPORTRANGE` (có thể tới ~30
+  phút). Sát ngày cưới, gõ thẳng số bàn vào cột `Table` là nhanh nhất.
+
+Lần đầu chạy, Google hỏi **Allow access** một lần cho `IMPORTRANGE`.
 
 ## Thêm khách sau khi site đã chạy
 

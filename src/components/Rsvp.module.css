@@ -30,17 +30,6 @@
   margin-top: var(--s-2);
 }
 
-.thanks {
-  width: 100%;
-}
-
-.lucky {
-  font-family: var(--font-heading);
-  font-size: 1.35em;
-  color: var(--gold-bright);
-  letter-spacing: 0.12em;
-}
-
 /* Shown instead of the name field when the guest came through their own link. */
 .replyingAs {
   margin: 0;

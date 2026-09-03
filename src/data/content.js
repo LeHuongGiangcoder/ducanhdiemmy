@@ -22,6 +22,14 @@ const en = {
     groom: "Duc Anh",
     bride: "Diem My",
     cta: "Open Invitation",
+    /** The gate on a personal invitation — the number in the `No` column. */
+    codeLabel: "Invitation Code",
+    codePlaceholder: "000",
+    codeHint: "Please enter the code on your invitation.",
+    codeChecking: "Checking…",
+    codeErrorEmpty: "Please enter your invitation code.",
+    codeErrorWrong: "That code doesn't match this invitation.",
+    codeErrorNetwork: "We couldn't check that just now. Please try again.",
   },
   hero: {
     src: "/hero%20final.mp4",
@@ -71,13 +79,38 @@ const en = {
     deadline: "Kindly reply by 20 September.",
     luckyPrefix: "Your lucky number is",
     luckySuffix: "— please keep it close throughout the evening.",
-    /** Seating, shown once the reply is in. */
-    tableAssigned: (name, table) => `${name}, your table is ${table}.`,
-    tablePending: (name) => `${name}, your table will be updated soon.`,
-    thanksAccept: (name) => `Thank you for your kind response.\nWe look forward to sharing this special occasion with you.`,
-    thanksDecline: (name) => `Thank you for your kind response.\nWe are sorry that you will not be able to share this special occasion with us.`,
     errorGeneric: "Something went wrong.",
     errorAttending: "Please let us know if you can join us.",
+    /**
+     * The card shown in place of the form once a reply is in — one of three,
+     * chosen by whether the guest is coming and whether they have been seated.
+     * `headline` is the number itself when there is one, so the table takes the
+     * same slot in all three states.
+     */
+    confirm: {
+      seated: {
+        eyebrow: "For the Evening",
+        title: "Your Table",
+        body: (name) =>
+          `Thank you for your kind response.\nWe look forward to sharing this special occasion with you.`,
+      },
+      pending: {
+        eyebrow: "For the Evening",
+        title: "Your Table",
+        headline: "To be assigned",
+        body: (name) =>
+          `Thank you for your kind response.\nYour table number will appear here once seating arrangements are finalized.`,
+        note: "Please check this invitation again before the celebration.",
+      },
+      declined: {
+        eyebrow: "Thank You",
+        title: "Your Response",
+        headline: "Unable to attend",
+        body: (name) =>
+          `Thank you for your kind response.\nWe are sorry that you will not be able to share this special occasion with us.`,
+      },
+      edit: "Update Response",
+    },
   },
   thankYou: {
     headline: "Thank You",
@@ -101,6 +134,13 @@ const vi = {
     groom: "Đức Anh",
     bride: "Diễm My",
     cta: "Mở thiệp mời",
+    codeLabel: "Mã thiệp mời",
+    codePlaceholder: "000",
+    codeHint: "Vui lòng nhập mã ghi trên thiệp của Quý vị.",
+    codeChecking: "Đang kiểm tra…",
+    codeErrorEmpty: "Vui lòng nhập mã thiệp mời.",
+    codeErrorWrong: "Mã không đúng với thiệp này.",
+    codeErrorNetwork: "Chưa kiểm tra được. Xin thử lại.",
   },
   hero: {
     src: "/hero%20final%20viet.mp4?v=2",
@@ -146,12 +186,32 @@ const vi = {
     deadline: "Vui lòng phản hồi trước ngày 20.09.2026.",
     luckyPrefix: "Số may mắn của bạn là",
     luckySuffix: "— vui lòng giữ bên mình trong suốt buổi tiệc.",
-    tableAssigned: (name, table) => `Số bàn của ${name} là ${table}.`,
-    tablePending: (name) => `Số bàn của ${name} sẽ được cập nhật sớm.`,
-    thanksAccept: (name) => `Trân trọng cảm ơn ${name} đã dành thời gian phản hồi.\nThật vui khi được sẻ chia ngày đặc biệt này cùng những người chúng tôi yêu quý.`,
-    thanksDecline: (name) => `Trân trọng cảm ơn ${name} đã dành thời gian phản hồi.\nDù không thể đón tiếp Quý vị trong ngày vui, chúng tôi vẫn vô cùng trân quý tình cảm và lời chúc của Quý vị dành cho hai chúng tôi.`,
     errorGeneric: "Đã có lỗi xảy ra.",
     errorAttending: "Vui lòng cho chúng tôi biết bạn có tham dự được không.",
+    confirm: {
+      seated: {
+        eyebrow: "Tại buổi tiệc",
+        title: "Số bàn",
+        body: (name) =>
+          `Trân trọng cảm ơn ${name} đã dành thời gian phản hồi.\nThật vui khi được sẻ chia ngày đặc biệt này cùng những người chúng tôi yêu quý.`,
+      },
+      pending: {
+        eyebrow: "Tại buổi tiệc",
+        title: "Số bàn",
+        headline: "Sẽ được cập nhật",
+        body: (name) =>
+          `Trân trọng cảm ơn ${name} đã dành thời gian phản hồi.\nSố bàn sẽ được hiển thị tại đây sau khi chúng tôi hoàn tất sắp xếp chỗ ngồi.`,
+        note: "Xin vui lòng xem lại thiệp trước ngày diễn ra buổi tiệc.",
+      },
+      declined: {
+        eyebrow: "R.S.V.P.",
+        title: "Phản hồi",
+        headline: "Không thể tham dự",
+        body: (name) =>
+          `Trân trọng cảm ơn ${name} đã dành thời gian phản hồi.\nDù không thể đón tiếp Quý vị trong ngày vui, chúng tôi vẫn vô cùng trân quý tình cảm và lời chúc của Quý vị dành cho hai chúng tôi.`,
+      },
+      edit: "Cập nhật phản hồi",
+    },
   },
   thankYou: {
     headline: "Lời Cảm Ơn",

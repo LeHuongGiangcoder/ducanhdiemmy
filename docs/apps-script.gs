@@ -77,6 +77,8 @@ function setupSheet() {
   sheet.setFrozenRows(1);
 
   const col = columns_(sheet);
+  // Cột No là mã khách, phải là text — để dạng số thì 001 rút thành 1.
+  sheet.getRange(FIRST_ROW, col.no, sheet.getMaxRows() - 1, 1).setNumberFormat('@');
   sheet.setColumnWidth(col.name, 220);
   sheet.setColumnWidth(col.link, 320);
   sheet.setColumnWidth(col.message, 320);
@@ -201,9 +203,24 @@ function columns_(sheet) {
   return col;
 }
 
-/** Số hàng dữ liệu hiện có (không tính header). */
-function dataRows_(sheet) {
-  return Math.max(0, sheet.getLastRow() - 1);
+/**
+ * Số hàng dữ liệu hiện có (không tính header), đo theo CỘT NAME.
+ *
+ * Không dùng getLastRow() được nữa: một ARRAYFORMULA ở cột Lang/Table đổ xuống
+ * hết cột, và những ô nó trả về "" vẫn bị Apps Script tính là ô có nội dung —
+ * getLastRow() sẽ nhảy xuống tận hàng 1000 và hàng RSVP mới bị nối vào đó,
+ * để lại một khoảng trống khổng lồ giữa bảng. Cột Name do người gõ tay, nên nó
+ * mới là mốc thật của danh sách.
+ */
+function dataRows_(sheet, col) {
+  const last = sheet.getLastRow() - 1;
+  if (last <= 0) return 0;
+
+  const names = sheet.getRange(FIRST_ROW, col.name, last, 1).getValues();
+  for (let i = names.length - 1; i >= 0; i--) {
+    if (String(names[i][0]).trim()) return i + 1;
+  }
+  return 0;
 }
 
 /**
@@ -213,12 +230,11 @@ function dataRows_(sheet) {
  * kể cả khi sau này sửa lại chính tả cái tên.
  */
 function syncGuests_(sheet, col) {
-  const rows = dataRows_(sheet);
+  const rows = dataRows_(sheet, col);
   if (rows === 0) return 0;
 
   const width = sheet.getLastColumn();
-  const range = sheet.getRange(FIRST_ROW, 1, rows, width);
-  const values = range.getValues();
+  const values = sheet.getRange(FIRST_ROW, 1, rows, width).getValues();
 
   const taken = {};
   values.forEach(function (row) {
@@ -226,38 +242,74 @@ function syncGuests_(sheet, col) {
     if (slug) taken[slug] = true;
   });
 
-  let changed = false;
+  // Ghi lại TỪNG CỘT một, không ghi cả hàng: những cột cô dâu chú rể để công
+  // thức (Lang, Table lấy qua IMPORTRANGE) nằm xen giữa các cột script này quản,
+  // mà setValues() cả hàng sẽ đè công thức bằng giá trị đọc được lúc đó — đó
+  // chính là lý do công thức tự biến mất sau khi link được generate.
+  const nos = [];
+  const slugs = [];
+  const links = [];
+  let noChanged = false;
+  let slugChanged = false;
+  let linkChanged = false;
   let counted = 0;
 
   values.forEach(function (row) {
     const name = String(row[col.name - 1]).trim();
-    if (!name) return; // hàng trống ở giữa danh sách — bỏ qua
-    counted++;
+    const currentNo = row[col.no - 1];
+    const currentSlug = String(row[col.slug - 1]).trim();
+    const currentLink = row[col.link - 1];
 
-    if (row[col.no - 1] !== counted) {
-      row[col.no - 1] = counted;
-      changed = true;
+    if (!name) {
+      // Hàng trống ở giữa danh sách — giữ nguyên, không đụng vào.
+      nos.push([currentNo]);
+      slugs.push([currentSlug]);
+      links.push([currentLink]);
+      return;
     }
 
-    let slug = String(row[col.slug - 1]).trim();
+    counted++;
+
+    // Ba chữ số, lưu dạng text: số này vừa là số thứ tự vừa là MÃ khách nhập
+    // ở trang mở thiệp, nên 7 và 007 phải luôn là một.
+    const no = code_(counted);
+    if (String(currentNo).trim() !== no) noChanged = true;
+    nos.push([no]);
+
+    // Slug đã có thì KHÔNG bao giờ ghi đè — link đã gửi cho khách phải sống mãi,
+    // kể cả khi sau này sửa lại chính tả cái tên.
+    let slug = currentSlug;
     if (!slug) {
       slug = uniqueSlug_(slugify_(name), taken);
       taken[slug] = true;
-      row[col.slug - 1] = slug;
-      changed = true;
+      slugChanged = true;
     }
+    slugs.push([slug]);
 
     // Dấu / thừa ở cuối SITE_ORIGIN sinh ra link //slug — vẫn tới nơi, nhưng
     // qua một cú redirect 308 mà trình duyệt trong app không phải lúc nào cũng theo.
     const link = SITE_ORIGIN.replace(/\/+$/, '') + '/' + slug;
-    if (row[col.link - 1] !== link) {
-      row[col.link - 1] = link;
-      changed = true;
-    }
+    if (currentLink !== link) linkChanged = true;
+    links.push([link]);
   });
 
-  if (changed) range.setValues(values);
+  if (noChanged) {
+    sheet.getRange(FIRST_ROW, col.no, rows, 1)
+      .setNumberFormat('@') // không có dòng này thì Sheets lưu 001 thành số 1
+      .setValues(nos);
+  }
+  if (slugChanged) sheet.getRange(FIRST_ROW, col.slug, rows, 1).setValues(slugs);
+  if (linkChanged) sheet.getRange(FIRST_ROW, col.link, rows, 1).setValues(links);
+
   return counted;
+}
+
+/** 7 → "007". Cột No cũng chính là mã khách gõ vào để mở thiệp. */
+function code_(n) {
+  let out = String(n == null ? '' : n).trim();
+  if (!out) return '';
+  while (out.length < 3) out = '0' + out;
+  return out;
 }
 
 function uniqueSlug_(base, taken) {
@@ -283,7 +335,7 @@ function slugify_(value) {
 }
 
 function readGuests_(sheet, col) {
-  const rows = dataRows_(sheet);
+  const rows = dataRows_(sheet, col);
   if (rows === 0) return [];
 
   return sheet.getRange(FIRST_ROW, 1, rows, sheet.getLastColumn())
@@ -291,14 +343,23 @@ function readGuests_(sheet, col) {
     .map(function (row) {
       const seats = parseInt(row[col.seats - 1], 10);
       const lang = langKey_(row[col.lang - 1]);
+      const attending = String(row[col.attending - 1]).trim().toUpperCase();
+      const guestCount = parseInt(row[col.guests - 1], 10);
       return {
         slug: String(row[col.slug - 1]).trim(),
         name: String(row[col.name - 1]).trim(),
+        // Mã khách nhập ở cổng vào. Ô đã định dạng text nên đọc ra đúng '001';
+        // sheet cũ còn lưu dạng số thì code_() bù lại số 0 ở đầu.
+        code: code_(String(row[col.no - 1]).trim().replace(/\D/g, '')),
         seats: seats > 0 ? seats : DEFAULT_SEATS,
         lang: LANGS[lang] || DEFAULT_LANG,
         // Ô trống được giữ nguyên là chuỗi rỗng: site cần phân biệt "chưa xếp
         // bàn" (hiện 'sẽ cập nhật sớm') với một số bàn đã có.
         table: String(row[col.table - 1]).trim(),
+        // Phản hồi đã ghi trước đó, để khách quay lại thấy đúng trạng thái
+        // của mình chứ không phải form trắng.
+        attending: attending === 'YES' ? true : (attending === 'NO' ? false : null),
+        guestCount: guestCount > 0 ? guestCount : 0,
       };
     })
     .filter(function (g) { return g.slug && g.name; });
@@ -316,7 +377,7 @@ function writeRsvp_(sheet, col, body) {
   answer[col.message] = body.message || '';
   answer[col.updated] = new Date();
 
-  const rows = dataRows_(sheet);
+  const rows = dataRows_(sheet, col);
   const slugs = rows > 0
     ? sheet.getRange(FIRST_ROW, col.slug, rows, 1).getValues()
     : [];
@@ -333,7 +394,8 @@ function writeRsvp_(sheet, col, body) {
   }
 
   // Không khớp slug nào: khách tự vào, chỉ có cái tên họ gõ.
-  const at = sheet.getLastRow() + 1;
+  // Nối ngay dưới cái tên cuối cùng, không phải dưới ô cuối cùng có công thức.
+  const at = FIRST_ROW + rows;
   sheet.getRange(at, col.name).setValue(body.name || '');
   Object.keys(answer).forEach(function (c) {
     sheet.getRange(at, Number(c)).setValue(answer[c]);

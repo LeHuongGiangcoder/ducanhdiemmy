@@ -1,0 +1,68 @@
+/*
+ * The reply, held in a card.
+ *
+ * The rest of the invitation sets its copy straight onto the damask; this is
+ * the one place that doesn't, because the card is carrying a piece of
+ * information the guest will come back to look up. The hairline and the
+ * darkened ground lift it off the pattern just enough to read as a plate.
+ */
+.card {
+  width: 100%;
+  padding: var(--s-7) var(--s-5) var(--s-6);
+  border: var(--border-hair);
+  border-radius: var(--radius);
+  /* Wine, deepened — the pattern still shows through at the edges. */
+  background: linear-gradient(180deg, #3a090fd9 0%, #3a090ff2 100%);
+  box-shadow: var(--shadow-lift);
+}
+
+.title {
+  color: var(--cream-bright);
+}
+
+/*
+ * The table number, at the largest size on the page. Tabular figures so a
+ * two-digit table sits centred rather than optically leaning on the 1.
+ */
+.table {
+  font-family: var(--font-heading);
+  font-size: calc(var(--t-couple) * var(--display-vn-scale));
+  line-height: 1;
+  font-weight: 300;
+  letter-spacing: var(--track-display);
+  font-variant-numeric: lining-nums tabular-nums;
+  color: var(--cream-bright);
+  text-shadow: 0 2px 24px #00000059;
+}
+
+/* Stands where the number would: italic and quieter, because it is a state
+   rather than an answer. */
+.pending {
+  font-family: var(--font-body);
+  font-size: var(--t-lede);
+  font-style: italic;
+  line-height: var(--lh-snug);
+  color: var(--gold-bright);
+  text-wrap: balance;
+}
+
+/* The closing instruction under the thank-you — fine print, deliberately. */
+.note {
+  font-size: var(--t-fine);
+  font-style: italic;
+  line-height: var(--lh-snug);
+  color: var(--ink-faint);
+  text-wrap: pretty;
+}
+
+.lucky {
+  font-family: var(--font-heading);
+  font-size: 1.35em;
+  color: var(--gold-bright);
+  letter-spacing: 0.12em;
+}
+
+.edit {
+  align-self: center;
+  margin-top: var(--s-3);
+}
