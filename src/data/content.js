@@ -22,14 +22,27 @@ const en = {
     groom: "Duc Anh",
     bride: "Diem My",
     cta: "Open Invitation",
-    /** The gate on a personal invitation — the number in the `No` column. */
-    codeLabel: "Invitation Code",
+    /**
+     * The master-link gate — the guest's code from the `No` column.
+     *
+     * Every string here is bilingual, and deliberately so: at the master link
+     * nobody has said who they are yet, so there is no `Lang` to render in.
+     * Once the code resolves, the invitation itself speaks one language only.
+     * `codeCta` is separate from `cta` above for exactly that reason — a guest
+     * on their own link gets the button in their own language.
+     */
+    codeLabel: "Mã khách mời · Guest Code",
     codePlaceholder: "000",
-    codeHint: "Please enter the code on your invitation.",
-    codeChecking: "Checking…",
-    codeErrorEmpty: "Please enter your invitation code.",
-    codeErrorWrong: "We couldn't find that code. Please check your invitation.",
-    codeErrorNetwork: "We couldn't check that just now. Please try again.",
+    codeCta: "Mở thiệp · Open Invitation",
+    codeChecking: "Đang mở · Opening…",
+    codeHint:
+      "Vui lòng nhập mã khách mời được ghi trên thiệp.\nPlease enter the Guest Code shown on your invitation.",
+    codeErrorEmpty:
+      "Vui lòng nhập mã khách mời.\nPlease enter your Guest Code.",
+    codeErrorWrong:
+      "Không tìm thấy mã này. Xin kiểm tra lại thiệp.\nWe couldn't find that code. Please check your invitation.",
+    codeErrorNetwork:
+      "Chưa kiểm tra được. Xin thử lại.\nWe couldn't check that just now. Please try again.",
   },
   hero: {
     src: "/hero%20final.mp4",
@@ -134,13 +147,19 @@ const vi = {
     groom: "Đức Anh",
     bride: "Diễm My",
     cta: "Mở thiệp mời",
-    codeLabel: "Mã thiệp mời",
+    /** Same bilingual gate as the English dictionary — see the note there. */
+    codeLabel: "Mã khách mời · Guest Code",
     codePlaceholder: "000",
-    codeHint: "Vui lòng nhập mã ghi trên thiệp của Quý vị.",
-    codeChecking: "Đang kiểm tra…",
-    codeErrorEmpty: "Vui lòng nhập mã thiệp mời.",
-    codeErrorWrong: "Không tìm thấy mã này. Xin kiểm tra lại thiệp của Quý vị.",
-    codeErrorNetwork: "Chưa kiểm tra được. Xin thử lại.",
+    codeCta: "Mở thiệp · Open Invitation",
+    codeChecking: "Đang mở · Opening…",
+    codeHint:
+      "Vui lòng nhập mã khách mời được ghi trên thiệp.\nPlease enter the Guest Code shown on your invitation.",
+    codeErrorEmpty:
+      "Vui lòng nhập mã khách mời.\nPlease enter your Guest Code.",
+    codeErrorWrong:
+      "Không tìm thấy mã này. Xin kiểm tra lại thiệp.\nWe couldn't find that code. Please check your invitation.",
+    codeErrorNetwork:
+      "Chưa kiểm tra được. Xin thử lại.\nWe couldn't check that just now. Please try again.",
   },
   hero: {
     src: "/hero%20final%20viet.mp4?v=2",
