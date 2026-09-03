@@ -210,25 +210,30 @@
   width: 100%;
 }
 
-/* The rule under the digits is a short one — the button sets its own width,
-   so the constraint belongs to the field rather than to the block. */
 .codeField {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--s-3);
   width: 100%;
-  max-width: 11rem;
   margin-top: var(--s-4);
 }
 
-/* Same small caps as .label in the design system, but in the gate's palette:
-   everything here sits on a bright photograph and needs its own shadow. */
+/*
+ * Same small caps as .label in the design system, but in the gate's palette:
+ * everything here sits on a bright photograph and needs its own shadow.
+ *
+ * The tracking is tighter than --track-eyebrow. The label carries both
+ * languages either side of a middle dot, and at eyebrow tracking that runs
+ * wider than the column on a small phone; `balance` splits it evenly if it
+ * does have to break rather than leaving one word stranded.
+ */
 .codeLabel {
   font-size: var(--t-eyebrow);
   text-transform: uppercase;
-  letter-spacing: var(--track-eyebrow);
-  text-indent: var(--track-eyebrow);
+  letter-spacing: 0.16em;
+  text-indent: 0.16em;
+  text-wrap: balance;
   color: var(--cream);
   text-shadow: 0 1px 12px #09203a99;
 }
@@ -239,7 +244,10 @@
  * centred over the rule despite the trailing space of the last letter.
  */
 .codeInput {
+  /* Three digits, so the rule to write on is short — the label above and the
+     button below both run wider, and are free to. */
   width: 100%;
+  max-width: 11rem;
   padding: var(--s-2) 0;
   background: transparent;
   border: 0;
@@ -267,14 +275,20 @@
   box-shadow: 0 1px 0 0 var(--gold-bright);
 }
 
-/* Reads like the hint it replaced — the quietest line on the screen. */
+/*
+ * Reads like the hint it replaced — the quietest line on the screen. Both
+ * languages, one per line: the break is written into the string in
+ * content.js, so pre-line rather than a wrap decides where it falls.
+ */
 .codeNote,
 .codeError {
   margin-top: calc(-1 * var(--s-1));
   font-size: var(--t-fine);
   font-style: italic;
+  line-height: var(--lh-snug);
   text-align: center;
-  text-wrap: balance;
+  text-wrap: pretty;
+  white-space: pre-line;
   text-shadow:
     0 1px 3px #09203ab3,
     0 2px 14px #09203acc;
@@ -300,6 +314,18 @@
    takes back the drop from the date that the field would otherwise provide. */
 .gate:not(:has(.codeField)) .cta {
   margin-top: var(--s-4);
+}
+
+/*
+ * The bilingual label is roughly twice the length of either language alone, so
+ * the button gives back the tracking and the side padding it can spare to keep
+ * it on one line. Still wide-set — just not at --track-btn.
+ */
+.ctaBilingual {
+  padding-inline: var(--s-5);
+  font-size: var(--t-eyebrow);
+  letter-spacing: 0.1em;
+  text-indent: 0.1em;
 }
 
 @keyframes cta-breathe {

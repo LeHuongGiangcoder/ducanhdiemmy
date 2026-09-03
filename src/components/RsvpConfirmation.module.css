@@ -21,12 +21,19 @@
 }
 
 /*
- * The table number, at the largest size on the page. Tabular figures so a
- * two-digit table sits centred rather than optically leaning on the 1.
+ * The table number, and by a distance the largest thing on the page — twice
+ * --t-couple, the size the couple's own names are set at. It is the one piece
+ * of information a guest opens this card to look up, so it is sized to be read
+ * across a table rather than held up to the face.
+ *
+ * Tabular figures so a two-digit table sits centred rather than optically
+ * leaning on the 1. The margin is on top of the stack's own gap: at this size
+ * the heading needs visibly more clearance than --s-5 alone gives it.
  */
 .table {
+  margin-top: var(--s-3);
   font-family: var(--font-heading);
-  font-size: calc(var(--t-couple) * var(--display-vn-scale));
+  font-size: calc(var(--t-couple) * 2 * var(--display-vn-scale));
   line-height: 1;
   font-weight: 300;
   letter-spacing: var(--track-display);

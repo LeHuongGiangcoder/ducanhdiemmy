@@ -134,13 +134,18 @@ export default function Intro({ onOpen, onPrimeAudio, closing, requireCode = fal
                      leading-zero stripping a number input would bring. */
                   inputMode="numeric"
                   autoComplete="off"
-                  maxLength={6}
+                  /* Codes are always three digits — see code_() in the sheet
+                     script. Nothing longer can match, so nothing longer is
+                     accepted: the field fills up exactly when the code does. */
+                  maxLength={3}
                   placeholder={t.intro.codePlaceholder}
                   aria-describedby="intro-code-note"
                   aria-invalid={error ? "true" : undefined}
                   value={code}
                   onChange={(e) => {
-                    setCode(e.target.value.replace(/\D/g, ""));
+                    // maxLength doesn't apply to a paste on every browser, so
+                    // the trim is done here as well as declared above.
+                    setCode(e.target.value.replace(/\D/g, "").slice(0, 3));
                     if (error) setError("");
                   }}
                 />
@@ -149,10 +154,16 @@ export default function Intro({ onOpen, onPrimeAudio, closing, requireCode = fal
 
             <button
               type="submit"
-              className={`btn btn--primary ${styles.cta}`}
+              className={`btn btn--primary ${styles.cta} ${
+                requireCode ? styles.ctaBilingual : ""
+              }`}
               disabled={checking}
             >
-              {checking ? t.intro.codeChecking : t.intro.cta}
+              {checking
+                ? t.intro.codeChecking
+                : requireCode
+                  ? t.intro.codeCta
+                  : t.intro.cta}
             </button>
 
             {requireCode && (
