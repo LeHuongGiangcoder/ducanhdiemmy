@@ -32,6 +32,11 @@
  */
 .table {
   margin-top: var(--s-3);
+  /* A table number fits with room to spare at this size, but the Table cell is
+     free text — if someone types "Bàn VIP" it wraps inside the card instead of
+     bursting out of it. */
+  max-width: 100%;
+  overflow-wrap: break-word;
   font-family: var(--font-heading);
   font-size: calc(var(--t-couple) * 2 * var(--display-vn-scale));
   line-height: 1;

@@ -18,8 +18,6 @@ export const snapshot = [
     slug: "mr-nguyen-van-an",
     name: "Mr. Nguyễn Văn An",
     code: "001",
-    attending: true,
-    table: "10",
     seats: 2,
     lang: "en",
   },
