@@ -28,14 +28,16 @@ const GATE_MS = 1600;
  * "Save the Date" is doing three jobs at once: it starts the music, lifts the
  * intro curtain, and releases the scroll lock on the body.
  *
- * A guest arriving on a personal link has to type their code first, and that
- * check is a round trip to the server — which is why priming the audio is a
- * separate step the gate calls before it awaits anything. `bypassIntro` skips
- * the curtain, but never the code: /rsvp/<slug> is the same invitation.
+ * At the master link the gate also asks for a code, and resolving it is a round
+ * trip to the server — which is why priming the audio is a separate step the
+ * gate calls before it awaits anything. The invitation that comes back replaces
+ * the generic one in place, so the code, the music and the curtain are still a
+ * single gesture rather than a second page load.
  */
-export default function Invitation({ guest, bypassIntro = false }) {
-  const gated = Boolean(guest.slug && guest.hasCode);
-  const skip = bypassIntro && !gated;
+export default function Invitation({ guest: initialGuest, bypassIntro = false, codeGate = false }) {
+  // Swapped for the real invitation once the master link's code resolves.
+  const [guest, setGuest] = useState(initialGuest);
+  const skip = bypassIntro && !codeGate;
   const [opened, setOpened] = useState(skip); // gesture received
   const [gateGone, setGateGone] = useState(skip); // curtain finished lifting
   const [playing, setPlaying] = useState(false);
@@ -77,9 +79,17 @@ export default function Invitation({ guest, bypassIntro = false }) {
     });
   }, []);
 
-  const open = useCallback(() => {
+  const open = useCallback((resolved) => {
     if (opened) return;
     setOpened(true);
+
+    if (resolved?.slug) {
+      setGuest(resolved);
+      // The address bar catches up with who this is, without a navigation that
+      // would reload the page and take the music's gesture with it. A refresh
+      // then lands on their own invitation, which opens without the code.
+      window.history.replaceState(null, "", `/${resolved.slug}`);
+    }
 
     const audio = audioRef.current;
     if (audio) {
@@ -133,8 +143,7 @@ export default function Invitation({ guest, bypassIntro = false }) {
           onOpen={open}
           onPrimeAudio={primeAudio}
           closing={opened}
-          slug={guest.slug}
-          requireCode={gated}
+          requireCode={codeGate}
         />
       )}
 

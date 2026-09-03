@@ -43,8 +43,7 @@ export const defaultGuest = {
   luckyNumber: null,
   lang: "en",
   table: null,
-  // No row in the sheet, so no code to ask for and no reply to look up.
-  hasCode: false,
+  // No row in the sheet, so there is no reply to look up and no table to show.
   attending: null,
   guestCount: 0,
 };

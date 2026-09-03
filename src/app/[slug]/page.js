@@ -42,7 +42,8 @@ export default async function GuestPage({ params }) {
   const guest = await getGuest(slug);
   if (!guest) notFound();
 
-  // publicGuest drops the access code — the invitation is a client component,
+  // Their own link: no code to type, the invitation opens on the button alone.
+  // publicGuest drops the `code` field — the invitation is a client component,
   // so anything handed to it is readable in the page source.
   return <Invitation guest={publicGuest(guest)} />;
 }

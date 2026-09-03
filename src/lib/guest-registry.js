@@ -65,39 +65,56 @@ export async function getGuest(slug) {
 }
 
 /**
- * The same guest, read straight from the sheet with the cache stepped over.
+ * The list read straight from the sheet, with the cache stepped over.
  *
- * Used by the two places where a minute-old answer would be the wrong answer:
- * checking the code a guest just typed, and showing the table number the couple
+ * For the two places where a minute-old answer would be the wrong answer: the
+ * code someone just typed at the master link, and the table number the couple
  * may have assigned since the page was rendered. Everything else goes through
- * getGuest, which is cached and prerenderable.
+ * getGuests, which is cached and keeps the invitations prerenderable.
  *
  * Falls back to the cached list rather than failing — a slow sheet must not
  * turn into a guest who can't get in.
  */
-export async function getGuestFresh(slug) {
-  if (!slug) return null;
+async function readFresh() {
   try {
     const list = await fetchFromSheet();
     lastGood = list;
-    return list.find((g) => g.slug === slug) ?? null;
+    return list;
   } catch (error) {
     console.error("[guests] fresh sheet read failed", error);
-    return getGuest(slug);
+    return getGuests();
   }
+}
+
+export async function getGuestFresh(slug) {
+  if (!slug) return null;
+  const list = await readFresh();
+  return list.find((g) => g.slug === slug) ?? null;
+}
+
+/**
+ * Look a guest up by the code they typed at the master link — the three-digit
+ * `No` from their row. This is a lookup, not a check: the code is how someone
+ * arriving at ducanhdiemmy.gloweb.site says which invitation is theirs.
+ */
+export async function getGuestByCode(code) {
+  const wanted = normaliseCode(code);
+  if (!wanted) return null;
+  const list = await readFresh();
+  return list.find((g) => g.code && g.code === wanted) ?? null;
 }
 
 /**
  * The guest as the browser is allowed to see them — everything except `code`.
  *
  * The invitation is a client component, so whatever it is handed is in the page
- * source. The code is the one field that has to stay on the server for the gate
- * to mean anything, so it is dropped on the way out.
+ * source. Nobody's code needs to be there for the invitation to render, so it
+ * is dropped on the way out.
  */
 export function publicGuest(guest) {
   if (!guest) return guest;
   const { code, ...rest } = guest;
-  return { ...rest, hasCode: Boolean(code) };
+  return rest;
 }
 
 export async function allSlugs() {

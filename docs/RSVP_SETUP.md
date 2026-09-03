@@ -83,19 +83,34 @@ Mong đợi `{"ok":true,"storage":"sheet"}` và cột `Attending` của hàng đ
 
 ---
 
-## Mã mở thiệp
+## Mã mở thiệp — chỉ ở link master
+
+Có hai đường vào, và chỉ một đường hỏi mã:
+
+| Khách mở | Có hỏi mã không |
+|---|---|
+| link riêng, ví dụ `…gloweb.site/mr-quoc-tran` | **Không.** Thiệp mở thẳng như cũ |
+| link master `ducanhdiemmy.gloweb.site` | **Có.** Gõ mã mới vào được |
 
 Cột `No` vừa là số thứ tự vừa là **mã riêng của từng khách**, luôn 3 chữ số
-(`001`, `002`, …) và được lưu dạng text để số 0 ở đầu không bị Sheets cắt mất.
+(`001`, `002`, …), lưu dạng text để số 0 ở đầu không bị Sheets cắt mất.
 
-Khách mở link riêng sẽ thấy một ô nhập mã trước khi thiệp mở ra. Gõ đúng mã ghi
-trên thiệp giấy thì thiệp mở; sai thì không. Mã **không nằm trong mã nguồn
-trang** — trình duyệt gửi mã lên `/api/access` và server so với sheet, đọc trực
-tiếp không qua cache, nên khách vừa được thêm vào sheet là vào được ngay.
+Ở link master, mã **không phải để kiểm tra** mà để **tra ra khách nào**: một địa
+chỉ in chung trên mọi tấm thiệp, khách gõ mã của mình và thiệp mở ra đúng tên,
+đúng ngôn ngữ, đúng số bàn của họ — không phải gửi đi bốn trăm cái link khác nhau.
 
-`001` và `1` được coi là một, để khách gõ kiểu nào cũng vào được. Hàng nào chưa
-có `No` thì thiệp mở thẳng bằng link, không hỏi mã — mất mã không bao giờ được
-phép khoá khách ở ngoài.
+Vài điểm đáng biết:
+
+- Mã gõ đúng thì **thanh địa chỉ tự đổi** thành link riêng của khách
+  (`…/mr-quoc-tran`), nên khách bookmark hay tải lại trang là vào thẳng thiệp
+  của mình, không phải gõ mã lần nữa. Trang không reload, nên nhạc vẫn nổi lên
+  đúng cú bấm như thiết kế.
+- `001` và `1` được coi là một, để khách gõ kiểu nào cũng vào được.
+- Danh sách được đọc **trực tiếp từ sheet, không qua cache**, nên khách vừa được
+  thêm vào sheet là mã dùng được ngay.
+- Hàng nào chưa có `No` thì không có mã để gõ — vẫn vào được bằng link riêng.
+- `/rsvp` (không kèm slug) vẫn là đường vào không cần mã, dành cho khách tự gõ
+  tên. Xem [Vài điều đáng biết](#vài-điều-đáng-biết).
 
 ## Thẻ phản hồi và số bàn
 

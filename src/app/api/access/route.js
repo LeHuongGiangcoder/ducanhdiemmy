@@ -1,15 +1,18 @@
-import { getGuestFresh, normaliseCode } from "@/lib/guest-registry";
+import { getGuestByCode, publicGuest } from "@/lib/guest-registry";
 
 /**
- * POST /api/access — the gate on a personal invitation.
+ * POST /api/access — the code typed at the master link.
  *
- * Each guest's row carries a three-digit number in the `No` column, printed on
- * what they were sent. Typing it is what opens their invitation, so a link that
- * gets forwarded on doesn't open by itself.
+ * ducanhdiemmy.gloweb.site is the one address printed on the cards, the same
+ * for everybody. What makes it personal is the three-digit number in the `No`
+ * column, printed alongside it: this route trades that code for the guest's
+ * invitation, so the master link lands on their name, their language and their
+ * table without anyone having to send out four hundred different URLs.
  *
- * The comparison happens here rather than in the browser on purpose: the code
- * is never part of the page, so it cannot be read out of the source. The read
- * is uncached — a guest added to the sheet a moment ago must be able to get in.
+ * A guest who already has their own /slug link never comes through here.
+ *
+ * The read is uncached — someone added to the sheet a minute ago must be able
+ * to get in — and the reply carries no code, only the invitation it unlocked.
  */
 export async function POST(request) {
   let payload;
@@ -19,19 +22,11 @@ export async function POST(request) {
     return Response.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  const slug = String(payload.slug ?? "").trim();
-  const code = normaliseCode(payload.code);
+  const code = String(payload.code ?? "").trim();
+  if (!code) return Response.json({ ok: false }, { status: 400 });
 
-  if (!slug || !code) {
-    return Response.json({ ok: false }, { status: 400 });
-  }
+  const guest = await getGuestByCode(code);
+  if (!guest) return Response.json({ ok: false }, { status: 404 });
 
-  const guest = await getGuestFresh(slug);
-  // A wrong slug and a wrong code answer the same way, so the endpoint can't be
-  // used to find out which invitations exist.
-  if (!guest || !guest.code || guest.code !== code) {
-    return Response.json({ ok: false }, { status: 401 });
-  }
-
-  return Response.json({ ok: true });
+  return Response.json({ ok: true, guest: publicGuest(guest) });
 }

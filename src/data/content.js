@@ -28,7 +28,7 @@ const en = {
     codeHint: "Please enter the code on your invitation.",
     codeChecking: "Checking…",
     codeErrorEmpty: "Please enter your invitation code.",
-    codeErrorWrong: "That code doesn't match this invitation.",
+    codeErrorWrong: "We couldn't find that code. Please check your invitation.",
     codeErrorNetwork: "We couldn't check that just now. Please try again.",
   },
   hero: {
@@ -139,7 +139,7 @@ const vi = {
     codeHint: "Vui lòng nhập mã ghi trên thiệp của Quý vị.",
     codeChecking: "Đang kiểm tra…",
     codeErrorEmpty: "Vui lòng nhập mã thiệp mời.",
-    codeErrorWrong: "Mã không đúng với thiệp này.",
+    codeErrorWrong: "Không tìm thấy mã này. Xin kiểm tra lại thiệp của Quý vị.",
     codeErrorNetwork: "Chưa kiểm tra được. Xin thử lại.",
   },
   hero: {

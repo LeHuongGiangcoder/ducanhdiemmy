@@ -19,15 +19,16 @@ import styles from "./Intro.module.css";
  * Pressing the button also unlocks audio playback, so the music and the reveal
  * are the same gesture.
  *
- * On a personal invitation the button is preceded by the guest's code — the
- * three-digit number from their row of the sheet, printed on what they were
- * sent. The code is checked on the server (POST /api/access), so it is never
- * part of this page and a forwarded link doesn't open by itself.
+ * At the master link — the one address printed on every card — the button is
+ * preceded by a code field. The three-digit number from the guest's row is what
+ * turns that shared address into their invitation: POST /api/access trades it
+ * for their name, language and table, and `onOpen` is handed the guest it
+ * resolved. A guest opening their own /slug link never sees this field.
  *
- * The audio is primed before that check, not after: iOS only lets playback
+ * The audio is primed before that lookup, not after: iOS only lets playback
  * start inside the gesture itself, and an `await` in between loses it.
  */
-export default function Intro({ onOpen, onPrimeAudio, closing, slug, requireCode = false }) {
+export default function Intro({ onOpen, onPrimeAudio, closing, requireCode = false }) {
   const { t } = useContent();
   const [code, setCode] = useState("");
   const [checking, setChecking] = useState(false);
@@ -57,13 +58,15 @@ export default function Intro({ onOpen, onPrimeAudio, closing, slug, requireCode
       const res = await fetch("/api/access", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug, code: typed }),
+        body: JSON.stringify({ code: typed }),
       });
       if (res.ok) {
-        onOpen();
+        const data = await res.json();
+        // The invitation the code resolved to — the gate opens onto it.
+        onOpen(data.guest);
         return;
       }
-      setError(res.status === 401 ? t.intro.codeErrorWrong : t.intro.codeErrorNetwork);
+      setError(res.status === 404 ? t.intro.codeErrorWrong : t.intro.codeErrorNetwork);
     } catch {
       setError(t.intro.codeErrorNetwork);
     } finally {
