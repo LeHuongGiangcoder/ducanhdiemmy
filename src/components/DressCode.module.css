@@ -160,12 +160,12 @@
 
 .chip {
   /* Wider than the 1fr column, so neighbours overlap. */
-  width: 9cqw;
-  height: 9cqw;
+  width: 10cqw;
+  height: 10cqw;
   border-radius: var(--radius-pill);
   /* Vintage gold rim to separate from the background */
   box-shadow:
-    0 0 0 2px #c5a870,
+    0 0 0 1px #c5a870,
     0 6px 14px -6px #3c2d2273;
 }
 
