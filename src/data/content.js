@@ -59,7 +59,7 @@ const en = {
     title: "Dress Code",
     headline: "Elegant & Formal attire",
     paletteHeading: "Dress Palette",
-    swatches: ["Midnight\nBlue", "Ocean\nBlue", "Black", "Ivory", "Taupe", "Mocha"],
+    swatches: ["Midnight\nBlue", "Ocean\nBlue", "Black", "Ivory", "Taupe"],
   },
   timeline: {
     eyebrow: "The Evening",
@@ -176,7 +176,7 @@ const vi = {
     title: "Dress Code",
     headline: "Trang trọng & Thanh lịch",
     paletteHeading: "Bảng màu gợi ý",
-    swatches: ["Xanh\nNavy", "Xanh\nDương", "Đen", "Trắng\nNgà", "Nâu\nXám", "Nâu\nMocha"],
+    swatches: ["Xanh\nNavy", "Xanh\nDương", "Đen", "Trắng\nNgà", "Nâu\nXám"],
   },
   timeline: {
     eyebrow: "Chương trình buổi tiệc",
