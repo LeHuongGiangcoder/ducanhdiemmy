@@ -40,9 +40,9 @@ const en = {
     codeErrorEmpty:
       "Vui lòng nhập mã khách mời.\nPlease enter your Guest Code.",
     codeErrorWrong:
-      "Không tìm thấy mã này. Xin kiểm tra lại thiệp.\nWe couldn't find that code. Please check your invitation.",
+      "Không tìm thấy mã khách mời. Vui lòng kiểm tra lại mã trên thiệp.\nGuest Code not found. Please check the code shown on your invitation.",
     codeErrorNetwork:
-      "Chưa kiểm tra được. Xin thử lại.\nWe couldn't check that just now. Please try again.",
+      "Chưa kiểm tra được. Xin thử lại.\nConnection failed, please try again",
   },
   hero: {
     src: "/hero%20final.mp4",
@@ -157,7 +157,7 @@ const vi = {
     codeErrorEmpty:
       "Vui lòng nhập mã khách mời.\nPlease enter your Guest Code.",
     codeErrorWrong:
-      "Không tìm thấy mã này. Xin kiểm tra lại thiệp.\nWe couldn't find that code. Please check your invitation.",
+      "Không tìm thấy mã khách mời. Vui lòng kiểm tra lại mã trên thiệp.\nGuest Code not found. Please check the code shown on your invitation.",
     codeErrorNetwork:
       "Chưa kiểm tra được. Xin thử lại.\nWe couldn't check that just now. Please try again.",
   },
