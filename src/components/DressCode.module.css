@@ -107,7 +107,7 @@
    * thumb comes over the lower edge. The seal ends at 8%, so the print starts
    * just under it and the whole block is sized to land above the fingers.
    */
-  top: 12%;
+  top: 18%;
   z-index: 1;
 
   display: flex;
