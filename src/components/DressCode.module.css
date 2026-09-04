@@ -143,9 +143,7 @@
   margin: 0;
   padding: 0;
   display: grid;
-  /* minmax(0, …) — a bare 1fr floors at min-content, which the oversized chip
-     would push the track out to, killing the overlap. */
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   grid-template-rows: auto auto;
   grid-auto-flow: column;
   justify-items: center;
@@ -161,9 +159,9 @@
 }
 
 .chip {
-  /* Wider than the 1fr column (25% of the block), so neighbours overlap. */
-  width: 13cqw;
-  height: 13cqw;
+  /* Wider than the 1fr column, so neighbours overlap. */
+  width: 9cqw;
+  height: 9cqw;
   border-radius: var(--radius-pill);
   /* Vintage gold rim to separate from the background */
   box-shadow:
@@ -172,7 +170,7 @@
 }
 
 .swatchName {
-  font-size: 2.15cqw;
+  font-size: 1.5cqw;
   line-height: 1.25;
   font-style: italic;
   text-align: center;
