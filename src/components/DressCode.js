@@ -6,7 +6,7 @@ import Reveal from "./Reveal";
 import styles from "./DressCode.module.css";
 
 /**
- * Dress code. The palette is held up on the card rather than laid on a panel:
+ * Dress Code. The palette is held up on the card rather than laid on a panel:
  * the gloved hand presents the paper, the wax seal is pressed on its top edge,
  * and the four swatches are printed in the blank of the paper itself.
  *

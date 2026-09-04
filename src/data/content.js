@@ -11,7 +11,7 @@
  * be an invitation to let the two drift apart.
  *
  * A few headings are deliberately left in English in the Vietnamese version —
- * "Dress code", "Timeline", "R.S.V.P." — at the couple's request. Strings that
+ * "Dress Code", "Timeline", "R.S.V.P." — at the couple's request. Strings that
  * do carry Vietnamese tone marks are set in DFVN Big Bang automatically; see
  * src/lib/aegean.js.
  */
@@ -56,7 +56,7 @@ const en = {
   },
   dressCode: {
     eyebrow: "For the Occasion",
-    title: "Dress code",
+    title: "Dress Code",
     headline: "Elegant & Formal attire",
     paletteHeading: "Dress Palette",
     swatches: ["Midnight\nBlue", "Ocean\nBlue", "Black", "Ivory"],
@@ -173,7 +173,7 @@ const vi = {
   },
   dressCode: {
     eyebrow: "Trang phục dự tiệc",
-    title: "Dress code",
+    title: "Dress Code",
     headline: "Trang trọng & Thanh lịch",
     paletteHeading: "Bảng màu gợi ý",
     swatches: ["Xanh\nNavy", "Xanh\nDương", "Đen", "Trắng\nNgà"],

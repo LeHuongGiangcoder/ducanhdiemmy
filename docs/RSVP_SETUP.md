@@ -203,5 +203,5 @@ vào cuối link bất kỳ.
 https://ducanhdiemmy.gloweb.site/mr-quoc-tran?lang=vi
 ```
 
-Vài tiêu đề giữ nguyên tiếng Anh trong bản Việt theo yêu cầu: `Dress code`,
+Vài tiêu đề giữ nguyên tiếng Anh trong bản Việt theo yêu cầu: `Dress Code`,
 `Timeline`, `R.S.V.P.`. Muốn dịch nốt thì sửa `src/data/content.js`.
