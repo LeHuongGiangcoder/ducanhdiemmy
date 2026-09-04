@@ -59,7 +59,7 @@ const en = {
     title: "Dress Code",
     headline: "Elegant & Formal attire",
     paletteHeading: "Dress Palette",
-    swatches: ["Midnight\nBlue", "Ocean\nBlue", "Black", "Ivory", "Dirty\nMocha", "Dusty\nRose"],
+    swatches: ["Midnight\nBlue", "Ocean\nBlue", "Black", "Ivory", "Mocha", "Dusty\nRose"],
   },
   timeline: {
     eyebrow: "The Evening",
