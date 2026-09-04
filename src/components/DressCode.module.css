@@ -107,14 +107,14 @@
    * thumb comes over the lower edge. The seal ends at 8%, so the print starts
    * just under it and the whole block is sized to land above the fingers.
    */
-  top: 18%;
+  top: 16%;
   z-index: 1;
 
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 4cqw;
+  gap: 5cqw;
 }
 
 /* Set on the paper, in the paper's own ink — not the section's cream on wine. */
