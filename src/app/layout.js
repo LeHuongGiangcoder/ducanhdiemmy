@@ -1,6 +1,7 @@
 import { cormorant, dfvnBigBang, tanAegean, tanPearl } from "./fonts";
 import { wedding } from "@/data/wedding";
 import { DEFAULT_LANG, getContent } from "@/data/content";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 /* The shared link has no guest, so it carries the default language. */
 const site = getContent(DEFAULT_LANG).intro;
@@ -37,6 +38,7 @@ export default function RootLayout({ children }) {
     >
       <body>
         {children}
+        <Analytics />
       </body>
     </html>
   );
