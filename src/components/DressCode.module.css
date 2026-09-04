@@ -143,7 +143,7 @@
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   grid-template-rows: auto auto;
   grid-auto-flow: column;
   justify-items: center;
@@ -160,8 +160,8 @@
 
 .chip {
   /* Wider than the 1fr column, so neighbours overlap. */
-  width: 10cqw;
-  height: 10cqw;
+  width: 12cqw;
+  height: 12cqw;
   border-radius: var(--radius-pill);
   /* Vintage gold rim to separate from the background */
   box-shadow:
@@ -170,7 +170,7 @@
 }
 
 .swatchName {
-  font-size: 1.5cqw;
+  font-size: 1.8cqw;
   line-height: 1.25;
   font-style: italic;
   text-align: center;
