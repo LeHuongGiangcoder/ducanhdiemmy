@@ -33,7 +33,7 @@ export const wedding = {
 export const timelineTimes = ["17:45", "18:45", "19:15", "20:30", "21:30"];
 
 /** Swatch colours. Their names are per-language, in content.js. */
-export const dressPalette = ["#0A1422", "#3d6285", "#111111", "#e8dcc8", "#c8828b", "#866355"];
+export const dressPalette = ["#0A1422", "#3d6285", "#111111", "#e8dcc8", "#866355", "#c8828b"];
 
 /** Fallback used at `/` — anyone opening the site without a personal link. */
 export const defaultGuest = {
