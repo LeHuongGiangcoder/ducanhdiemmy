@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { couple, wedding } from "@/data/wedding";
 import { useContent } from "./LanguageProvider";
 import { fallbackFontClass } from "@/lib/aegean";
@@ -36,9 +36,24 @@ export default function Intro({
   requireCode = false,
 }) {
   const { t } = useContent();
+  const bgRef = useRef(null);
   const [code, setCode] = useState("");
   const [checking, setChecking] = useState(false);
   const [error, setError] = useState("");
+
+  /*
+   * `onLoad` is the usual signal, but a `priority` image is often already
+   * decoded by the time React attaches the handler — on a warm cache it
+   * finished in 5 ms, hydration ran a beat later, and the event had long
+   * since passed. React does not replay it, so the signal never arrived and
+   * the media sat waiting on Invitation's fallback timer instead.
+   *
+   * An image that is already `complete` at mount is the same news, just
+   * earlier: report it.
+   */
+  useEffect(() => {
+    if (bgRef.current?.complete) onBackdropLoad?.();
+  }, [onBackdropLoad]);
 
   async function submit(event) {
     event.preventDefault();
@@ -88,6 +103,7 @@ export default function Intro({
       aria-label={`${t.intro.groom} & ${t.intro.bride}`}
     >
       <Image
+        ref={bgRef}
         src="/assets/intro-sunset.jpg"
         alt=""
         aria-hidden="true"
@@ -98,7 +114,8 @@ export default function Intro({
         className={styles.bg}
         /* The starting gun for the hero video and the music — see the
            `mediaReady` note in Invitation.js. Nothing heavier than this
-           photograph should be in flight until it has landed. */
+           photograph should be in flight until it has landed, and a
+           photograph that failed is no reason to hold the rest hostage. */
         onLoad={onBackdropLoad}
         onError={onBackdropLoad}
       />

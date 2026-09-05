@@ -52,6 +52,9 @@ export default function Invitation({ guest: initialGuest, bypassIntro = false, c
    * anyone taps it, which is plenty of runway for the video to buffer.
    */
   const [mediaReady, setMediaReady] = useState(skip);
+  /* Stable, so Intro's already-complete check isn't an effect that re-runs on
+     every render of the gate. */
+  const markMediaReady = useCallback(() => setMediaReady(true), []);
   const [playing, setPlaying] = useState(false);
   // Until the audio file is supplied there is nothing to toggle, so the
   // control hides itself rather than sitting there doing nothing.
@@ -180,7 +183,7 @@ export default function Invitation({ guest: initialGuest, bypassIntro = false, c
         <Intro
           onOpen={open}
           onPrimeAudio={primeAudio}
-          onBackdropLoad={() => setMediaReady(true)}
+          onBackdropLoad={markMediaReady}
           closing={opened}
           requireCode={codeGate}
         />
