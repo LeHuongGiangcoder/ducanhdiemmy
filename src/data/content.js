@@ -177,7 +177,7 @@ const vi = {
     eyebrow: "Trang phục dự tiệc",
     title: "Dress Code",
     headline: "Trang trọng & Thanh lịch",
-    ok  paletteHeading: "Bảng màu gợi ý",
+    paletteHeading: "Bảng màu gợi ý",
     swatches: ["Xanh\nNavy", "Xanh\nDương", "Đen", "Trắng\nNgà", "Nâu\nXám"],
   },
   timeline: {
