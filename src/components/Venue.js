@@ -60,7 +60,24 @@ export default function Venue() {
               height={800}
               sizes="(max-width: 479px) 100vw, 430px"
               className={styles.sketch}
-              priority
+              /*
+               * Eager but low priority, rather than `priority`.
+               *
+               * This sketch is the next screen down and it sits behind the
+               * intro gate, so nobody is looking at it yet — but `priority`
+               * had it racing the intro photograph for the connection, the
+               * same contention the hero video was taken out of (see
+               * `mediaReady` in Invitation.js).
+               *
+               * Plain lazy would be the obvious answer and it is the wrong
+               * one here: the reveal below fades this in on intersection, so
+               * a lazy fetch would only start as the guest arrives and the
+               * sketch would fade in empty. Eager keeps the fetch guaranteed
+               * and early; `fetchPriority="low"` is what tells the scheduler
+               * to queue it behind the photograph instead of alongside it.
+               */
+              loading="eager"
+              fetchPriority="low"
             />
           </div>
 
