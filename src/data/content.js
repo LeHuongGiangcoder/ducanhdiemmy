@@ -45,7 +45,8 @@ const en = {
       "Chưa kiểm tra được. Xin thử lại.\nConnection failed, please try again",
   },
   hero: {
-    src: "/hero%20final.mp4",
+    src: "/assets/hero-en.mp4",
+    poster: "/assets/hero-en.jpg",
     salutation: "Dear",
   },
   venue: {
@@ -162,7 +163,8 @@ const vi = {
       "Chưa kiểm tra được. Xin thử lại.\nWe couldn't check that just now. Please try again.",
   },
   hero: {
-    src: "/hero%20final%20viet.mp4?v=2",
+    src: "/assets/hero-vi.mp4",
+    poster: "/assets/hero-vi.jpg",
     salutation: "Trân trọng kính mời",
   },
   venue: {
@@ -175,7 +177,7 @@ const vi = {
     eyebrow: "Trang phục dự tiệc",
     title: "Dress Code",
     headline: "Trang trọng & Thanh lịch",
-    paletteHeading: "Bảng màu gợi ý",
+    ok  paletteHeading: "Bảng màu gợi ý",
     swatches: ["Xanh\nNavy", "Xanh\nDương", "Đen", "Trắng\nNgà", "Nâu\nXám"],
   },
   timeline: {

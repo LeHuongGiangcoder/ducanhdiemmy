@@ -70,13 +70,36 @@ const SLOT_FILL = 0.7;
 /** Never shrink past this — below it the name stops reading as the same card. */
 const MIN_FIT = 0.62;
 
-export default function Hero({ guest, started, revealing }) {
+export default function Hero({ guest, started, revealing, preloadVideo = true }) {
   const { lang, t } = useContent();
   const slot = SLOT[lang] ?? SLOT.en;
   const stageRef = useRef(null);
   const nameRef = useRef(null);
+  const videoRef = useRef(null);
   const [box, setBox] = useState(null);
   const nameSafe = isDisplaySafe(guest.name);
+
+  /**
+   * The card is 2.4 MB and it is behind a gate nobody has tapped yet, so it
+   * waits until the intro photograph has painted (see `mediaReady` in
+   * Invitation.js) before it starts downloading.
+   *
+   * `preload="none"` alone does not hold it: an `autoplay` element is allowed
+   * to begin fetching whatever it needs to honour the autoplay, and Chrome
+   * does — measured, the video still started at 77 ms, alongside the
+   * photograph. So autoplay is withheld too, and playback is started here by
+   * hand once the wait is over. `muted` is what makes that `play()` legal
+   * without a gesture.
+   */
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!preloadVideo || !video) return;
+    if (video.readyState === 0) video.load();
+    video.play().catch(() => {
+      // A browser that refuses the programmatic start still has `autoplay`
+      // set on the element by now, which is the same instruction again.
+    });
+  }, [preloadVideo, t.hero.src]);
 
   /**
    * The video is `object-fit: cover`, so its rendered frame rarely matches the
@@ -167,12 +190,17 @@ export default function Hero({ guest, started, revealing }) {
     >
       <video
         key={t.hero.src}
+        ref={videoRef}
         className={styles.video}
-        autoPlay
+        autoPlay={preloadVideo}
         loop
         muted
         playsInline
-        preload="auto"
+        /* A still of the card's first frame, so the hero is the invitation
+           from the very first paint rather than a black rectangle waiting on
+           a buffer. */
+        poster={t.hero.poster}
+        preload={preloadVideo ? "auto" : "none"}
         aria-hidden="true"
       >
         {/*

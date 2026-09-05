@@ -40,6 +40,18 @@ export default function Invitation({ guest: initialGuest, bypassIntro = false, c
   const skip = bypassIntro && !codeGate;
   const [opened, setOpened] = useState(skip); // gesture received
   const [gateGone, setGateGone] = useState(skip); // curtain finished lifting
+  /*
+   * The hero video and the music are ~5 MB between them, and neither is on
+   * screen while the gate is up — but a `preload="auto"` on both starts them
+   * fetching at first paint, which put the intro photograph behind megabytes
+   * of media it has no reason to wait for. On a phone that was three seconds
+   * of blank gate.
+   *
+   * So the media holds at `preload="none"` until the photograph has actually
+   * painted, and only then starts. The gate is read for a few seconds before
+   * anyone taps it, which is plenty of runway for the video to buffer.
+   */
+  const [mediaReady, setMediaReady] = useState(skip);
   const [playing, setPlaying] = useState(false);
   // Until the audio file is supplied there is nothing to toggle, so the
   // control hides itself rather than sitting there doing nothing.
@@ -47,14 +59,40 @@ export default function Invitation({ guest: initialGuest, bypassIntro = false, c
   const audioRef = useRef(null);
 
   /**
-   * `preload="auto"` starts fetching before React hydrates, so a missing file
-   * can fail before the onError prop is ever attached. Re-check the element on
-   * mount to catch that case.
+   * The fetch can begin before React hydrates, so a missing file can fail
+   * before the onError prop is ever attached. Re-check the element on mount to
+   * catch that case.
    */
   useEffect(() => {
     const audio = audioRef.current;
     if (audio?.error) setHasAudio(false);
   }, []);
+
+  /*
+   * `onLoad` on the intro photograph is the signal, but it is not guaranteed:
+   * a decode failure, or a browser that never fires it for a cached image,
+   * would strand the media at `preload="none"` and leave the tap waiting on a
+   * cold video. The timer is the floor — worst case the media starts a beat
+   * late, which is still later than the photograph.
+   */
+  useEffect(() => {
+    if (mediaReady) return;
+    const timer = window.setTimeout(() => setMediaReady(true), 2500);
+    return () => window.clearTimeout(timer);
+  }, [mediaReady]);
+
+  /*
+   * Flipping the `preload` attribute is not enough on its own — once resource
+   * selection has concluded under `none`, most browsers need an explicit
+   * `load()` to go back and fetch. Skipped once the gate is open, where
+   * `load()` would tear down the playback that just started.
+   */
+  useEffect(() => {
+    if (!mediaReady || opened) return;
+    const audio = audioRef.current;
+    if (!audio || !audio.paused) return;
+    audio.load();
+  }, [mediaReady, opened]);
 
   // Lock scrolling behind the gate.
   useEffect(() => {
@@ -134,7 +172,7 @@ export default function Invitation({ guest: initialGuest, bypassIntro = false, c
         ref={audioRef}
         src={MUSIC_SRC}
         loop
-        preload="auto"
+        preload={mediaReady ? "auto" : "none"}
         onError={() => setHasAudio(false)}
       />
 
@@ -142,13 +180,19 @@ export default function Invitation({ guest: initialGuest, bypassIntro = false, c
         <Intro
           onOpen={open}
           onPrimeAudio={primeAudio}
+          onBackdropLoad={() => setMediaReady(true)}
           closing={opened}
           requireCode={codeGate}
         />
       )}
 
       <main aria-hidden={!gateGone}>
-        <Hero guest={guest} started={gateGone} revealing={opened} />
+        <Hero
+          guest={guest}
+          started={gateGone}
+          revealing={opened}
+          preloadVideo={mediaReady}
+        />
         <Venue />
         <DressCode />
         <Timeline />

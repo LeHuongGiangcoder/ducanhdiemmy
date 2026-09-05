@@ -28,7 +28,13 @@ import styles from "./Intro.module.css";
  * The audio is primed before that lookup, not after: iOS only lets playback
  * start inside the gesture itself, and an `await` in between loses it.
  */
-export default function Intro({ onOpen, onPrimeAudio, closing, requireCode = false }) {
+export default function Intro({
+  onOpen,
+  onPrimeAudio,
+  onBackdropLoad,
+  closing,
+  requireCode = false,
+}) {
   const { t } = useContent();
   const [code, setCode] = useState("");
   const [checking, setChecking] = useState(false);
@@ -90,6 +96,11 @@ export default function Intro({ onOpen, onPrimeAudio, closing, requireCode = fal
         quality={90}
         sizes="(max-width: 479px) 100vw, (max-height: 1000px) 100vh, 100vw"
         className={styles.bg}
+        /* The starting gun for the hero video and the music — see the
+           `mediaReady` note in Invitation.js. Nothing heavier than this
+           photograph should be in flight until it has landed. */
+        onLoad={onBackdropLoad}
+        onError={onBackdropLoad}
       />
 
       <div className={styles.body}>
