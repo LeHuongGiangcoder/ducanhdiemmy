@@ -123,6 +123,18 @@
 }
 
 /*
+ * A signature that is words rather than initials — "Gia Đình Hai Bên" on the
+ * families' version. Four words at h-2 overrun a 375px screen, and the nowrap
+ * above was written for three characters, so it is lifted here and the line is
+ * allowed to break where it needs to.
+ */
+.signatureWords {
+  white-space: normal;
+  text-wrap: balance;
+  max-width: 12em;
+}
+
+/*
  * The size correction used to be applied here by hand. It now rides on .h-2
  * via --display-vn-scale, and the element carries `display-caps` because the
  * initials are all capitals — so this rule would double-apply it. See the
@@ -192,6 +204,7 @@
  * and they land on the brightest part of the frame. One step further up the
  * weight axis puts them back.
  */
-[data-lang="vi"] .section :global(.body) {
+[data-lang="vi"] .section :global(.body),
+[data-lang="parents"] .section :global(.body) {
   font-weight: 550;
 }

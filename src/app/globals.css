@@ -1162,7 +1162,14 @@ legend.label {
  * CSS modules included, with no specificity fight: --font-heading and
  * --font-couple-name are both built on these.
  */
-[data-lang="vi"] {
+/*
+ * Both Vietnamese-language versions take the Vietnamese display face — the
+ * couple's and the families'. The selector lists them rather than matching a
+ * prefix, so a future version has to opt in deliberately: a version that is not
+ * in Vietnamese must not inherit a face chosen for tone marks.
+ */
+[data-lang="vi"],
+[data-lang="parents"] {
   /* Override the composed variables, not --font-display underneath them: var()
      is substituted where a property is declared, so --font-heading froze TAN
      in at :root and would inherit down here already resolved. */
@@ -1179,6 +1186,7 @@ legend.label {
  * x-height needs less lifting to meet DFVN.
  */
 [data-lang="vi"] .h-couple,
+[data-lang="parents"] .h-couple,
 .h-couple.font-display-vn {
   --display-vn-scale: var(--vn-scale-couple);
 }
@@ -1195,6 +1203,7 @@ legend.label {
  * already resolved to --vn-scale-title. Same trap as --font-heading above.
  */
 [data-lang="vi"] .display-caps,
+[data-lang="parents"] .display-caps,
 .font-display-vn.display-caps {
   --display-vn-scale: var(--vn-scale-caps);
 }

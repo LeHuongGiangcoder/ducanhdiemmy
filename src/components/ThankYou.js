@@ -56,7 +56,24 @@ export default function ThankYou() {
             <span className="rule-mark__dot" />
           </div>
           <p className="eyebrow">{t.thankYou.signoff}</p>
-          <p className={`h-2 display-caps ${styles.signature}`}>{couple.initials}</p>
+          {/*
+           * The couple sign with their initials; the families sign with their
+           * name. `display-caps` and the nowrap that goes with it belong to the
+           * initials only — they are two letters and an ampersand, which is what
+           * both were cut for. A signature of real words takes the ordinary
+           * heading treatment and is allowed to wrap.
+           */}
+          {t.thankYou.signature ? (
+            <p
+              className={`h-2 ${styles.signature} ${styles.signatureWords} ${fallbackFontClass(
+                t.thankYou.signature,
+              )}`}
+            >
+              {t.thankYou.signature}
+            </p>
+          ) : (
+            <p className={`h-2 display-caps ${styles.signature}`}>{couple.initials}</p>
+          )}
           <p className="eyebrow date-text">{wedding.dateShort}</p>
         </Reveal>
       </div>

@@ -47,6 +47,13 @@ const SLOT_HEIGHT = SLOT_BOTTOM - SLOT_TOP;
 const SLOT = {
   en: { top: SLOT_TOP, height: SLOT_HEIGHT, x: 0.5113 },
   vi: { top: SLOT_TOP, height: SLOT_HEIGHT, x: 0.5113 },
+  /* The families' card is the Vietnamese composition re-cut with the parents'
+     names and their own wishes line, so the blank line falls in the same
+     place. Measured, not assumed: the salutation band above the slot is
+     pixel-identical between the two cards (both read "Trân trọng kính mời"),
+     and the wishes line below it starts on the same row, while the bands that
+     carry the two families' names differ as you would expect. */
+  parents: { top: SLOT_TOP, height: SLOT_HEIGHT, x: 0.5113 },
 };
 
 /*

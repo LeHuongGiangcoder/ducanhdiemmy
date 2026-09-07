@@ -9,7 +9,7 @@ hàng của người đó. Không có chỗ nào khác phải sửa, không cầ
 | `No` | tự sinh | số thứ tự **và là mã khách nhập để mở thiệp** — 3 chữ số (`001`, `002`…) |
 | `Name` | **bạn gõ** | tên hiện trên thiệp — có dấu tiếng Việt thoải mái |
 | `Seats` | **bạn gõ** | số chỗ tối đa của thiệp này (bỏ trống = 2) |
-| `Lang` | **bạn chọn** | `vi` = thiệp tiếng Việt, `en` = tiếng Anh. **Bỏ trống = `en`** |
+| `Lang` | **bạn chọn** | `vi` = thiệp tiếng Việt, `en` = tiếng Anh, `parents` = thiệp hai bên gia đình đứng tên. **Bỏ trống = `en`** |
 | `Table` | **bạn gõ** | số bàn, hiện trong thẻ phản hồi sau khi khách xác nhận. Bỏ trống = khách thấy "sẽ được cập nhật" |
 | `Slug` | tự sinh | phần đuôi URL, sinh từ tên |
 | `Link` | tự sinh | link để gửi cho khách — copy thẳng từ đây |
@@ -188,19 +188,25 @@ Không sửa tay file đó — lần chạy sau sẽ ghi đè.
 - Khách vào thẳng `/rsvp` (không qua link riêng) vẫn trả lời được: họ tự gõ tên,
   và một hàng mới được nối vào cuối sheet.
 
-## Hai ngôn ngữ
+## Ba bản thiệp
 
-Mỗi khách nhận thiệp bằng đúng ngôn ngữ ghi ở cột `Lang`. Không có hai website,
+Mỗi khách nhận thiệp bằng đúng bản ghi ở cột `Lang`. Không có hai website,
 không có hai bản build — cùng một trang, đổi từ điển nội dung theo từng khách.
 
-Bản tiếng Việt dùng video hero riêng (`hero final viet.mp4`) và font DFVN Big
-Bang cho những dòng có dấu, vì TAN Aegean không vẽ được dấu tiếng Việt.
+| `Lang` | Thiệp | Khác gì |
+| --- | --- | --- |
+| `en` | Tiếng Anh | mặc định khi ô trống |
+| `vi` | Tiếng Việt | video hero riêng, cô dâu chú rể đứng tên |
+| `parents` | Hai bên gia đình | **video hero riêng + lời cảm ơn của gia đình**, ký `Gia Đình Hai Bên`; mọi phần còn lại y hệt bản `vi` |
 
-Muốn xem thử bản kia mà không phải sửa sheet: thêm `?lang=vi` (hoặc `?lang=en`)
-vào cuối link bất kỳ.
+Bản tiếng Việt và bản `parents` dùng video hero riêng và font DFVN Big Bang cho
+những dòng có dấu, vì TAN Aegean không vẽ được dấu tiếng Việt.
+
+Muốn xem thử bản kia mà không phải sửa sheet: thêm `?lang=vi`, `?lang=parents`
+(hoặc `?lang=en`) vào cuối link bất kỳ.
 
 ```
-https://ducanhdiemmy.gloweb.site/mr-quoc-tran?lang=vi
+https://ducanhdiemmy.gloweb.site/mr-quoc-tran?lang=parents
 ```
 
 Vài tiêu đề giữ nguyên tiếng Anh trong bản Việt theo yêu cầu: `Dress Code`,

@@ -169,7 +169,8 @@
  * does, so it wraps to two lines and takes the full column to break in.
  * --t-h4's "stays on one line" holds for every other title in both languages.
  */
-[data-lang="vi"] .subtitle {
+[data-lang="vi"] .subtitle,
+[data-lang="parents"] .subtitle {
   padding-right: var(--s-6);
 }
 

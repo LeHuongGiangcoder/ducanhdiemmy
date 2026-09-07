@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Re-encode the two hero cards for mobile delivery, and cut a poster from each.
+# Re-encode the three hero cards for mobile delivery, and cut a poster from each.
 #
 # The masters came off the editor at 5.6 Mbps (EN) and 8.4 Mbps (VI) for ten
 # seconds of an almost-static 1080x1920 card — film-grade bitrates spent on
@@ -49,5 +49,9 @@ encode() {
 
 encode "public/hero final.mp4"      "public/assets/hero-en.mp4"
 encode "public/hero final viet.mp4" "public/assets/hero-vi.mp4"
+# The families' card. Its master arrived at 9 Mbps and was encoded once without
+# ffmpeg on the machine (AVFoundation, 3.2 Mbps — 4.0 MB), which is a megabyte
+# and a half more than this line produces for the same picture. Run it.
+encode "public/hero final parents.mp4" "public/assets/hero-parents.mp4"
 
 ls -la public/assets/hero-*

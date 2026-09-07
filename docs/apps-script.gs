@@ -38,6 +38,13 @@ const LANGS = {
   en: 'en', eng: 'en', english: 'en', anh: 'en', 'tieng anh': 'en',
   vi: 'vi', vn: 'vi', vie: 'vi', viet: 'vi', vietnamese: 'vi',
   'viet nam': 'vi', 'tieng viet': 'vi',
+  /*
+   * Thiệp do hai bên gia đình đứng tên: vẫn tiếng Việt, nhưng video hero và
+   * lời cảm ơn là của gia đình. Nhận cả cách gõ tiếng Việt lẫn tiếng Anh vì ô
+   * này hay được gõ tay đè lên dropdown.
+   */
+  parents: 'parents', parent: 'parents', 'bo me': 'parents',
+  'gia dinh': 'parents', 'phu huynh': 'parents',
 };
 
 /** Bỏ dấu để 'Tiếng Việt' và 'tieng viet' cùng tra được một chỗ. */
@@ -83,11 +90,13 @@ function setupSheet() {
   sheet.setColumnWidth(col.link, 320);
   sheet.setColumnWidth(col.message, 320);
 
-  // Ô Lang thành dropdown en/vi để khỏi gõ sai.
+  // Ô Lang thành dropdown en/vi/parents để khỏi gõ sai.
   const rule = SpreadsheetApp.newDataValidation()
-    .requireValueInList(['en', 'vi'], true)
+    .requireValueInList(['en', 'vi', 'parents'], true)
     .setAllowInvalid(false)
-    .setHelpText('en = thiệp tiếng Anh, vi = thiệp tiếng Việt. Trống = en.')
+    .setHelpText(
+      'en = thiệp tiếng Anh, vi = thiệp tiếng Việt, ' +
+      'parents = thiệp hai bên gia đình đứng tên. Trống = en.')
     .build();
   sheet.getRange(FIRST_ROW, col.lang, sheet.getMaxRows() - 1, 1)
     .setDataValidation(rule);
@@ -112,10 +121,14 @@ function checkData() {
     return g.lang + '   ' + g.slug + '   ' + g.name;
   });
 
-  const viCount = guests.filter(function (g) { return g.lang === 'vi'; }).length;
+  const count_ = function (lang) {
+    return guests.filter(function (g) { return g.lang === lang; }).length;
+  };
   const message =
-    guests.length + ' khách — ' + viCount + ' tiếng Việt, ' +
-    (guests.length - viCount) + ' tiếng Anh\n\n' +
+    guests.length + ' khách — ' +
+    count_('vi') + ' tiếng Việt, ' +
+    count_('en') + ' tiếng Anh, ' +
+    count_('parents') + ' gia đình\n\n' +
     'lang  slug  name\n' + lines.join('\n') +
     (guests.length > 12 ? '\n… còn ' + (guests.length - 12) + ' dòng' : '');
 

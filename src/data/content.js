@@ -1,10 +1,11 @@
 /**
- * Every word on the invitation, in both languages.
+ * Every word on the invitation, in each of its versions.
  *
- * The couple invite guests who read English and guests who read Vietnamese, so
+ * The couple invite guests who read English and guests who read Vietnamese, and
+ * some guests are invited by the two families rather than by the couple — so
  * each guest's row in the sheet carries a `Lang` and their invitation is
- * rendered in it. One code path, two dictionaries — never two builds, which
- * would be two things to remember to change.
+ * rendered in it. One code path, three dictionaries — never three builds, which
+ * would be three things to remember to change.
  *
  * Structural data (times, hex values, map URL, the date itself) stays in
  * wedding.js: it is the same in both languages, and duplicating it here would
@@ -250,15 +251,72 @@ const vi = {
   },
 };
 
-const dictionaries = { en, vi };
+/**
+ * The parents' version — the same invitation, sent in the families' voice.
+ *
+ * Only two things change: the hero card, which is cut with the parents' own
+ * wording set into the footage, and the closing thanks, which is written by the
+ * two families rather than by the couple. Everything else — venue, dress code,
+ * timeline, R.S.V.P., menu — is word for word the Vietnamese invitation, so it
+ * is spread in rather than copied. A copy would be a second place to remember
+ * to edit, and the first line the couple ever changed would put the two
+ * versions quietly out of step.
+ */
+const parents = {
+  ...vi,
+  hero: {
+    src: "/assets/hero-parents.mp4",
+    poster: "/assets/hero-parents.jpg",
+    salutation: "Trân trọng kính mời",
+  },
+  thankYou: {
+    headline: "Trân Trọng Cảm Ơn",
+    body:
+      "Sự hiện diện của Quý khách là niềm vui\nvà vinh hạnh lớn đối với gia đình chúng tôi\ntrong ngày thành hôn của hai con.\n\n" +
+      "Gia đình xin chân thành cảm ơn Quý khách\nđã dành thời gian đến chung vui, cùng những\ntình cảm, sự quan tâm và lời chúc tốt đẹp\ndành cho hai con.",
+    signoff: "Trân trọng",
+    /**
+     * Takes the place of the couple's initials in the sign-off. Only this
+     * version sets it — everywhere else the closing signature is `D.A & D.M`
+     * from wedding.js, and ThankYou.js falls back to that when it is absent.
+     */
+    signature: "Gia Đình Hai Bên",
+  },
+};
+
+const dictionaries = { en, vi, parents };
 
 export const LANGUAGES = Object.keys(dictionaries);
 export const DEFAULT_LANG = "en";
 
-/** Anything unrecognised — blank cell, a typo, "English" — falls back to `en`. */
+/**
+ * Spellings the sheet may carry that are not the canonical key.
+ *
+ * The Apps Script already folds the Lang column down to `en` / `vi` /
+ * `parents` before the site ever sees it (see LANGS in docs/apps-script.gs),
+ * so in practice this catches the two places that bypass it: a `?lang=` in the
+ * URL, and a sheet read by an older deployment of the script.
+ */
+const ALIASES = {
+  eng: "en", english: "en",
+  vn: "vi", vie: "vi", viet: "vi", vietnamese: "vi",
+  parent: "parents", family: "parents", families: "parents",
+};
+
+/**
+ * Anything unrecognised — blank cell, a typo, "English" — falls back to `en`.
+ *
+ * The key is matched whole. It used to be cut to two characters, which was
+ * harmless while every version was a two-letter code and quietly wrong the
+ * moment one wasn't: "parents" came through as "pa", matched nothing, and the
+ * families' invitation rendered in English. The slice was also doing the
+ * aliasing by accident — "vietnamese" happened to start with "vi" — so the
+ * spellings it used to absorb are named above rather than left to fall back.
+ */
 export function normaliseLang(value) {
-  const key = String(value ?? "").trim().toLowerCase().slice(0, 2);
-  return dictionaries[key] ? key : DEFAULT_LANG;
+  const key = String(value ?? "").trim().toLowerCase();
+  const resolved = ALIASES[key] ?? key;
+  return dictionaries[resolved] ? resolved : DEFAULT_LANG;
 }
 
 export function getContent(lang) {
