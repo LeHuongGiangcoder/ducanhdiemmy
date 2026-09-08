@@ -295,12 +295,13 @@ export const DEFAULT_LANG = "en";
  * The Apps Script already folds the Lang column down to `en` / `vi` /
  * `parents` before the site ever sees it (see LANGS in docs/apps-script.gs),
  * so in practice this catches the two places that bypass it: a `?lang=` in the
- * URL, and a sheet read by an older deployment of the script.
+ * URL, and a sheet read by an older deployment of the script. `pr` is what the
+ * Lang column now actually holds, so it is spelled out here too.
  */
 const ALIASES = {
   eng: "en", english: "en",
   vn: "vi", vie: "vi", viet: "vi", vietnamese: "vi",
-  parent: "parents", family: "parents", families: "parents",
+  pr: "parents", parent: "parents", family: "parents", families: "parents",
 };
 
 /**

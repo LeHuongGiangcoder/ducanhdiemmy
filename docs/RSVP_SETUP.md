@@ -9,7 +9,7 @@ hàng của người đó. Không có chỗ nào khác phải sửa, không cầ
 | `No` | tự sinh | số thứ tự **và là mã khách nhập để mở thiệp** — 3 chữ số (`001`, `002`…) |
 | `Name` | **bạn gõ** | tên hiện trên thiệp — có dấu tiếng Việt thoải mái |
 | `Seats` | **bạn gõ** | số chỗ tối đa của thiệp này (bỏ trống = 2) |
-| `Lang` | **bạn chọn** | `vi` = thiệp tiếng Việt, `en` = tiếng Anh, `parents` = thiệp hai bên gia đình đứng tên. **Bỏ trống = `en`** |
+| `Lang` | **bạn chọn** | `vi` = thiệp tiếng Việt, `en` = tiếng Anh, `pr` = thiệp hai bên gia đình đứng tên. **Bỏ trống = `en`** |
 | `Table` | **bạn gõ** | số bàn, hiện trong thẻ phản hồi sau khi khách xác nhận. Bỏ trống = khách thấy "sẽ được cập nhật" |
 | `Slug` | tự sinh | phần đuôi URL, sinh từ tên |
 | `Link` | tự sinh | link để gửi cho khách — copy thẳng từ đây |
@@ -197,16 +197,16 @@ không có hai bản build — cùng một trang, đổi từ điển nội dung
 | --- | --- | --- |
 | `en` | Tiếng Anh | mặc định khi ô trống |
 | `vi` | Tiếng Việt | video hero riêng, cô dâu chú rể đứng tên |
-| `parents` | Hai bên gia đình | **video hero riêng + lời cảm ơn của gia đình**, ký `Gia Đình Hai Bên`; mọi phần còn lại y hệt bản `vi` |
+| `pr` | Hai bên gia đình | **video hero riêng + lời cảm ơn của gia đình**, ký `Gia Đình Hai Bên`; mọi phần còn lại y hệt bản `vi` |
 
-Bản tiếng Việt và bản `parents` dùng video hero riêng và font DFVN Big Bang cho
+Bản tiếng Việt và bản `pr` dùng video hero riêng và font DFVN Big Bang cho
 những dòng có dấu, vì TAN Aegean không vẽ được dấu tiếng Việt.
 
-Muốn xem thử bản kia mà không phải sửa sheet: thêm `?lang=vi`, `?lang=parents`
+Muốn xem thử bản kia mà không phải sửa sheet: thêm `?lang=vi`, `?lang=pr`
 (hoặc `?lang=en`) vào cuối link bất kỳ.
 
 ```
-https://ducanhdiemmy.gloweb.site/mr-quoc-tran?lang=parents
+https://ducanhdiemmy.gloweb.site/mr-quoc-tran?lang=pr
 ```
 
 Vài tiêu đề giữ nguyên tiếng Anh trong bản Việt theo yêu cầu: `Dress Code`,

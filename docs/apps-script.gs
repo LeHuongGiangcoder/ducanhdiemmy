@@ -40,10 +40,11 @@ const LANGS = {
   'viet nam': 'vi', 'tieng viet': 'vi',
   /*
    * Thiệp do hai bên gia đình đứng tên: vẫn tiếng Việt, nhưng video hero và
-   * lời cảm ơn là của gia đình. Nhận cả cách gõ tiếng Việt lẫn tiếng Anh vì ô
-   * này hay được gõ tay đè lên dropdown.
+   * lời cảm ơn là của gia đình. Trong sheet chỉ gõ 'pr' cho gọn — mọi cách
+   * viết cũ vẫn nhận, vì ô này hay được gõ tay đè lên dropdown và các sheet
+   * dựng trước đây còn ghi 'parents'. Website vẫn nhận key 'parents'.
    */
-  parents: 'parents', parent: 'parents', 'bo me': 'parents',
+  pr: 'parents', parents: 'parents', parent: 'parents', 'bo me': 'parents',
   'gia dinh': 'parents', 'phu huynh': 'parents',
 };
 
@@ -90,13 +91,13 @@ function setupSheet() {
   sheet.setColumnWidth(col.link, 320);
   sheet.setColumnWidth(col.message, 320);
 
-  // Ô Lang thành dropdown en/vi/parents để khỏi gõ sai.
+  // Ô Lang thành dropdown en/vi/pr để khỏi gõ sai.
   const rule = SpreadsheetApp.newDataValidation()
-    .requireValueInList(['en', 'vi', 'parents'], true)
+    .requireValueInList(['en', 'vi', 'pr'], true)
     .setAllowInvalid(false)
     .setHelpText(
       'en = thiệp tiếng Anh, vi = thiệp tiếng Việt, ' +
-      'parents = thiệp hai bên gia đình đứng tên. Trống = en.')
+      'pr = thiệp hai bên gia đình đứng tên. Trống = en.')
     .build();
   sheet.getRange(FIRST_ROW, col.lang, sheet.getMaxRows() - 1, 1)
     .setDataValidation(rule);
