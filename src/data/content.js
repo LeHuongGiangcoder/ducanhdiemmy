@@ -254,9 +254,10 @@ const vi = {
 /**
  * The parents' version — the same invitation, sent in the families' voice.
  *
- * Only two things change: the hero card, which is cut with the parents' own
- * wording set into the footage, and the closing thanks, which is written by the
- * two families rather than by the couple. Everything else — venue, dress code,
+ * Only three things change: the gate, which names the two households; the hero
+ * card, which is cut with the parents' own wording set into the footage; and
+ * the closing thanks, which is written by the two families rather than by the
+ * couple. Everything else — venue, dress code,
  * timeline, R.S.V.P., menu — is word for word the Vietnamese invitation, so it
  * is spread in rather than copied. A copy would be a second place to remember
  * to edit, and the first line the couple ever changed would put the two
@@ -264,6 +265,26 @@ const vi = {
  */
 const parents = {
   ...vi,
+  /**
+   * The gate names the two households, because this version is sent in their
+   * voice: a guest invited by the families should see who is inviting them
+   * before they open anything. `vi.intro` is spread in rather than restated, so
+   * the bilingual code gate stays one definition — the field below is the only
+   * thing this version adds.
+   *
+   * Structured — a label and its names — rather than one pre-formatted string,
+   * so Intro.js can give each household its own column and each parent their
+   * own line. These guests are the parents' generation; a run-on line that
+   * wraps wherever the column happens to end is the first thing to become hard
+   * to read.
+   */
+  intro: {
+    ...vi.intro,
+    families: [
+      { label: "Nhà Trai", names: ["Ông Vũ Hồng Khanh", "Bà Nguyễn Ngọc Thanh"] },
+      { label: "Nhà Gái", names: ["Ông Nguyễn Tất Kim Dũng", "Bà Lê Hồng Ánh"] },
+    ],
+  },
   hero: {
     src: "/assets/hero-parents.mp4",
     poster: "/assets/hero-parents.jpg",

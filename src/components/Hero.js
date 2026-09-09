@@ -44,16 +44,39 @@ const SLOT_HEIGHT = SLOT_BOTTOM - SLOT_TOP;
  * future re-cut moves the line, these are the three numbers to re-measure,
  * and only the affected language changes.
  */
+/*
+ * The families' card no longer shares them.
+ *
+ * It used to: the first cut was the Vietnamese composition with the parents'
+ * wording swapped in, and its blank line fell on the same rows to the pixel.
+ * The card was then re-cut — the couple's full names now head it and the
+ * wishes line reads "đến dự Lễ Thành Hôn của hai con chúng tôi" — and the gap
+ * moved with it. Measured off the new footage the way the numbers above were,
+ * at 0.3s and 5.0s, which agree to the pixel:
+ *
+ *   0.3974 – 0.4125   "Trân trọng kính mời"   (px 763–792)
+ *   0.4125 – 0.5120    ← the slot              (px 792–983)
+ *   0.5120 – 0.5281   "đến dự Lễ Thành Hôn…"  (px 983–1014)
+ *
+ * A shade lower than the couple's slot and a quarter taller. Left on the
+ * shared constants the name would hang 25px high in it — inside the gap, but
+ * visibly not centred in it, which on a card this still is what the eye picks
+ * up first.
+ */
+const PARENTS_SLOT_TOP = 0.4125;
+const PARENTS_SLOT_BOTTOM = 0.512;
+
 const SLOT = {
   en: { top: SLOT_TOP, height: SLOT_HEIGHT, x: 0.5113 },
   vi: { top: SLOT_TOP, height: SLOT_HEIGHT, x: 0.5113 },
-  /* The families' card is the Vietnamese composition re-cut with the parents'
-     names and their own wishes line, so the blank line falls in the same
-     place. Measured, not assumed: the salutation band above the slot is
-     pixel-identical between the two cards (both read "Trân trọng kính mời"),
-     and the wishes line below it starts on the same row, while the bands that
-     carry the two families' names differ as you would expect. */
-  parents: { top: SLOT_TOP, height: SLOT_HEIGHT, x: 0.5113 },
+  /* `x` is unchanged: the re-cut card's lines centre on 0.506–0.511, the same
+     nudge to the right, and re-measuring moved it by fewer pixels than the
+     stroke of the type it hangs under. */
+  parents: {
+    top: PARENTS_SLOT_TOP,
+    height: PARENTS_SLOT_BOTTOM - PARENTS_SLOT_TOP,
+    x: 0.5113,
+  },
 };
 
 /*

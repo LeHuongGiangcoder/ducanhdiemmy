@@ -141,6 +141,36 @@ export default function Intro({
             <span className={fallbackFontClass(t.intro.bride)}>{t.intro.bride}</span>
           </p>
 
+          {/*
+           * The two households, in the version sent in their voice — the
+           * couple's own invitation has no `families` and renders nothing
+           * here. Under the names rather than above them: the pair is still
+           * what the gate is about, and read in this order the block answers
+           * "who is inviting me" rather than delaying the answer to "to what".
+           */}
+          {t.intro.families && (
+            <div className={styles.families}>
+              {t.intro.families.map((side) => (
+                /*
+                 * `display: contents` — the household is a group in the markup,
+                 * so it still reads "Nhà Trai, then its two names" aloud and in
+                 * source order, but it lays out no box of its own. Its label and
+                 * its names become cells of the grid one level up, which is what
+                 * puts the two fathers on a row and the two mothers on the row
+                 * under it. See the note in Intro.module.css.
+                 */
+                <div className={styles.family} key={side.label}>
+                  <p className={styles.familyLabel}>{side.label}</p>
+                  {side.names.map((name) => (
+                    <p className={styles.familyName} key={name}>
+                      {name}
+                    </p>
+                  ))}
+                </div>
+              ))}
+            </div>
+          )}
+
           {/* The date itself — the promise the gate is asking to be kept. */}
           <p className={styles.date}>
             <span className={styles.dateRule} aria-hidden="true" />

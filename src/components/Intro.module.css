@@ -67,6 +67,15 @@
   height: 100%;
   display: grid;
   align-content: center;
+  /*
+   * Centred until the cluster is taller than the screen, and then aligned to
+   * the top instead. Centring a block that overflows cuts it at BOTH ends, and
+   * the end it would take first is the monogram and the couple's names. On the
+   * families' version the cluster carries four more lines than it used to, so
+   * the case is no longer hypothetical on a short phone. A browser that does
+   * not know `safe` drops this line and keeps the plain centring above.
+   */
+  align-content: safe center;
   justify-items: center;
   padding: var(--gutter);
 }
@@ -121,6 +130,125 @@
   font-size: 0.42em;
   font-style: italic;
   color: var(--cream);
+}
+
+/* --- The two households -------------------------------------------------
+ * Only the families' version renders this block (see the `families` note in
+ * content.js). Two columns divided by a hairline — the arrangement the guests
+ * being addressed have read on every invitation of their lives, and the one
+ * that keeps each parent on a line of their own.
+ *
+ * Held to 22rem so the columns stay wider than the longest name here; inside
+ * the 430px frame that is the full measure, and the cap only matters if the
+ * column is ever widened.
+ */
+.families {
+  position: relative;
+  display: grid;
+  /*
+   * One grid for both households, three rows deep — label, father, mother —
+   * filled a column at a time. The rows are what matter: the longest name here
+   * takes two lines in half the measure, and with each household laid out on
+   * its own the second line pushed everything under it down, so the two
+   * fathers no longer sat level and the eye had to hunt for the pairing. A row
+   * of the grid is one band across both columns whatever it holds, so father
+   * reads across to father and mother across to mother.
+   */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: auto auto auto;
+  grid-auto-flow: column;
+  /* Top, not centre: the first line of a name that wrapped is the one that has
+     to line up with its opposite number, not the block's middle. */
+  align-items: start;
+  justify-items: center;
+  column-gap: var(--s-5);
+  row-gap: var(--s-2);
+  width: 100%;
+  max-width: 22rem;
+  margin-top: var(--s-2);
+}
+
+/* Lays out no box of its own — see the note at the call site in Intro.js. */
+.family {
+  display: contents;
+}
+
+/* The divider between the households, drawn on the grid rather than on a
+   column, so it runs the full height whichever side is taller. */
+.families::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: #ffffff40;
+}
+
+/*
+ * The quieter half of the block: cream, and tracked well under --track-eyebrow.
+ * These two words are a heading for the names below, not a line to be read —
+ * and at eyebrow tracking "Nhà Trai" runs wider than half the column.
+ */
+.familyLabel {
+  /* The label's own air, on top of the grid's row-gap: a heading needs more
+     room under it than the two names need between them. */
+  margin-bottom: var(--s-1);
+  font-size: var(--t-fine);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  text-indent: 0.14em;
+  white-space: nowrap;
+  color: var(--cream);
+  text-shadow: 0 1px 12px #09203a99;
+}
+
+/*
+ * The names themselves, and the reason for the block: set at body size rather
+ * than at the gate's supporting sizes, because the guests reading them are the
+ * couple's parents' generation and this is the one thing on the screen nobody
+ * can infer from context. --cream-bright rather than white — size already
+ * carries the hierarchy here, and the couple's names keep the only pure white.
+ *
+ * Weight 500: Cormorant's regular is a light, high-contrast serif, and its thin
+ * strokes break up over a bright photograph at this size.
+ */
+.familyName {
+  text-align: center;
+  font-size: var(--t-body);
+  font-weight: 500;
+  line-height: var(--lh-snug);
+  /* Split evenly when a name does have to take two lines, rather than leaving
+     a single word stranded under it. */
+  text-wrap: balance;
+  color: var(--cream-bright);
+  /* It lands on surf and lit rock — the same double shadow the hint needs. */
+  text-shadow:
+    0 1px 3px #09203ab3,
+    0 2px 14px #09203acc;
+}
+
+/*
+ * On a short phone — an SE, or any browser still showing its chrome — the
+ * gate fills the screen exactly, and this block is the four lines that pushed
+ * it there. It gives back its own air rather than its type: the gaps close,
+ * the names stay the size they were asked to be.
+ */
+@media (max-height: 700px) {
+  /* The cluster's own rhythm closes up by one step first — four lines of names
+     cost more than the gaps between six elements, and air is the cheaper thing
+     to spend. */
+  .cluster {
+    gap: var(--s-3);
+  }
+  .families {
+    margin-top: 0;
+    row-gap: var(--s-1);
+  }
+  .familyLabel {
+    margin-bottom: 0;
+  }
 }
 
 /*
