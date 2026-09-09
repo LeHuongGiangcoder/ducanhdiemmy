@@ -143,46 +143,27 @@
  * column is ever widened.
  */
 .families {
-  position: relative;
   display: grid;
-  /*
-   * One grid for both households, three rows deep — label, father, mother —
-   * filled a column at a time. The rows are what matter: the longest name here
-   * takes two lines in half the measure, and with each household laid out on
-   * its own the second line pushed everything under it down, so the two
-   * fathers no longer sat level and the eye had to hunt for the pairing. A row
-   * of the grid is one band across both columns whatever it holds, so father
-   * reads across to father and mother across to mother.
-   */
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-template-rows: auto auto auto;
-  grid-auto-flow: column;
-  /* Top, not centre: the first line of a name that wrapped is the one that has
-     to line up with its opposite number, not the block's middle. */
-  align-items: start;
-  justify-items: center;
-  column-gap: var(--s-5);
-  row-gap: var(--s-2);
   width: 100%;
   max-width: 22rem;
   margin-top: var(--s-2);
 }
 
-/* Lays out no box of its own — see the note at the call site in Intro.js. */
+/* Each household reads down its own column, so a name that takes two lines
+   lengthens its own side and leaves the other alone. */
 .family {
-  display: contents;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-3);
+  padding-inline: var(--s-3);
 }
 
-/* The divider between the households, drawn on the grid rather than on a
-   column, so it runs the full height whichever side is taller. */
-.families::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 1px;
-  background: #ffffff40;
+/* Drawn on the second column rather than as a third grid track, so the two
+   households keep exactly half the measure each whatever the names are. */
+.family + .family {
+  border-inline-start: 1px solid #ffffff40;
 }
 
 /*
@@ -191,9 +172,6 @@
  * and at eyebrow tracking "Nhà Trai" runs wider than half the column.
  */
 .familyLabel {
-  /* The label's own air, on top of the grid's row-gap: a heading needs more
-     room under it than the two names need between them. */
-  margin-bottom: var(--s-1);
   font-size: var(--t-fine);
   font-weight: 500;
   text-transform: uppercase;
@@ -214,8 +192,11 @@
  * Weight 500: Cormorant's regular is a light, high-contrast serif, and its thin
  * strokes break up over a bright photograph at this size.
  */
-.familyName {
-  text-align: center;
+.familyNames {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  list-style: none;
   font-size: var(--t-body);
   font-weight: 500;
   line-height: var(--lh-snug);
@@ -244,10 +225,12 @@
   }
   .families {
     margin-top: 0;
-    row-gap: var(--s-1);
   }
-  .familyLabel {
-    margin-bottom: 0;
+  .family {
+    gap: var(--s-2);
+  }
+  .familyNames {
+    gap: var(--s-1);
   }
 }
 
