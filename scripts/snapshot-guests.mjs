@@ -14,6 +14,7 @@
 
 import { readFileSync, writeFileSync } from "node:fs";
 import { exit } from "node:process";
+import { normaliseLang } from "../src/data/content.js";
 
 const env = loadEnv(".env.local");
 const endpoint = process.env.RSVP_WEBHOOK_URL || env.RSVP_WEBHOOK_URL;
@@ -52,7 +53,16 @@ const rows = guests
       // The access code, so the gate still works during a sheet outage.
       `    code: ${JSON.stringify(String(g.code ?? "").trim())},`,
       `    seats: ${Number.isFinite(seats) && seats > 0 ? seats : 2},`,
-      `    lang: ${JSON.stringify(g.lang === "vi" ? "vi" : "en")},`,
+      /*
+       * Every language the site knows, not just the two this line used to
+       * allow: `g.lang === "vi" ? "vi" : "en"` quietly rewrote the families'
+       * version to English, so a snapshot taken during a sheet outage served
+       * those guests the wrong invitation entirely. normaliseLang is the same
+       * check the registry applies to a live row.
+       */
+      `    lang: ${JSON.stringify(normaliseLang(g.lang))},`,
+      // Whether they are also asked to the ăn hỏi and vu quy.
+      `    anHoi: ${g.anHoi === true},`,
       "  },",
     ].join("\n");
   })

@@ -12,16 +12,35 @@ import styles from "./Timeline.module.css";
 const TRIGGER = 0.72;
 
 /**
- * The running order of the evening, strung along a single gold rail.
+ * A running order, strung along a single gold rail.
  *
  * The rail is drawn per item rather than as one absolute element, so the
  * segments join seamlessly whatever the copy does: each item's segment runs
  * from its own dot down to the next one, and fills as the guest scrolls past.
+ *
+ * Two lists use it: the evening at the Fairmont, which is what every argument
+ * below defaults to, and the afternoon of the family ceremonies (Ceremony.js).
+ * Parameters rather than a second copy of the file — the rail, the scroll
+ * trigger and the lit-dot logic are the whole component, and a duplicate is
+ * the place where the two would quietly stop matching.
+ *
+ * `copy` carries eyebrow / title / items / note. Only the title and the items
+ * are required: a list with no kicker and no footnote just leaves them out.
  */
-export default function Timeline() {
+export default function Timeline({
+  id = "timeline",
+  times = timelineTimes,
+  copy,
+  surface = "section--pattern-navy",
+  /** Optional artwork above the heading — the monogram, on the agenda. */
+  mark = null,
+  /** The cherub that closes the evening list. Pass null to leave it off. */
+  cherub = "/assets/cherub-bucket.webp",
+}) {
   const { t } = useContent();
+  const c = copy ?? t.timeline;
   // Times are language-neutral; titles are not. Zipped by position.
-  const items = timelineTimes.map((time, i) => ({ time, ...t.timeline.items[i] }));
+  const items = times.map((time, i) => ({ time, ...c.items[i] }));
   const dots = useRef([]);
   const [active, setActive] = useState(-1);
 
@@ -53,11 +72,12 @@ export default function Timeline() {
   }, []);
 
   return (
-    <section id="timeline" className={`section section--screen section--pattern-navy ${styles.section}`}>
+    <section id={id} className={`section section--screen ${surface} ${styles.section}`}>
       <div className={`shell stack center ${styles.shell}`}>
         <Reveal className="masthead">
-          <p className="eyebrow">{t.timeline.eyebrow}</p>
-          <h2 className={`h-1 ${fallbackFontClass(t.timeline.title)}`}>{t.timeline.title}</h2>
+          {mark}
+          {c.eyebrow ? <p className="eyebrow">{c.eyebrow}</p> : null}
+          <h2 className={`h-1 ${fallbackFontClass(c.title)}`}>{c.title}</h2>
         </Reveal>
 
         <ol className={styles.list}>
@@ -93,21 +113,25 @@ export default function Timeline() {
           ))}
         </ol>
 
-        <Reveal delay={80} className={styles.note}>
-          <p className="fine" style={{ whiteSpace: "pre-line" }}>{t.timeline.note}</p>
-        </Reveal>
+        {c.note ? (
+          <Reveal delay={80} className={styles.note}>
+            <p className="fine" style={{ whiteSpace: "pre-line" }}>{c.note}</p>
+          </Reveal>
+        ) : null}
 
-        <Reveal delay={120}>
-          <Image
-            src="/assets/cherub-bucket.webp"
-            alt=""
-            aria-hidden="true"
-            width={893}
-            height={900}
-            sizes="(max-width: 479px) 52vw, 224px"
-            className={styles.cherub}
-          />
-        </Reveal>
+        {cherub ? (
+          <Reveal delay={120}>
+            <Image
+              src={cherub}
+              alt=""
+              aria-hidden="true"
+              width={893}
+              height={900}
+              sizes="(max-width: 479px) 52vw, 224px"
+              className={styles.cherub}
+            />
+          </Reveal>
+        ) : null}
       </div>
     </section>
   );

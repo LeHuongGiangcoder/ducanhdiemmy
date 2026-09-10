@@ -10,6 +10,7 @@ hàng của người đó. Không có chỗ nào khác phải sửa, không cầ
 | `Name` | **bạn gõ** | tên hiện trên thiệp — có dấu tiếng Việt thoải mái |
 | `Seats` | **bạn gõ** | số chỗ tối đa của thiệp này (bỏ trống = 2) |
 | `Lang` | **bạn chọn** | `vi` = thiệp tiếng Việt, `en` = tiếng Anh, `pr` = thiệp hai bên gia đình đứng tên. **Bỏ trống = `en`** |
+| `AnHoi` | **bạn chọn** | `YES` = khách này được mời **cả lễ ăn hỏi & vu quy** tại tư gia hai bên. **Bỏ trống = chỉ lễ thành hôn ở Fairmont** |
 | `Table` | **bạn gõ** | số bàn, hiện trong thẻ phản hồi sau khi khách xác nhận. Bỏ trống = khách thấy "sẽ được cập nhật" |
 | `Slug` | tự sinh | phần đuôi URL, sinh từ tên |
 | `Link` | tự sinh | link để gửi cho khách — copy thẳng từ đây |
@@ -201,6 +202,29 @@ không có hai bản build — cùng một trang, đổi từ điển nội dung
 
 Bản tiếng Việt và bản `pr` dùng video hero riêng và font DFVN Big Bang cho
 những dòng có dấu, vì TAN Aegean không vẽ được dấu tiếng Việt.
+
+## Cột `AnHoi` — ai được mời lễ ăn hỏi & vu quy
+
+Cột này độc lập với `Lang`: bản thiệp nào cũng có thể bật, kể cả `en`.
+
+Gõ `YES` thì dưới video hero mọc thêm một nút chuyển hai bên:
+
+| Nút | Khách thấy gì |
+| --- | --- |
+| **Lễ Thành Hôn** | đúng như cũ — Fairmont, dress code, chương trình buổi tối, R.S.V.P. |
+| **Lễ Ăn Hỏi & Vu Quy** | thiệp hai buổi lễ tại tư gia: tab `Nhà Trai` / `Nhà Gái` đổi thiệp và địa chỉ, bên dưới là chi tiết chương trình chiều 29/09 dùng chung cho cả hai tab |
+
+Bỏ trống, gõ `NO`, gõ sai, hay sheet cũ chưa có cột này — tất cả đều là
+**không mời**, và thiệp của khách đó y hệt như trước khi có tính năng này.
+Đó là hướng sai an toàn: khách đáng được mời mà chưa thấy thì sẽ nhắn lại,
+còn khách không được mời mà đã nhìn thấy địa chỉ nhà riêng của hai bên thì
+không rút lại được nữa.
+
+R.S.V.P. chỉ nằm ở bên **Lễ Thành Hôn** — đó mới là buổi tiệc ngồi bàn cần
+xác nhận và xếp chỗ.
+
+Muốn xem thử: mở link của một khách đã bật `YES`. Sau khi sửa sheet nhớ chạy
+lại **Wedding → Dựng lại sheet** một lần để cột `AnHoi` có dropdown `YES`/`NO`.
 
 Muốn xem thử bản kia mà không phải sửa sheet: thêm `?lang=vi`, `?lang=pr`
 (hoặc `?lang=en`) vào cuối link bất kỳ.

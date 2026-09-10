@@ -1,0 +1,307 @@
+/* --------------------------------------------------------------------------
+ * The family ceremonies card.
+ *
+ * Everything here composes the design system rather than restating it: the
+ * wine damask and its vignette come from .section--pattern-wine, the gold
+ * kicker from .eyebrow, the divider from .rule-mark, the rite's size from
+ * .h-1. What is left below is the card's own rhythm — which is most of what
+ * makes the printed piece read the way it does.
+ * ------------------------------------------------------------------------ */
+
+.section {
+  /* The card runs long; this screen is allowed to outgrow one viewport. */
+  padding-bottom: var(--s-9);
+}
+
+.shell {
+  gap: var(--s-6);
+}
+
+/* --- The two households, as tabs ----------------------------------------
+ * Not a segmented pill: the toggle above already owns that shape, and a
+ * second one directly under it would read as the same control twice. These
+ * are two words on a hairline, the quieter of the two switches.
+ */
+.tabs {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  border-bottom: 1px solid var(--line);
+}
+
+.tab {
+  flex: 1 1 0;
+  max-width: 11rem;
+  padding: var(--s-3) var(--s-2);
+  background: none;
+  border: 0;
+  /* Sits on the section's hairline and covers it while lit. */
+  border-bottom: 1px solid transparent;
+  margin-bottom: -1px;
+
+  font-family: var(--font-body);
+  font-size: var(--t-fine);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  text-indent: 0.16em;
+  line-height: 1.2;
+  color: var(--ink-faint);
+
+  cursor: pointer;
+  transition:
+    color var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
+}
+
+.tab[data-on="true"] {
+  color: var(--gold-bright);
+  border-bottom-color: var(--gold);
+}
+
+@media (hover: hover) {
+  .tab:hover {
+    color: var(--cream-bright);
+  }
+}
+
+/* --- The card ------------------------------------------------------------
+ * No panel and no border: on the damask the type is the card, the same way
+ * the venue section sets its details straight onto the navy.
+ */
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-4);
+  width: 100%;
+  text-align: center;
+  /* Re-runs on every switch — the card is keyed on the household in
+     Ceremony.js, so React rebuilds it rather than editing it in place. */
+  animation: card-in 0.7s var(--ease) both;
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.6rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* --- Who is announcing --------------------------------------------------
+ * The same two-column arrangement as the gate, in this section's palette.
+ * The selected household leads (Ceremony.js decides the order), so the guest
+ * always reads their own hosts on the left.
+ */
+.households {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: 100%;
+  max-width: 24rem;
+  margin-bottom: var(--s-2);
+}
+
+.household {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-3);
+  padding-inline: var(--s-3);
+}
+
+.household + .household {
+  border-inline-start: var(--border-hair);
+}
+
+.householdLabel {
+  font-family: var(--font-body);
+  font-size: var(--t-eyebrow);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  text-indent: 0.16em;
+  white-space: nowrap;
+  color: var(--accent);
+}
+
+/* Two lines each, broken in the data — see `families` in wedding.js. */
+.householdNames {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  list-style: none;
+  font-size: var(--t-small);
+  line-height: var(--lh-snug);
+  white-space: pre-line;
+  color: var(--ink);
+}
+
+.divider {
+  margin-block: var(--s-2);
+}
+
+/* --- The announcement ---------------------------------------------------- */
+
+.announce {
+  /* .eyebrow already sets the face, tracking and gold. */
+  margin-top: var(--s-2);
+}
+
+.line {
+  font-size: var(--t-small);
+  font-style: italic;
+  line-height: var(--lh-snug);
+  color: var(--ink-soft);
+  text-wrap: balance;
+}
+
+/* The rite itself — the largest thing on the card, and the only all-caps
+   display line, which is why it takes the caps ratio rather than the title
+   one (see .display-caps in globals.css). */
+.rite {
+  /*
+   * Sized to hold "LỄ THÀNH HÔN" on one line, the way the printed card does.
+   *
+   * Not --t-h1 with the DFVN correction applied: that correction exists to
+   * make DFVN meet a size chosen for TAN, and what this line needs is a size
+   * chosen for the string. Measured, DFVN sets it at 8.04px of width per pixel
+   * of font-size, and the column is the frame less its two gutters — so the
+   * ceiling is frame * 0.86 / 8.04, with a few percent kept back. Written
+   * against --vw (1% of the column, not of the window) like every other fluid
+   * size in globals.css, so it holds at both ends of the frame.
+   *
+   * "LỄ ĂN HỎI & VU QUY" is half again as long and still takes two lines —
+   * which is also what the card it comes from does.
+   */
+  font-size: clamp(2rem, calc(10.2 * var(--vw)), 2.75rem);
+  text-transform: uppercase;
+  color: var(--cream-bright);
+}
+
+/*
+ * The couple, in TAN Pearl. Stacked with the ampersand between them, the same
+ * lockup the gate uses — and for the same reason: at this size the pair breaks
+ * anyway, so it breaks where it was meant to.
+ */
+.couple {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-1);
+  margin-top: var(--s-2);
+  /*
+   * DFVN outright, not TAN Pearl with a fallback. Pearl carries Đ and the
+   * single accents but not ũ, ễ or ấ, and all three are in these two names —
+   * so the face was never going to be Pearl here, in any language version.
+   *
+   * Declaring it in CSS rather than through fallbackFontClass is what lets
+   * the size correction land: var() resolves where a property is DECLARED,
+   * and font-size is declared on this element, so a --display-vn-scale set on
+   * the child spans would arrive too late to be read. All caps, so it takes
+   * the cap-height ratio rather than the blended Title Case one.
+   */
+  font-family: var(--font-heading-vn);
+  --display-vn-scale: var(--vn-scale-caps);
+  /*
+   * Sized the same way as .rite above, off the longer of the two names:
+   * "NGUYỄN TẤT DIỄM MY" sets at 12.19px of width per pixel of font-size, so
+   * it clears the column at 6.7 * --vw. A name broken across two lines reads
+   * as a mistake rather than as a line break, which is why this is measured
+   * rather than picked off the type scale.
+   */
+  font-size: clamp(1.375rem, calc(6.7 * var(--vw)), 1.875rem);
+  font-weight: 300;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--track-display);
+  text-transform: uppercase;
+  color: var(--cream-bright);
+}
+
+.amp {
+  font-family: var(--font-body);
+  font-size: 0.5em;
+  font-style: italic;
+  text-transform: none;
+  color: var(--accent);
+}
+
+/* "được cử hành vào", "tại" — the small hinges between the blocks. */
+.lead {
+  margin-top: var(--s-2);
+  font-size: var(--t-fine);
+  font-style: italic;
+  color: var(--ink-faint);
+}
+
+/*
+ * Weekday · date · hour, divided by two hairlines. Held to one line: the
+ * rules only work with the three parts unbroken between them.
+ */
+/*
+ * Weekday · date · hour, divided by two hairlines.
+ *
+ * Each part is unbreakable, but the row is allowed to wrap: at --t-h3 the
+ * three of them plus their gaps measured 345px against the 348px available at
+ * 375px wide, which is not a fit — it is a coincidence, and it becomes an
+ * overflow on the 360px phones that are still very much in use. Sized down to
+ * body scale so it fits with room to spare, and allowed to break onto a second
+ * line rather than run off the edge on anything narrower still.
+ */
+.when {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2) var(--s-3);
+  font-family: var(--font-heading);
+  font-size: var(--t-body);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--cream-bright);
+}
+
+.when > span {
+  white-space: nowrap;
+}
+
+/* The date is the middle and the largest of the three — the day of the week
+   and the hour are its wings. */
+.date {
+  font-size: 1.15em;
+  letter-spacing: 0.04em;
+}
+
+.whenRule {
+  flex: none;
+  width: 1px;
+  height: 1.5em;
+  background: var(--gold);
+  opacity: 0.5;
+}
+
+.lunar {
+  font-size: var(--t-fine);
+  color: var(--ink-faint);
+}
+
+.home {
+  font-family: var(--font-heading);
+  font-size: calc(var(--t-h3) * var(--display-vn-scale));
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-indent: 0.1em;
+  line-height: var(--lh-snug);
+  color: var(--accent);
+  text-wrap: balance;
+}
+
+.address {
+  font-size: var(--t-small);
+  line-height: var(--lh-snug);
+  color: var(--ink-soft);
+  text-wrap: pretty;
+}

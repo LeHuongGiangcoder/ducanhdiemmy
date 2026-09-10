@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Ceremony from "./Ceremony";
 import DressCode from "./DressCode";
 import { LanguageProvider } from "./LanguageProvider";
 import Hero from "./Hero";
@@ -37,6 +38,18 @@ const GATE_MS = 1600;
 export default function Invitation({ guest: initialGuest, bypassIntro = false, codeGate = false }) {
   // Swapped for the real invitation once the master link's code resolves.
   const [guest, setGuest] = useState(initialGuest);
+  /**
+   * Which of the two celebrations is on screen.
+   *
+   * Only the guests whose sheet row says so are asked to the family
+   * ceremonies, and for everyone else this stays null — which is also what
+   * hides the toggle, so the invitation is exactly what it was before.
+   *
+   * It is reset when the master link's code resolves to a different guest:
+   * the person who just identified themselves may not be invited to the same
+   * days as the placeholder they replaced.
+   */
+  const [ceremony, setCeremony] = useState(initialGuest.anHoi ? "thanhHon" : null);
   const skip = bypassIntro && !codeGate;
   const [opened, setOpened] = useState(skip); // gesture received
   const [gateGone, setGateGone] = useState(skip); // curtain finished lifting
@@ -126,6 +139,7 @@ export default function Invitation({ guest: initialGuest, bypassIntro = false, c
 
     if (resolved?.slug) {
       setGuest(resolved);
+      setCeremony(resolved.anHoi ? "thanhHon" : null);
       // The address bar catches up with who this is, without a navigation that
       // would reload the page and take the music's gesture with it. A refresh
       // then lands on their own invitation, which opens without the code.
@@ -195,11 +209,28 @@ export default function Invitation({ guest: initialGuest, bypassIntro = false, c
           started={gateGone}
           revealing={opened}
           preloadVideo={mediaReady}
+          ceremony={ceremony}
+          onCeremony={setCeremony}
         />
-        <Venue />
-        <DressCode />
-        <Timeline />
-        <Rsvp guest={guest} />
+
+        {/*
+         * The two celebrations are two different days at two different places,
+         * so they get the page rather than sharing it: the Fairmont evening
+         * with its dress code, running order and reply form, or the afternoon
+         * at the family homes. The reply form belongs to the evening — that is
+         * the seated dinner with a table to assign.
+         */}
+        {ceremony === "anHoi" ? (
+          <Ceremony />
+        ) : (
+          <>
+            <Venue />
+            <DressCode />
+            <Timeline />
+            <Rsvp guest={guest} />
+          </>
+        )}
+
         <ThankYou />
       </main>
 
@@ -208,7 +239,8 @@ export default function Invitation({ guest: initialGuest, bypassIntro = false, c
         onToggle={toggleMusic}
         visible={gateGone && hasAudio}
       />
-      <Menu visible={gateGone} />
+      {/* The menu lists whatever is actually on the page — see Menu.js. */}
+      <Menu visible={gateGone} ceremony={ceremony} />
     </LanguageProvider>
   );
 }

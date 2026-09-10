@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { isDisplaySafe } from "@/lib/aegean";
+import { fallbackFontClass, isDisplaySafe } from "@/lib/aegean";
 import { useContent } from "./LanguageProvider";
 import styles from "./Hero.module.css";
 
@@ -18,6 +18,9 @@ import styles from "./Hero.module.css";
  * set falls back wholly to Cormorant italic rather than breaking glyph by
  * glyph (see src/lib/aegean.js).
  */
+
+/** The two celebrations, in the order the toggle offers them. */
+const CELEBRATIONS = ["thanhHon", "anHoi"];
 
 const VIDEO_W = 1080;
 const VIDEO_H = 1920;
@@ -100,7 +103,15 @@ const SLOT_FILL = 0.7;
 /** Never shrink past this — below it the name stops reading as the same card. */
 const MIN_FIT = 0.62;
 
-export default function Hero({ guest, started, revealing, preloadVideo = true }) {
+export default function Hero({
+  guest,
+  started,
+  revealing,
+  preloadVideo = true,
+  /** Which celebration is showing, or null when this guest is asked to one. */
+  ceremony = null,
+  onCeremony,
+}) {
   const { lang, t } = useContent();
   const slot = SLOT[lang] ?? SLOT.en;
   const stageRef = useRef(null);
@@ -296,12 +307,47 @@ export default function Hero({ guest, started, revealing, preloadVideo = true })
 
       {guest.note ? <p className={`${styles.note} fine`}>{guest.note}</p> : null}
 
-      <div
-        className={`${styles.scrollHint} ${started ? styles.hintOn : ""}`}
-        aria-hidden="true"
-      >
-        <span className={styles.hintLine} />
-      </div>
+      {/*
+       * The switch between the two celebrations, for the guests asked to both.
+       * On the video rather than under it, because it answers a question the
+       * card itself raises: the footage names one date, and a guest who was
+       * told about two needs to see without scrolling that the other is here.
+       *
+       * It takes the scroll hint's place rather than sitting above it. Two
+       * invitations to act stacked at the foot of one screen read as clutter,
+       * and a control that is plainly tappable says "there is more below" at
+       * least as well as the line did.
+       */}
+      {ceremony ? (
+        <div
+          className={`${styles.switch} ${started ? styles.switchIn : ""}`}
+          role="radiogroup"
+          aria-label={t.ceremony.toggle.label}
+        >
+          {CELEBRATIONS.map((key) => (
+            <button
+              key={key}
+              type="button"
+              role="radio"
+              aria-checked={ceremony === key}
+              className={`${styles.segment} ${fallbackFontClass(
+                t.ceremony.toggle[key],
+              )}`}
+              data-on={ceremony === key ? "true" : "false"}
+              onClick={() => onCeremony?.(key)}
+            >
+              {t.ceremony.toggle[key]}
+            </button>
+          ))}
+        </div>
+      ) : (
+        <div
+          className={`${styles.scrollHint} ${started ? styles.hintOn : ""}`}
+          aria-hidden="true"
+        >
+          <span className={styles.hintLine} />
+        </div>
+      )}
     </section>
   );
 }

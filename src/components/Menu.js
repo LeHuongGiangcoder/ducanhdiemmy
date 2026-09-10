@@ -5,12 +5,22 @@ import { useContent } from "./LanguageProvider";
 import { fallbackFontClass } from "@/lib/aegean";
 import styles from "./Menu.module.css";
 
-/** Targets only — the labels are per-language, matched by position. */
+/**
+ * Targets only — the labels are per-language, matched by position.
+ *
+ * Two sets, because the invitation has two: the guests asked to both days can
+ * switch the page under this menu (see Invitation.js), and a link to #venue
+ * while the family ceremonies are showing would scroll to nothing at all.
+ */
 const LINKS = ["#home", "#venue", "#dress-code", "#timeline", "#rsvp"];
+const CEREMONY_LINKS = ["#home", "#agenda"];
 
-export default function Menu({ visible }) {
+export default function Menu({ visible, ceremony = null }) {
   const { t } = useContent();
   const [open, setOpen] = useState(false);
+  const showingCeremony = ceremony === "anHoi";
+  const links = showingCeremony ? CEREMONY_LINKS : LINKS;
+  const labels = showingCeremony ? t.ceremony.menuLinks : t.menu.links;
 
   const toggleMenu = useCallback(() => {
     setOpen((o) => !o);
@@ -70,15 +80,15 @@ export default function Menu({ visible }) {
 
       <div className={`${styles.overlay} ${open ? styles.overlayOpen : ""}`} aria-hidden={!open}>
         <nav className={styles.nav}>
-          {LINKS.map((href, i) => (
+          {links.map((href, i) => (
             <a
               key={href}
               href={href}
               onClick={(e) => scrollTo(e, href)}
-              className={`${styles.link} ${fallbackFontClass(t.menu.links[i])}`}
+              className={`${styles.link} ${fallbackFontClass(labels[i])}`}
               tabIndex={open ? 0 : -1}
             >
-              {t.menu.links[i]}
+              {labels[i]}
             </a>
           ))}
         </nav>

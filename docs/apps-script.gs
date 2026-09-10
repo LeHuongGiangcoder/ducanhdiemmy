@@ -2,7 +2,8 @@
  * Đức Anh & Diễm My — guest list + RSVP, một tab duy nhất.
  *
  * Sheet vừa là nguồn danh sách khách (site đọc lên), vừa là nơi RSVP đổ về
- * (site ghi xuống). Cô dâu chú rể chỉ gõ bốn cột: Name, Lang, Table, Seats.
+ * (site ghi xuống). Cô dâu chú rể chỉ gõ năm cột: Name, Lang, AnHoi, Table,
+ * Seats.
  *
  * Cài đặt: xem docs/RSVP_SETUP.md.
  */
@@ -21,7 +22,7 @@ const SECRET = 'CHANGE-ME-to-a-long-random-string';
 const SITE_ORIGIN = 'https://ducanhdiemmy.gloweb.site';
 
 const HEADERS = [
-  'No', 'Name', 'Seats', 'Lang', 'Table', 'Slug', 'Link',
+  'No', 'Name', 'Seats', 'Lang', 'AnHoi', 'Table', 'Slug', 'Link',
   'Attending', 'Guests', 'Message', 'Updated',
 ];
 
@@ -56,6 +57,24 @@ function langKey_(value) {
     .replace(/đ/gi, 'd')
     .trim()
     .toLowerCase();
+}
+
+/*
+ * Cột AnHoi — khách này CÓ được mời dự lễ ăn hỏi & vu quy tại tư gia hai bên
+ * hay không. Ai được đánh YES thì thiệp của họ mọc thêm nút chuyển qua lại
+ * giữa hai buổi lễ; ai không thì thiệp y như cũ, chỉ có lễ thành hôn.
+ *
+ * Chỉ 'YES' mới hiện. Ô trống, 'NO', gõ sai, hay sheet cũ chưa có cột này —
+ * tất cả đều là không, và đó là hướng sai an toàn: khách đáng được mời mà
+ * chưa thấy thì sẽ nhắn lại, còn khách không được mời mà đã nhìn thấy địa chỉ
+ * nhà riêng của hai bên thì không rút lại được nữa.
+ */
+const YES = { yes: true, y: true, 'true': true, x: true, co: true, '1': true };
+
+/** Ô AnHoi ở mọi kiểu dữ liệu (checkbox trả về boolean thật) → true/false. */
+function isYes_(value) {
+  if (value === true) return true;
+  return YES[langKey_(value)] === true;
 }
 
 /* ------------------------------------------------------------------ menu */
@@ -102,6 +121,18 @@ function setupSheet() {
   sheet.getRange(FIRST_ROW, col.lang, sheet.getMaxRows() - 1, 1)
     .setDataValidation(rule);
 
+  // Ô AnHoi thành dropdown YES/NO. Để trống = NO, nên không phải gõ gì cho
+  // những khách chỉ dự lễ thành hôn ở Fairmont.
+  const anHoiRule = SpreadsheetApp.newDataValidation()
+    .requireValueInList(['YES', 'NO'], true)
+    .setAllowInvalid(false)
+    .setHelpText(
+      'YES = khách này được mời cả lễ ăn hỏi & vu quy tại tư gia hai bên. ' +
+      'Trống = chỉ lễ thành hôn ở Fairmont.')
+    .build();
+  sheet.getRange(FIRST_ROW, col.anhoi, sheet.getMaxRows() - 1, 1)
+    .setDataValidation(anHoiRule);
+
   SpreadsheetApp.getActiveSpreadsheet().toast('Sheet đã sẵn sàng.', 'Wedding');
 }
 
@@ -119,9 +150,10 @@ function checkData() {
   const guests = readGuests_(sheet, col);
 
   const lines = guests.slice(0, 12).map(function (g) {
-    return g.lang + '   ' + g.slug + '   ' + g.name;
+    return g.lang + '  ' + (g.anHoi ? 'AH' : '  ') + '  ' + g.slug + '   ' + g.name;
   });
 
+  const anHoi_ = guests.filter(function (g) { return g.anHoi; }).length;
   const count_ = function (lang) {
     return guests.filter(function (g) { return g.lang === lang; }).length;
   };
@@ -129,8 +161,8 @@ function checkData() {
     guests.length + ' khách — ' +
     count_('vi') + ' tiếng Việt, ' +
     count_('en') + ' tiếng Anh, ' +
-    count_('parents') + ' gia đình\n\n' +
-    'lang  slug  name\n' + lines.join('\n') +
+    count_('parents') + ' gia đình; ' + anHoi_ + ' khách cả ăn hỏi & vu quy\n\n' +
+    'lang AH  slug  name\n' + lines.join('\n') +
     (guests.length > 12 ? '\n… còn ' + (guests.length - 12) + ' dòng' : '');
 
   SpreadsheetApp.getUi().alert('Dữ liệu gửi cho website', message,
@@ -367,6 +399,8 @@ function readGuests_(sheet, col) {
         code: code_(String(row[col.no - 1]).trim().replace(/\D/g, '')),
         seats: seats > 0 ? seats : DEFAULT_SEATS,
         lang: LANGS[lang] || DEFAULT_LANG,
+        // Có được mời lễ ăn hỏi & vu quy không — xem chú thích ở isYes_().
+        anHoi: isYes_(row[col.anhoi - 1]),
         // Ô trống được giữ nguyên là chuỗi rỗng: site cần phân biệt "chưa xếp
         // bàn" (hiện 'sẽ cập nhật sớm') với một số bàn đã có.
         table: String(row[col.table - 1]).trim(),

@@ -10,6 +10,9 @@
  * the gate. A guest without one gets an invitation that opens on the link
  * alone, which is the right way to fail: an outage must not lock anyone out.
  *
+ * `anHoi` is the AnHoi column: whether they are also asked to the ăn hỏi and
+ * vu quy at the two family homes. Absent or false means the reception only.
+ *
  * Refresh it before a deploy with:  npm run guests:snapshot
  */
 
@@ -20,20 +23,23 @@ export const snapshot = [
     code: "001",
     seats: 2,
     lang: "en",
+    anHoi: false,
   },
   {
     slug: "ms-tran-thi-bao-ngoc",
     name: "Ms. Trần Thị Bảo Ngọc",
     code: "002",
     seats: 1,
-    lang: "en",
+    lang: "vi",
+    anHoi: true,
   },
   {
     slug: "mr-and-mrs-le",
     name: "Mr. & Mrs. Le",
     code: "003",
     seats: 4,
-    lang: "en",
+    lang: "parents",
+    anHoi: true,
   },
   {
     slug: "james-carter",
@@ -41,5 +47,6 @@ export const snapshot = [
     code: "004",
     seats: 2,
     lang: "en",
+    anHoi: false,
   },
 ];

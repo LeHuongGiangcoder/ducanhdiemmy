@@ -177,9 +177,32 @@ function normalise(row) {
     guestCount: Number.isFinite(count) && count > 0 ? count : 0,
     // A blank Lang cell means English — the language the hero video is cut in.
     lang: normaliseLang(row.lang),
+    /*
+     * Whether this guest is also asked to the ăn hỏi and vu quy at the two
+     * family homes. Only a row that actually says yes gets the toggle on their
+     * invitation — a blank cell, a missing column, or a sheet that predates
+     * the column all mean no, which is the safe direction to be wrong in: a
+     * guest who should have been invited will say so, whereas one who is shown
+     * an address they were never meant to have cannot be un-shown it.
+     */
+    anHoi: isYes(row.anHoi),
     luckyNumber: String(row.luckyNumber ?? "").trim() || null,
     note: String(row.note ?? "").trim() || undefined,
   };
+}
+
+/**
+ * A yes/no cell, in whatever the sheet happens to hold.
+ *
+ * The script already folds the column down to YES/NO, but a checkbox column
+ * arrives as a real boolean and a hand-typed cell as anything at all. Only an
+ * explicit yes counts; everything else — blank, "no", a typo, the column not
+ * existing — is no.
+ */
+function isYes(value) {
+  if (value === true) return true;
+  const text = String(value ?? "").trim().toLowerCase();
+  return text === "yes" || text === "y" || text === "true" || text === "1" || text === "có" || text === "co" || text === "x";
 }
 
 /**

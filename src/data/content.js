@@ -132,6 +132,59 @@ const en = {
     body: "Some moments are made\nall the more meaningful\nby the people we share them with.\nThank you for being part of ours.",
     signoff: "With Love",
   },
+  /**
+   * The family ceremonies — the second invitation, behind the toggle.
+   *
+   * Only guests whose sheet row says so ever see this; see `anHoi` in
+   * src/lib/guest-registry.js. The two rites are one afternoon that moves
+   * between the two family homes, so the guest picks a household rather than a
+   * ceremony, and the running order below is shared by both tabs.
+   *
+   * The Vietnamese names of the rites are kept as they are. "Lễ Vu Quy" and
+   * "Lễ Ăn Hỏi" have no English equivalent that a guest would recognise on the
+   * day, and the couple's parents will be announcing them by these names —
+   * the gloss goes in the line underneath instead.
+   */
+  ceremony: {
+    toggle: {
+      /** Names the pair for a screen reader; the two labels are the buttons. */
+      label: "Which celebration",
+      thanhHon: "The Reception",
+      anHoi: "Family Ceremonies",
+    },
+    tabs: { groom: "The Groom's Family", bride: "The Bride's Family" },
+    /** Heads the two household blocks at the top of each card. */
+    households: { groom: "Nhà Trai", bride: "Nhà Gái" },
+    announce: "With warmest regards",
+    heldOn: "to be held on",
+    at: "at",
+    weekday: "Tuesday",
+    sides: {
+      groom: {
+        line: "the wedding ceremony of our two children",
+        title: "Lễ Thành Hôn",
+        home: "The Groom's Family Home",
+      },
+      bride: {
+        line: "the betrothal and farewell ceremonies of our two children",
+        title: "Lễ Ăn Hỏi & Vu Quy",
+        home: "The Bride's Family Home",
+      },
+    },
+    agenda: {
+      title: "The Afternoon",
+      items: [
+        { title: "Lễ Ăn Hỏi", subtitle: "The groom's family present the betrothal gifts, and the two families formally agree the marriage." },
+        { title: "Lễ Xin Dâu", subtitle: "The groom's family ask the bride's family's leave to take her home." },
+        { title: "Lễ Vu Quy", subtitle: "Rites before the ancestors, presentation to both families, and the farewell to the bride at her home." },
+        { title: "Lễ Rước Dâu", subtitle: "The bride, the groom and both families set out for the groom's home." },
+        { title: "Lễ Thành Hôn", subtitle: "Rites before the ancestors, and the bride is welcomed into the groom's family." },
+        { title: "Tiệc Mừng Thành Hôn", subtitle: "Both families gather for a private celebration at the groom's home." },
+      ],
+    },
+    /** Replaces the reception's five links while the ceremonies are showing. */
+    menuLinks: ["Home", "The Afternoon"],
+  },
   menu: {
     open: "Open menu",
     close: "Close menu",
@@ -240,6 +293,50 @@ const vi = {
     body: "Niềm vui trong ngày trọng đại này\nsẽ càng trọn vẹn hơn khi được\nsẻ chia cùng những người chúng tôi\nyêu quý và trân trọng.\n\nCảm ơn vì đã dành thời gian,\ntình cảm và những lời chúc tốt đẹp\ncho dấu mốc đặc biệt này của chúng tôi.",
     signoff: "Thân mến",
   },
+  /**
+   * Hai lễ tại tư gia — see the note on the English `ceremony` above.
+   *
+   * The wording here is the printed card's, word for word, including "hai con
+   * chúng tôi": these cards are announced by the two families, which is also
+   * why the families' version inherits this block unchanged.
+   */
+  ceremony: {
+    toggle: {
+      label: "Chọn buổi lễ",
+      thanhHon: "Lễ Thành Hôn",
+      anHoi: "Lễ Ăn Hỏi & Vu Quy",
+    },
+    tabs: { groom: "Nhà Trai", bride: "Nhà Gái" },
+    households: { groom: "Nhà Trai", bride: "Nhà Gái" },
+    announce: "Trân trọng kính báo",
+    heldOn: "được cử hành vào",
+    at: "tại",
+    weekday: "Thứ Ba",
+    sides: {
+      groom: {
+        line: "Lễ thành hôn của hai con chúng tôi",
+        title: "Lễ Thành Hôn",
+        home: "Tư Gia Nhà Trai",
+      },
+      bride: {
+        line: "Lễ ăn hỏi và lễ vu quy của hai con chúng tôi",
+        title: "Lễ Ăn Hỏi & Vu Quy",
+        home: "Tư Gia Nhà Gái",
+      },
+    },
+    agenda: {
+      title: "Chi tiết chương trình",
+      items: [
+        { title: "Lễ Ăn Hỏi", subtitle: "Nhà trai trao lễ vật, hai gia đình chính thức thưa chuyện và kết giao hôn sự." },
+        { title: "Lễ Xin Dâu", subtitle: "Nhà trai chính thức xin phép gia đình nhà gái đón cô dâu về nhà chồng." },
+        { title: "Lễ Vu Quy", subtitle: "Nghi lễ gia tiên, ra mắt hai họ và tiễn cô dâu tại nhà gái." },
+        { title: "Lễ Rước Dâu", subtitle: "Cô dâu cùng chú rể và đoàn hai họ khởi hành về nhà trai." },
+        { title: "Lễ Thành Hôn", subtitle: "Nghi lễ gia tiên và đón cô dâu về với gia đình nhà trai." },
+        { title: "Tiệc Mừng Thành Hôn", subtitle: "Hai gia đình cùng sum họp và dùng tiệc thân mật tại tư gia nhà trai." },
+      ],
+    },
+    menuLinks: ["Trang chủ", "Chương trình"],
+  },
   menu: {
     open: "Mở menu",
     close: "Đóng menu",
@@ -272,36 +369,15 @@ const parents = {
    * the bilingual code gate stays one definition — the field below is the only
    * thing this version adds.
    *
-   * Structured — a label and its names — rather than one pre-formatted string,
-   * so Intro.js can give each household its own column and each parent their
-   * own line. These guests are the parents' generation; a run-on line that
-   * wraps wherever the column happens to end is the first thing to become hard
-   * to read.
-   *
-   * Which is why the break inside each name is written here rather than left
-   * to the column: family name on the first line, given name on the second, so
-   * all four break in the same place and the eye can run down the surnames.
-   * The couple's own card is the authority on where that falls — the footage
-   * reads "VŨ TRUNG ĐỨC ANH" and "NGUYỄN TẤT DIỄM MY", so the bride's father
-   * is Nguyễn Tất / Kim Dũng and not Nguyễn / Tất Kim Dũng. Carried as \n
-   * and rendered with white-space: pre-line, the same way the timeline note
-   * and the closing thanks carry their own breaks.
-   *
-   * "Mr." and "Mrs." rather than "Ông" and "Bà" at the couple's request; the
-   * stops match the honorifics the English invitation already uses.
+   * A flag, not the names: the four of them are set on the ceremony cards
+   * too, so they live once in wedding.js and the gate composes them with the
+   * household labels from `ceremony.households`. These guests are the
+   * parents' generation, which is why each name takes two lines of its own —
+   * see the note beside `families` there.
    */
   intro: {
     ...vi.intro,
-    families: [
-      {
-        label: "Nhà Trai",
-        names: ["Mr. Vũ\nHồng Khanh", "Mrs. Nguyễn\nNgọc Thanh"],
-      },
-      {
-        label: "Nhà Gái",
-        names: ["Mr. Nguyễn Tất\nKim Dũng", "Mrs. Lê\nHồng Ánh"],
-      },
-    ],
+    showFamilies: true,
   },
   hero: {
     src: "/assets/hero-parents.mp4",

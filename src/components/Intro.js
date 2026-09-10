@@ -2,10 +2,13 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { couple, wedding } from "@/data/wedding";
+import { couple, families, wedding } from "@/data/wedding";
 import { useContent } from "./LanguageProvider";
 import { fallbackFontClass } from "@/lib/aegean";
 import styles from "./Intro.module.css";
+
+/** Groom's family first, the way the printed cards read. */
+const HOUSEHOLDS = ["groom", "bride"];
 
 /**
  * The gate. The sunset photograph carries the whole screen; over it sits one
@@ -142,19 +145,22 @@ export default function Intro({
           </p>
 
           {/*
-           * The two households, in the version sent in their voice — the
-           * couple's own invitation has no `families` and renders nothing
-           * here. Under the names rather than above them: the pair is still
-           * what the gate is about, and read in this order the block answers
-           * "who is inviting me" rather than delaying the answer to "to what".
+           * The two households, in the version sent in their voice — only that
+           * dictionary sets `showFamilies`, so the couple's own invitations
+           * render nothing here. Under the names rather than above them: the
+           * pair is still what the gate is about, and read in this order the
+           * block answers "who is inviting me" rather than delaying the answer
+           * to "to what".
            */}
-          {t.intro.families && (
+          {t.intro.showFamilies && (
             <div className={styles.families}>
-              {t.intro.families.map((side) => (
-                <div className={styles.family} key={side.label}>
-                  <p className={styles.familyLabel}>{side.label}</p>
+              {HOUSEHOLDS.map((side) => (
+                <div className={styles.family} key={side}>
+                  <p className={styles.familyLabel}>
+                    {t.ceremony.households[side]}
+                  </p>
                   <ul className={styles.familyNames}>
-                    {side.names.map((name) => (
+                    {families[side].map((name) => (
                       <li key={name}>{name}</li>
                     ))}
                   </ul>
