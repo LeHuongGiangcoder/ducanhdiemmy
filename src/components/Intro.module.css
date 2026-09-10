@@ -136,7 +136,7 @@
  * Only the families' version renders this block (see the `families` note in
  * content.js). Two columns divided by a hairline — the arrangement the guests
  * being addressed have read on every invitation of their lives, and the one
- * that keeps each parent on a line of their own.
+ * that gives each parent two lines of their own.
  *
  * Held to 22rem so the columns stay wider than the longest name here; inside
  * the 430px frame that is the full measure, and the cap only matters if the
@@ -200,9 +200,11 @@
   font-size: var(--t-body);
   font-weight: 500;
   line-height: var(--lh-snug);
-  /* Split evenly when a name does have to take two lines, rather than leaving
-     a single word stranded under it. */
-  text-wrap: balance;
+  /* Every name takes two lines, and content.js says where each one breaks —
+     family name above, given name below, so the four surnames stack. The
+     column is no longer allowed a vote: `pre-line` honours the written break
+     and still wraps anything that somehow outgrows the measure. */
+  white-space: pre-line;
   color: var(--cream-bright);
   /* It lands on surf and lit rock — the same double shadow the hint needs. */
   text-shadow:
@@ -212,14 +214,14 @@
 
 /*
  * On a short phone — an SE, or any browser still showing its chrome — the
- * gate fills the screen exactly, and this block is the four lines that pushed
- * it there. It gives back its own air rather than its type: the gaps close,
- * the names stay the size they were asked to be.
+ * gate fills the screen exactly, and this block is the eight lines that
+ * pushed it there. It gives back its own air rather than its type: the gaps
+ * close, the names stay the size they were asked to be.
  */
 @media (max-height: 700px) {
-  /* The cluster's own rhythm closes up by one step first — four lines of names
-     cost more than the gaps between six elements, and air is the cheaper thing
-     to spend. */
+  /* The cluster's own rhythm closes up by one step first — eight lines of
+     names cost more than the gaps between six elements, and air is the
+     cheaper thing to spend. */
   .cluster {
     gap: var(--s-3);
   }

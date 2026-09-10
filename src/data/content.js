@@ -277,12 +277,30 @@ const parents = {
    * own line. These guests are the parents' generation; a run-on line that
    * wraps wherever the column happens to end is the first thing to become hard
    * to read.
+   *
+   * Which is why the break inside each name is written here rather than left
+   * to the column: family name on the first line, given name on the second, so
+   * all four break in the same place and the eye can run down the surnames.
+   * The couple's own card is the authority on where that falls — the footage
+   * reads "VŨ TRUNG ĐỨC ANH" and "NGUYỄN TẤT DIỄM MY", so the bride's father
+   * is Nguyễn Tất / Kim Dũng and not Nguyễn / Tất Kim Dũng. Carried as \n
+   * and rendered with white-space: pre-line, the same way the timeline note
+   * and the closing thanks carry their own breaks.
+   *
+   * "Mr." and "Mrs." rather than "Ông" and "Bà" at the couple's request; the
+   * stops match the honorifics the English invitation already uses.
    */
   intro: {
     ...vi.intro,
     families: [
-      { label: "Nhà Trai", names: ["Ông Vũ Hồng Khanh", "Bà Nguyễn Ngọc Thanh"] },
-      { label: "Nhà Gái", names: ["Ông Nguyễn Tất Kim Dũng", "Bà Lê Hồng Ánh"] },
+      {
+        label: "Nhà Trai",
+        names: ["Mr. Vũ\nHồng Khanh", "Mrs. Nguyễn\nNgọc Thanh"],
+      },
+      {
+        label: "Nhà Gái",
+        names: ["Mr. Nguyễn Tất\nKim Dũng", "Mrs. Lê\nHồng Ánh"],
+      },
     ],
   },
   hero: {
