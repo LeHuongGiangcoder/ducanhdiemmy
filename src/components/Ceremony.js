@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import CelebrationSwitch from "./CelebrationSwitch";
 import { couple, engagement, engagementTimes, families } from "@/data/wedding";
 import { useContent } from "./LanguageProvider";
 import { fallbackFontClass } from "@/lib/aegean";
@@ -30,14 +31,26 @@ import styles from "./Ceremony.module.css";
  * card is laid out for the family sending it.
  */
 
-/** Selected household first, then the other one. */
-const ORDER = { groom: ["groom", "bride"], bride: ["bride", "groom"] };
+/**
+ * The households, always in this order.
+ *
+ * Each printed card leads with the family sending it, and the first cut of
+ * this screen did the same. On paper that works, because a card is the only
+ * thing in your hand. Here there is a tab row directly above reading
+ * "Nhà Trai | Nhà Gái" in a fixed order — so on the bride's tab the two rows
+ * showed the same two words in opposite orders, forty pixels apart. Whichever
+ * is more faithful to the paper, that is a puzzle, and the guest has to solve
+ * it before they can read the names.
+ *
+ * The couple's names below still swap, because nothing above them contradicts
+ * it and the card's own voice depends on it.
+ */
+const HOUSEHOLDS = ["groom", "bride"];
 
-export default function Ceremony() {
+export default function Ceremony({ ceremony, onCeremony }) {
   const { t } = useContent();
   const [side, setSide] = useState("groom");
   const card = t.ceremony.sides[side];
-  const households = ORDER[side];
   // The child of the selected house is named first, matching their card.
   const names =
     side === "groom"
@@ -46,11 +59,38 @@ export default function Ceremony() {
 
   return (
     <>
+      {/*
+       * This section stands in for the hero, so it carries the hero's job as
+       * well as its own: it is what "#home" means while the ceremonies are
+       * showing, and it opens with the couple's mark at the size the video
+       * sets it, so the two screens read as the same invitation rather than
+       * two different ones.
+       */}
       <section
-        id="ceremony"
+        id="home"
         className={`section section--screen section--pattern-wine ${styles.section}`}
       >
         <div className={`shell stack center ${styles.shell}`}>
+          <Reveal className={styles.masthead}>
+            <Image
+              src={couple.monogram}
+              alt=""
+              aria-hidden="true"
+              width={876}
+              height={900}
+              sizes="(max-width: 479px) 14vw, 60px"
+              priority
+              className="monogram"
+            />
+
+            {/* The way back to the reception — see CelebrationSwitch.js. */}
+            <CelebrationSwitch
+              value={ceremony}
+              onChange={onCeremony}
+              className={styles.switch}
+            />
+          </Reveal>
+
           {/*
            * Two tabs over one panel. `radiogroup` rather than `tablist`: the
            * panel is a single region that re-renders, not two panels being
@@ -84,7 +124,7 @@ export default function Ceremony() {
            */}
           <article key={side} className={styles.card}>
             <div className={styles.households}>
-              {households.map((key) => (
+              {HOUSEHOLDS.map((key) => (
                 <div className={styles.household} key={key}>
                   <p className={styles.householdLabel}>
                     {t.ceremony.households[key]}
@@ -161,17 +201,6 @@ export default function Ceremony() {
         copy={t.ceremony.agenda}
         surface="section--pattern-wine"
         cherub={null}
-        mark={
-          <Image
-            src={couple.monogram}
-            alt=""
-            aria-hidden="true"
-            width={876}
-            height={900}
-            sizes="(max-width: 479px) 16vw, 68px"
-            className="monogram"
-          />
-        }
       />
     </>
   );

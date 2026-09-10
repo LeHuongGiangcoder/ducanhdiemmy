@@ -204,26 +204,29 @@ export default function Invitation({ guest: initialGuest, bypassIntro = false, c
       )}
 
       <main aria-hidden={!gateGone}>
-        <Hero
-          guest={guest}
-          started={gateGone}
-          revealing={opened}
-          preloadVideo={mediaReady}
-          ceremony={ceremony}
-          onCeremony={setCeremony}
-        />
-
         {/*
          * The two celebrations are two different days at two different places,
-         * so they get the page rather than sharing it: the Fairmont evening
-         * with its dress code, running order and reply form, or the afternoon
-         * at the family homes. The reply form belongs to the evening — that is
-         * the seated dinner with a table to assign.
+         * so they get the page rather than sharing it — the hero included. The
+         * video card names the Fairmont evening and nothing else, so it has no
+         * business heading the afternoon at the family homes; Ceremony opens
+         * with a screen of its own instead, and takes over "#home" while it is
+         * showing.
+         *
+         * The reply form stays with the reception. That is the seated dinner,
+         * the one with a table to assign.
          */}
         {ceremony === "anHoi" ? (
-          <Ceremony />
+          <Ceremony ceremony={ceremony} onCeremony={setCeremony} />
         ) : (
           <>
+            <Hero
+              guest={guest}
+              started={gateGone}
+              revealing={opened}
+              preloadVideo={mediaReady}
+              ceremony={ceremony}
+              onCeremony={setCeremony}
+            />
             <Venue />
             <DressCode />
             <Timeline />

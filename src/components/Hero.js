@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { fallbackFontClass, isDisplaySafe } from "@/lib/aegean";
+import { isDisplaySafe } from "@/lib/aegean";
+import CelebrationSwitch from "./CelebrationSwitch";
 import { useContent } from "./LanguageProvider";
 import styles from "./Hero.module.css";
 
@@ -18,9 +19,6 @@ import styles from "./Hero.module.css";
  * set falls back wholly to Cormorant italic rather than breaking glyph by
  * glyph (see src/lib/aegean.js).
  */
-
-/** The two celebrations, in the order the toggle offers them. */
-const CELEBRATIONS = ["thanhHon", "anHoi"];
 
 const VIDEO_W = 1080;
 const VIDEO_H = 1920;
@@ -319,27 +317,11 @@ export default function Hero({
        * least as well as the line did.
        */}
       {ceremony ? (
-        <div
+        <CelebrationSwitch
+          value={ceremony}
+          onChange={onCeremony}
           className={`${styles.switch} ${started ? styles.switchIn : ""}`}
-          role="radiogroup"
-          aria-label={t.ceremony.toggle.label}
-        >
-          {CELEBRATIONS.map((key) => (
-            <button
-              key={key}
-              type="button"
-              role="radio"
-              aria-checked={ceremony === key}
-              className={`${styles.segment} ${fallbackFontClass(
-                t.ceremony.toggle[key],
-              )}`}
-              data-on={ceremony === key ? "true" : "false"}
-              onClick={() => onCeremony?.(key)}
-            >
-              {t.ceremony.toggle[key]}
-            </button>
-          ))}
-        </div>
+        />
       ) : (
         <div
           className={`${styles.scrollHint} ${started ? styles.hintOn : ""}`}

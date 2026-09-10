@@ -97,6 +97,9 @@ export async function getGuest(slug) {
  * turn into a guest who can't get in.
  */
 async function readFresh() {
+  // No sheet configured — there is nothing fresher than the snapshot, and
+  // trying anyway logs a failed fetch on every RSVP status check in dev.
+  if (!ENDPOINT) return getGuests();
   try {
     const list = shape(await fetchRows());
     lastGood = list;

@@ -12,7 +12,15 @@ DFVN Big Bang mang hai lỗi, cả hai đều chỉ lộ ra khi đã lên màn h
    dấu huyền luôn ngồi cùng một chỗ — rồi dời contour của dấu cho khớp. Contour
    của chữ gốc không bị đụng tới.
 
-2. SỐ 1 VẼ RA CHỮ D — ký tự '1' trỏ nhầm sang glyph `one.1`, mà outline của nó
+2. BỀ RỘNG Ô CHỮ GẤP ĐÔI — vẫn tám glyph ấy. Sửa xong chỗ đứng của dấu thì nét
+   chữ đã đúng, nhưng ô chữ vẫn rộng gần gấp đôi mức đáng có, nên mắt thấy một
+   khoảng trắng thừa mở ra ngay sau chữ: "Tiệc Mừ ng", "Lờ i Cảm Ơn". Lỗi nằm ở
+   charstring: bề rộng được ghi thành số TUYỆT ĐỐI, trong khi Type 2 quy định
+   toán hạng ấy là HIỆU so với nominalWidthX — thành ra 588 + 661 = 1249 thay vì
+   661. Bảng `hmtx` vẫn đúng, nên lỗi chỉ lộ ra ở trình duyệt nào đọc bề rộng
+   từ charstring. Vẫn lấy glyph mang dấu sắc làm mốc như trên.
+
+3. SỐ 1 VẼ RA CHỮ D — ký tự '1' trỏ nhầm sang glyph `one.1`, mà outline của nó
    trùng khít từng điểm với glyph `D`. Bản thân font có sẵn glyph `one` vẽ đúng
    nhưng bị bỏ rơi, không ký tự nào trỏ tới. Sửa bằng cách trỏ lại cho đúng.
    Lỗi này làm "17:45" hiện thành "D7:45".
@@ -25,6 +33,16 @@ from fontTools.ttLib import TTFont
 from fontTools.pens.boundsPen import BoundsPen
 from fontTools.pens.recordingPen import RecordingPen
 from fontTools.pens.t2CharStringPen import T2CharStringPen
+
+# Tam glyph mang ca hai loi, tra thang theo cap (hong, moc dau sac). Bang nay
+# chi dung cho loi be rong: loi cho dung cua dau van duoc DO ra chu khong khai
+# san, vi no con co the xuat hien o font khac.
+WIDTH_PAIRS = [
+    ("ằ", "ắ"), ("Ằ", "Ắ"),
+    ("ừ", "ứ"), ("Ừ", "Ứ"),
+    ("ờ", "ớ"), ("Ờ", "Ớ"),
+    ("ỳ", "ý"), ("Ỳ", "Ý"),
+]
 
 TONES = set("̣̀́̉̃")
 GRAVE, ACUTE = "̀", "́"
@@ -120,8 +138,70 @@ def fix_orphan_digit():
         print(f"  '{ch}': đang vẽ ra '{chr(twins[0])}' — trỏ lại sang glyph `{correct}`")
 
 
+def fix_widths():
+    """Bề rộng ô chữ: lấy bản dấu sắc làm mốc, vì nét chữ hai bên trùng khít.
+
+    Bề rộng của một charstring Type 2 nằm ở TOÁN HẠNG ĐẦU TIÊN của program, và
+    nó là HIỆU so với nominalWidthX chứ không phải số tuyệt đối. Tám glyph này
+    đang ghi thẳng số tuyệt đối vào đó:
+
+        ừ  program = [661, 548, 540, "rmoveto", …]   → 588 + 661 = 1249
+        ứ  program = [-100, "callgsubr", …]          → không có, lấy theo hmtx
+
+    nên chỉ cần trừ nominalWidthX đi là xong. KHÔNG dựng lại charstring bằng
+    T2CharStringPen: chính cái pen ấy ghi số tuyệt đối, và đó là nguồn gốc của
+    lỗi này — sửa bằng pen thì lần sau lại sai y như cũ.
+    """
+    # Số toán hạng mà mỗi lệnh mở đầu ăn; dư ra một cái thì cái dư là bề rộng.
+    TAKES = {"rmoveto": 2, "hmoveto": 1, "vmoveto": 1}
+    STEMS = ("hstem", "vstem", "hstemhm", "vstemhm", "hintmask", "cntrmask")
+
+    hmtx = font["hmtx"]
+    fixed = 0
+    for ch, ref_ch in WIDTH_PAIRS:
+        if ord(ch) not in cmap or ord(ref_ch) not in cmap:
+            continue
+        name, ref = cmap[ord(ch)], cmap[ord(ref_ch)]
+        want = hmtx[ref][0]
+        cs = charstrings[name]
+        cs.decompile()
+        prog = cs.program
+
+        # Đếm số đứng trước lệnh đầu tiên để biết có toán hạng bề rộng không.
+        i = 0
+        while i < len(prog) and not isinstance(prog[i], str):
+            i += 1
+        if i == len(prog):
+            continue
+        op = prog[i]
+        if op in TAKES:
+            has_width = i > TAKES[op]
+        elif op in STEMS:
+            has_width = i % 2 == 1
+        elif op == "endchar":
+            has_width = i in (1, 5)
+        else:
+            has_width = False
+        if not has_width:
+            continue
+
+        nominal = cs.private.nominalWidthX
+        now = nominal + prog[0]
+        if now == want:
+            continue
+        prog[0] = want - nominal
+        cs.bytecode = None  # buộc dịch lại từ program khi lưu
+        # hmtx vốn đã đúng, nhưng ghi lại cho hai bảng không thể lệch nhau.
+        hmtx[name] = (want, hmtx[name][1])
+        print(f"  {ch}  (mốc {ref_ch})  bề rộng {now} → {want}")
+        fixed += 1
+    return fixed
+
+
 if not suspects:
     print("Không tìm thấy glyph dấu nào lệch.")
+    if fix_widths() == 0:
+        print("Không có glyph nào sai bề rộng.")
     fix_orphan_digit()
     font.save(path)
     sys.exit(0)
@@ -163,6 +243,7 @@ for ch, ref_ch in sorted(suspects):
     charstrings[broken] = pen.getCharString(old.private, old.globalSubrs)
     print(f"  {ch}  (mốc {ref_ch})  dời dấu dx={dx:+.0f} dy={dy:+.0f}")
 
+fix_widths()
 fix_orphan_digit()
 
 font.save(path)
