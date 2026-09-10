@@ -34,11 +34,32 @@ export const GUESTS_TTL_SECONDS = 60;
 /**
  * Shared by every render in a build and by every request after it, so
  * generateStaticParams and the page body can never disagree about who exists.
+ *
+ * What is cached is the sheet's own answer — the raw rows — and NOT the guest
+ * objects normalise() makes of them. That distinction cost a release: the data
+ * cache outlives a deployment, so when `anHoi` was added to normalise() the
+ * new build went on being handed guest objects shaped by the old one, and
+ * every guest arrived without the field. Their invitations rendered as though
+ * nobody had been invited to the ceremonies.
+ *
+ * Caching the rows puts the boundary in the right place. A row is what Google
+ * said; a guest is what this file decides a row means, and that meaning is now
+ * recomputed on every read, so it can never be served stale from a build that
+ * no longer exists.
+ *
+ * The key is versioned for the same reason — it is what makes the entries the
+ * old code wrote unreachable rather than merely wrong. Bump it whenever what
+ * goes INTO the cache changes shape.
  */
-const readSheet = unstable_cache(fetchFromSheet, ["guest-registry"], {
+const readRows = unstable_cache(fetchRows, ["guest-registry", "rows-v1"], {
   revalidate: GUESTS_TTL_SECONDS,
   tags: ["guests"],
 });
+
+/** Rows as they came off the sheet → guests as the site understands them. */
+function shape(rows) {
+  return rows.map(normalise).filter((g) => g.slug && g.name);
+}
 
 /** Survives a failed refresh; only ever holds a list the sheet really returned. */
 let lastGood = null;
@@ -49,7 +70,7 @@ const fallback = snapshot.map(normalise);
 export async function getGuests() {
   if (!ENDPOINT) return fallback; // sheet not wired up yet
   try {
-    const list = await readSheet();
+    const list = shape(await readRows());
     lastGood = list;
     return list;
   } catch (error) {
@@ -77,7 +98,7 @@ export async function getGuest(slug) {
  */
 async function readFresh() {
   try {
-    const list = await fetchFromSheet();
+    const list = shape(await fetchRows());
     lastGood = list;
     return list;
   } catch (error) {
@@ -122,7 +143,8 @@ export async function allSlugs() {
   return list.map((g) => g.slug);
 }
 
-async function fetchFromSheet() {
+/** The sheet's rows, untouched. Shaping into guests happens after the cache. */
+async function fetchRows() {
   const res = await fetch(ENDPOINT, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -152,7 +174,7 @@ async function fetchFromSheet() {
     throw new Error("Sheet returned no guests");
   }
 
-  return body.guests.map(normalise).filter((g) => g.slug && g.name);
+  return body.guests;
 }
 
 /** The sheet carries name/seats/slug/lang; everything else takes a default. */
