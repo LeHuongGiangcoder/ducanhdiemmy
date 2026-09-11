@@ -394,3 +394,27 @@
   color: var(--ink-soft);
   text-wrap: pretty;
 }
+
+/*
+ * The filigree rule above “Chi tiết chương trình”.
+ *
+ * Artwork rather than the design system's own .rule or .rule-mark: those
+ * are drawn in CSS and belong to the navy sections, and this screen is the
+ * one place the couple asked for the printed piece's own ornament. Held
+ * well inside the measure so the flourish at its centre stays the thing you
+ * see, and given its air below rather than above, where the section's head
+ * offset already provides it.
+ *
+ * No mix-blend-mode, unlike the venue drawing it otherwise resembles. That
+ * one is gilt on an opaque black ground and needs screen to drop the ground
+ * out; this file carries a real alpha channel (VP8X with the ALPHA flag
+ * set), so there is no ground to drop, and blending would only shift the
+ * gold against the damask.
+ */
+.agendaDivider {
+  width: min(78%, 20rem);
+  height: auto;
+  margin-inline: auto;
+  margin-bottom: var(--s-5);
+  opacity: 0.9;
+}

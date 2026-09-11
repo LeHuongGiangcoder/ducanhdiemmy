@@ -209,6 +209,18 @@ export default function Ceremony({ ceremony, onCeremony }) {
         copy={t.ceremony.agenda}
         surface="section--pattern-wine"
         cherub={null}
+        heading="h-2"
+        mark={
+          <Image
+            src="/assets/divider.webp"
+            alt=""
+            aria-hidden="true"
+            width={1200}
+            height={58}
+            sizes="(max-width: 479px) 78vw, 20rem"
+            className={styles.agendaDivider}
+          />
+        }
       />
     </>
   );

@@ -32,6 +32,13 @@ export default function Timeline({
   times = timelineTimes,
   copy,
   surface = "section--pattern-navy",
+  /*
+   * The heading's size class. "Timeline" is one short word and carries .h-1
+   * comfortably; "Chi tiết chương trình" is twenty-one characters of DFVN and
+   * at the same size took two lines and the whole screen with them. The scale
+   * is the design system's — the caller only says which step of it.
+   */
+  heading = "h-1",
   /** Optional artwork above the heading — the monogram, on the agenda. */
   mark = null,
   /** The cherub that closes the evening list. Pass null to leave it off. */
@@ -77,7 +84,7 @@ export default function Timeline({
         <Reveal className="masthead">
           {mark}
           {c.eyebrow ? <p className="eyebrow">{c.eyebrow}</p> : null}
-          <h2 className={`h-1 ${fallbackFontClass(c.title)}`}>{c.title}</h2>
+          <h2 className={`${heading} ${fallbackFontClass(c.title)}`}>{c.title}</h2>
         </Reveal>
 
         <ol className={styles.list}>
