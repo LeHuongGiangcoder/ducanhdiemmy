@@ -173,6 +173,9 @@
   --dur: 0.7s;
   --dur-slow: 1.2s;
   --dur-gate: 1.6s; /* intro→hero cross-dissolve; shared by both halves */
+  /* How long the outgoing celebration takes to clear before the other
+     arrives. Must match SWAP_MS in Invitation.js. */
+  --dur-swap: 0.26s;
 
   /* ---- Backdrops -------------------------------------------------------- */
   --pattern-navy: url("/assets/pattern-navy.webp");
@@ -1080,6 +1083,44 @@ legend.label {
   }
   to {
     opacity: 1;
+  }
+}
+
+/* --- Swapping between the two celebrations ------------------------------
+ * The toggle replaces the whole invitation under the guest's thumb, hero
+ * included, and an instant replacement reads as a page load rather than as
+ * two faces of one card. So the outgoing screen dims and settles back, and
+ * the incoming one rises into its place — the same vocabulary as the intro
+ * gate's hand-off, at a fraction of its length, because this one happens
+ * every time the guest changes their mind rather than once.
+ *
+ * Applied by Invitation.js, which holds the swap open for --dur-swap before
+ * exchanging the two.
+ */
+.celebration {
+  animation: celebration-in var(--dur) var(--ease) both;
+}
+
+.celebration[data-leaving="true"] {
+  animation: celebration-out var(--dur-swap) var(--ease-inout) forwards;
+  pointer-events: none;
+}
+
+@keyframes celebration-in {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes celebration-out {
+  to {
+    opacity: 0;
+    transform: scale(0.985);
   }
 }
 

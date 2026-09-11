@@ -21,6 +21,8 @@ import Venue from "./Venue";
 const MUSIC_SRC = "/audio/rewrite-the-stars.m4a";
 /** Must match --dur-gate in globals.css (the cross-dissolve length). */
 const GATE_MS = 1600;
+/** Must match --dur-swap in globals.css (the celebration hand-off). */
+const SWAP_MS = 260;
 
 /**
  * Owns the entrance sequence.
@@ -50,6 +52,9 @@ export default function Invitation({ guest: initialGuest, bypassIntro = false, c
    * days as the placeholder they replaced.
    */
   const [ceremony, setCeremony] = useState(initialGuest.anHoi ? "thanhHon" : null);
+  /** True while the outgoing celebration is clearing — see SWAP_MS. */
+  const [swapping, setSwapping] = useState(false);
+  const swapTimer = useRef(0);
   const skip = bypassIntro && !codeGate;
   const [opened, setOpened] = useState(skip); // gesture received
   const [gateGone, setGateGone] = useState(skip); // curtain finished lifting
@@ -172,6 +177,32 @@ export default function Invitation({ guest: initialGuest, bypassIntro = false, c
     }, GATE_MS);
   }, [opened, bypassIntro]);
 
+  /**
+   * Change celebration, with the hand-off rather than a cut.
+   *
+   * The two are different days at different places and they replace the whole
+   * page, hero included — swapped instantly that reads as a navigation, and
+   * leaves the guest wherever they had scrolled to on a page that no longer
+   * exists. So: dim the outgoing one, exchange, return to the top, and let
+   * the incoming one rise in (the `key` below is what restarts that).
+   */
+  const changeCeremony = useCallback((next) => {
+    setCeremony((current) => {
+      if (next === current || !current) return current;
+      setSwapping(true);
+      window.clearTimeout(swapTimer.current);
+      swapTimer.current = window.setTimeout(() => {
+        setCeremony(next);
+        setSwapping(false);
+        window.scrollTo({ top: 0, behavior: "auto" });
+      }, SWAP_MS);
+      return current;
+    });
+  }, []);
+
+  // A guest who switches and closes the tab must not leave a timer running.
+  useEffect(() => () => window.clearTimeout(swapTimer.current), []);
+
   const toggleMusic = useCallback(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -215,24 +246,31 @@ export default function Invitation({ guest: initialGuest, bypassIntro = false, c
          * The reply form stays with the reception. That is the seated dinner,
          * the one with a table to assign.
          */}
-        {ceremony === "anHoi" ? (
-          <Ceremony ceremony={ceremony} onCeremony={setCeremony} />
-        ) : (
-          <>
-            <Hero
-              guest={guest}
-              started={gateGone}
-              revealing={opened}
-              preloadVideo={mediaReady}
-              ceremony={ceremony}
-              onCeremony={setCeremony}
-            />
-            <Venue />
-            <DressCode />
-            <Timeline />
-            <Rsvp guest={guest} />
-          </>
-        )}
+        {/* Keyed on the celebration, so the incoming screen animates in. */}
+        <div
+          key={ceremony ?? "only"}
+          className="celebration"
+          data-leaving={swapping ? "true" : "false"}
+        >
+          {ceremony === "anHoi" ? (
+            <Ceremony ceremony={ceremony} onCeremony={changeCeremony} />
+          ) : (
+            <>
+              <Hero
+                guest={guest}
+                started={gateGone}
+                revealing={opened}
+                preloadVideo={mediaReady}
+                ceremony={ceremony}
+                onCeremony={changeCeremony}
+              />
+              <Venue />
+              <DressCode />
+              <Timeline />
+              <Rsvp guest={guest} />
+            </>
+          )}
+        </div>
 
         <ThankYou />
       </main>

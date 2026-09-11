@@ -122,7 +122,13 @@ export default function Ceremony({ ceremony, onCeremony }) {
            * editing it in place — that is what lets the fade below run again
            * on every switch instead of only the first time.
            */}
-          <article key={side} className={styles.card}>
+          {/*
+           * data-side, because the two printed cards do not size their rite
+           * the same way: the groom's sets "LỄ THÀNH HÔN" a shade under the
+           * couple's names, the bride's sets "LỄ ĂN HỎI & VU QUY" well above
+           * them and over two lines. See .rite in the stylesheet.
+           */}
+          <article key={side} data-side={side} className={styles.card}>
             <div className={styles.households}>
               {HOUSEHOLDS.map((key) => (
                 <div className={styles.household} key={key}>
@@ -179,7 +185,9 @@ export default function Ceremony({ ceremony, onCeremony }) {
 
             <p className={styles.lunar}>({engagement.lunar})</p>
 
-            <p className={styles.lead}>{t.ceremony.at}</p>
+            <p className={`${styles.lead} ${styles.leadPlace}`}>
+              {t.ceremony.at}
+            </p>
             <p
               className={`${styles.home} display-caps ${fallbackFontClass(card.home)}`}
             >
