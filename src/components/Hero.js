@@ -46,37 +46,43 @@ const SLOT_HEIGHT = SLOT_BOTTOM - SLOT_TOP;
  * and only the affected language changes.
  */
 /*
- * The families' card no longer shares them.
+ * The families' card does not share them, and has now been re-cut twice.
  *
- * It used to: the first cut was the Vietnamese composition with the parents'
- * wording swapped in, and its blank line fell on the same rows to the pixel.
- * The card was then re-cut — the couple's full names now head it and the
- * wishes line reads "đến dự Lễ Thành Hôn của hai con chúng tôi" — and the gap
- * moved with it. Measured off the new footage the way the numbers above were,
- * at 0.3s and 5.0s, which agree to the pixel:
+ * The first cut was the Vietnamese composition with the parents' wording
+ * swapped in, and its blank line fell on the same rows to the pixel. The
+ * second moved the gap down. This third one rebuilds the card altogether —
+ * the wishes line is split over two lines and the couple's full names have
+ * moved BELOW it rather than heading the card — which lifts the guest's line
+ * to the top third of the frame, nearly a fifth of the height above where it
+ * used to sit.
  *
- *   0.3974 – 0.4125   "Trân trọng kính mời"   (px 763–792)
- *   0.4125 – 0.5120    ← the slot              (px 792–983)
- *   0.5120 – 0.5281   "đến dự Lễ Thành Hôn…"  (px 983–1014)
+ * Measured off the footage the way the numbers above were, at 0.3s, 5.0s and
+ * 8.0s, which agree to within two pixels:
  *
- * A shade lower than the couple's slot and a quarter taller. Left on the
- * shared constants the name would hang 25px high in it — inside the gap, but
- * visibly not centred in it, which on a card this still is what the eye picks
- * up first.
+ *   0.2000 – 0.2151   "Trân trọng kính mời"        (px 384–413)
+ *   0.2151 – 0.2943    ← the slot                   (px 413–565)
+ *   0.2943 – 0.3135   "đến dự Lễ Thành Hôn của"    (px 565–602)
+ *   0.3323 – 0.3573   "hai con chúng tôi"          (px 638–686)
+ *
+ * The salutation is short and set lighter than the rest of the card, so the
+ * sweep that found the other bands missed it completely at first — worth
+ * knowing if these ever need re-measuring: narrow the window to the middle
+ * half of the frame and drop the threshold, or the top of the slot comes back
+ * as the monogram's baseline and the name lands 150px high.
  */
-const PARENTS_SLOT_TOP = 0.4125;
-const PARENTS_SLOT_BOTTOM = 0.512;
+const PARENTS_SLOT_TOP = 0.2151;
+const PARENTS_SLOT_BOTTOM = 0.2943;
 
 const SLOT = {
   en: { top: SLOT_TOP, height: SLOT_HEIGHT, x: 0.5113 },
   vi: { top: SLOT_TOP, height: SLOT_HEIGHT, x: 0.5113 },
-  /* `x` is unchanged: the re-cut card's lines centre on 0.506–0.511, the same
-     nudge to the right, and re-measuring moved it by fewer pixels than the
-     stroke of the type it hangs under. */
+  /* The three type lines on this cut centre on 0.5111, 0.5144 and 0.5162 —
+     the same nudge right, three pixels further over than the couple's cards.
+     Their mean is what the name hangs on. */
   parents: {
     top: PARENTS_SLOT_TOP,
     height: PARENTS_SLOT_BOTTOM - PARENTS_SLOT_TOP,
-    x: 0.5113,
+    x: 0.5139,
   },
 };
 
