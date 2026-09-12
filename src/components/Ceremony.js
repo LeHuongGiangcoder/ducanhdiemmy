@@ -70,7 +70,14 @@ export default function Ceremony({ ceremony, onCeremony }) {
        */}
       <section
         id="home"
-        className={`section section--screen section--pattern-wine ${styles.section}`}
+        /*
+         * `lang-vn` — this screen is in Vietnamese in all three versions, so
+         * it takes the Vietnamese display face and its size correction from
+         * the section down rather than from the guest's language. See the
+         * class in globals.css; without it the English invitation sets these
+         * headings in a face with no tone marks.
+         */
+        className={`section section--screen section--pattern-wine lang-vn ${styles.section}`}
       >
         <div className={`shell stack center ${styles.shell}`}>
           <Reveal className={styles.masthead}>
@@ -232,7 +239,7 @@ export default function Ceremony({ ceremony, onCeremony }) {
         times={engagementTimes}
         copy={t.ceremony.agenda}
         surface="section--pattern-wine"
-        className={styles.agenda}
+        className={`lang-vn ${styles.agenda}`}
         cherub={null}
         heading="h-2"
         mark={

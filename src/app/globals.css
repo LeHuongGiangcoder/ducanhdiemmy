@@ -1261,7 +1261,23 @@ legend.label {
  * in Vietnamese must not inherit a face chosen for tone marks.
  */
 [data-lang="vi"],
-[data-lang="parents"] {
+[data-lang="parents"],
+/*
+ * `lang-vn` is the same swap, asked for by a subtree rather than by the
+ * guest's language — for a screen that is in Vietnamese in every version of
+ * the invitation. The family ceremonies are the one such screen: two rites at
+ * two family homes, announced by the two households in the words they will be
+ * announced in on the day, whatever language the guest reads the reception in
+ * (see `ceremony` in src/data/content.js).
+ *
+ * Without it the English invitation sets that screen's headings in TAN
+ * Aegean, which carries no tone marks, and every line of it comes out glyph by
+ * glyph across two typefaces — the exact failure the wholesale swap below was
+ * written to end. Reaching for fallbackFontClass() at each call site is what
+ * this replaces: the agenda's event titles and the card's weekday had no such
+ * call and would have been the first two casualties.
+ */
+.lang-vn {
   /* Override the composed variables, not --font-display underneath them: var()
      is substituted where a property is declared, so --font-heading froze TAN
      in at :root and would inherit down here already resolved. */
@@ -1279,6 +1295,7 @@ legend.label {
  */
 [data-lang="vi"] .h-couple,
 [data-lang="parents"] .h-couple,
+.lang-vn .h-couple,
 .h-couple.font-display-vn {
   --display-vn-scale: var(--vn-scale-couple);
 }
@@ -1296,6 +1313,7 @@ legend.label {
  */
 [data-lang="vi"] .display-caps,
 [data-lang="parents"] .display-caps,
+.lang-vn .display-caps,
 .font-display-vn.display-caps {
   --display-vn-scale: var(--vn-scale-caps);
 }

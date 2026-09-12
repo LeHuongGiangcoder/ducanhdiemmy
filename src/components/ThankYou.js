@@ -65,6 +65,10 @@ export default function ThankYou({ ceremony = null }) {
          * on the page there is nothing below it for the lost height to expose.
          */
         families ? "section--pattern-wine" : "section--screen",
+        /* Its copy is the families' Vietnamese in all three versions, so it
+           takes the Vietnamese face from the section down — as the two
+           ceremony screens above it do. See `lang-vn` in globals.css. */
+        families ? "lang-vn" : "",
         styles.section,
         families ? styles.wine : styles.photo,
       ]
