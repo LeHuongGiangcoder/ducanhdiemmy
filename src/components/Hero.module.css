@@ -123,6 +123,23 @@
   text-indent: 0.06em;
 }
 
+/*
+ * Except on the Vietnamese cards, where --font-heading IS DFVN.
+ *
+ * The face swap in globals.css redefines that variable for both Vietnamese
+ * versions, so a name this class judged "display safe" — "Mr. & Mrs. Le", any
+ * name without a tone mark — is set in DFVN here too, while only
+ * .guestFallback below was correcting for DFVN's shorter capitals. The result
+ * was two guests on the same card at two different sizes: 20.3px for the
+ * Latin name, 26.2px for the one with tone marks, purely by whose name it was.
+ *
+ * The rule the fallback carries is the rule: same face, same correction.
+ */
+[data-lang="vi"] .guestDisplay,
+[data-lang="parents"] .guestDisplay {
+  --name-scale: var(--vn-scale-title);
+}
+
 /* DFVN Big Bang — whole-string fallback for Vietnamese diacritics. Still a
    display face, so a Vietnamese name reads as a name and not as body copy. */
 .guestFallback {

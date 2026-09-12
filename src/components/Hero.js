@@ -84,9 +84,32 @@ const SLOT_HEIGHT = SLOT_BOTTOM - SLOT_TOP;
 const PARENTS_SLOT_TOP = 0.2151;
 const PARENTS_SLOT_BOTTOM = 0.2943;
 
+/** Name size as a fraction of the frame, so it tracks the video's own type. */
+const NAME_SIZE = 0.025;
+
+/*
+ * The Vietnamese cards set the name larger than the English one does.
+ *
+ * Not a preference — it is the same optical size. The English card is set in
+ * TAN Aegean and the two Vietnamese ones in DFVN Big Bang (the face swap in
+ * globals.css), and DFVN's capitals stand about 29% shorter for the same
+ * font-size. 0.029 against 0.025 is that difference, so the guest's name
+ * reads at the same weight against the video's own lettering on all three.
+ *
+ * It is the same correction --vn-scale-title applies everywhere else; it
+ * cannot ride on that token here, because the name's size is built by a clamp
+ * out of --name-size rather than out of any --t-* step. See .guestFallback in
+ * the stylesheet, which applies the token to the multiplier this composes with.
+ *
+ * Declared above SLOT rather than beside the other type constants below it,
+ * because SLOT reads them: a `const` referenced before its declaration is a
+ * ReferenceError at module evaluation, not a hoisted undefined.
+ */
+const NAME_SIZE_VN = 0.029;
+
 const SLOT = {
-  en: { top: SLOT_TOP, height: SLOT_HEIGHT, x: 0.5113 },
-  vi: { top: SLOT_TOP, height: SLOT_HEIGHT, x: 0.5113 },
+  en: { top: SLOT_TOP, height: SLOT_HEIGHT, x: 0.5113, size: NAME_SIZE },
+  vi: { top: SLOT_TOP, height: SLOT_HEIGHT, x: 0.5113, size: NAME_SIZE_VN },
   /* The three type lines on this cut centre on 0.5111, 0.5144 and 0.5162 —
      the same nudge right, three pixels further over than the couple's cards.
      Their mean is what the name hangs on. */
@@ -94,6 +117,7 @@ const SLOT = {
     top: PARENTS_SLOT_TOP,
     height: PARENTS_SLOT_BOTTOM - PARENTS_SLOT_TOP,
     x: 0.5139,
+    size: NAME_SIZE_VN,
   },
 };
 
@@ -103,9 +127,6 @@ const SLOT = {
  * slot is nudged by the same 1.13% to hang the guest's name directly under it
  * (see the `x` in SLOT above).
  */
-/** Name size as a fraction of the frame, so it tracks the video's own type. */
-const NAME_SIZE = 0.025;
-
 /*
  * How much of the slot a name may occupy. The slot is the whole gap between
  * "Dear" and the wishes line, and it was cut for one line of type. A two-line
@@ -191,16 +212,13 @@ export default function Hero({
   }, []);
 
   /**
-   * Shrink a name that outgrows its slot.
+   * Shrink a name that outgrows its slot — the measure first, then the gap.
    *
    * "Mr. Jason Lau & Ms. Dung Dang" is two and a half times the length of
-   * "James Carter" and wraps to two lines, which fills the gap the video left
-   * for one. Rather than guess a size from character count — which breaks the
-   * moment a name is in the other typeface, or carries a wide glyph — the
-   * rendered height is measured and the size divided down until it fits.
-   *
-   * Two passes: shrinking can un-wrap a line, which changes the height it was
-   * solving for. It converges immediately in practice; the loop is the guard.
+   * "James Carter" and outgrows the line the video left for it. Rather than
+   * guess a size from character count — which breaks the moment a name is in
+   * the other typeface, or carries a wide glyph — both dimensions are
+   * measured off the rendered name and the size divided down until it fits.
    */
   useEffect(() => {
     const name = nameRef.current;
@@ -215,6 +233,39 @@ export default function Hero({
 
       let scale = 1;
       el.style.setProperty("--name-fit", "1");
+
+      /*
+       * Width first, and one line for as long as one line is possible.
+       *
+       * The slot was cut for a single line, and wrapping is the expensive
+       * thing to let happen: a second line doubles the height the loop below
+       * has to solve for, and that budget is little more than one line's
+       * worth. Measured on a 375px phone, "Vợ chồng Hai Bác Tâm & Huy" wants
+       * 396px of the 315px measure — so it used to wrap, and the height pass
+       * then took it down to 16.8px to get two lines into a gap cut for one.
+       * Held to one line it sets at 20.8px instead. The name was not too
+       * small; it was being charged for the wrap.
+       *
+       * So: measure it unwrapped, and if it overruns, shrink it to the
+       * measure rather than break it. Only a name that cannot hold one line
+       * even at MIN_FIT is allowed to wrap, and then the pass below sizes the
+       * two lines as it always did.
+       */
+      el.style.whiteSpace = "nowrap";
+      const measure = el.clientWidth;
+      const oneLine = el.scrollWidth;
+      if (oneLine > measure) {
+        const wanted = measure / oneLine;
+        if (wanted >= MIN_FIT) {
+          scale = wanted;
+        } else {
+          el.style.whiteSpace = "";
+        }
+      }
+      el.style.setProperty("--name-fit", String(scale));
+
+      // Two passes: shrinking can un-wrap a line, which changes the height it
+      // was solving for. It converges immediately; the loop is the guard.
       for (let pass = 0; pass < 2; pass++) {
         const height = el.scrollHeight;
         if (height <= budget) break;
@@ -284,7 +335,7 @@ export default function Hero({
                 height: `${box.height}px`,
                 // Type scales with the footage, not the viewport, so the name
                 // keeps the same relationship to the video's own lettering.
-                "--name-size": `${box.height * NAME_SIZE}px`,
+                "--name-size": `${box.height * slot.size}px`,
                 "--slot-shift": `${box.width * (slot.x - 0.5)}px`,
               }
             : undefined
