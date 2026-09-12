@@ -32,20 +32,23 @@ import styles from "./Ceremony.module.css";
  */
 
 /**
- * The households, always in this order.
+ * The households, selected family first.
  *
- * Each printed card leads with the family sending it, and the first cut of
- * this screen did the same. On paper that works, because a card is the only
- * thing in your hand. Here there is a tab row directly above reading
- * "Nhà Trai | Nhà Gái" in a fixed order — so on the bride's tab the two rows
- * showed the same two words in opposite orders, forty pixels apart. Whichever
- * is more faithful to the paper, that is a puzzle, and the guest has to solve
- * it before they can read the names.
+ * Each printed card leads with the family sending it, and this screen follows
+ * it: on the bride's tab the bride's parents are the left-hand column, on the
+ * groom's tab the groom's are.
  *
- * The couple's names below still swap, because nothing above them contradicts
- * it and the card's own voice depends on it.
+ * There is a cost, and it is worth naming rather than rediscovering. The tab
+ * row directly above reads "Nhà Trai | Nhà Gái" in a fixed order, so on the
+ * bride's tab the two rows show the same two words in opposite orders about
+ * forty pixels apart — which is why an earlier cut of this screen pinned the
+ * columns to the tabs' order instead. The couple asked for the paper's
+ * arrangement back: the card is what a guest reads on the day, and the family
+ * sending it leads. So the columns swap with the tab, the way the couple's
+ * names below them already did.
  */
-const HOUSEHOLDS = ["groom", "bride"];
+const householdOrder = (side) =>
+  side === "bride" ? ["bride", "groom"] : ["groom", "bride"];
 
 export default function Ceremony({ ceremony, onCeremony }) {
   const { t } = useContent();
@@ -81,13 +84,6 @@ export default function Ceremony({ ceremony, onCeremony }) {
               sizes="(max-width: 479px) 14vw, 60px"
               priority
               className="monogram"
-            />
-
-            {/* The way back to the reception — see CelebrationSwitch.js. */}
-            <CelebrationSwitch
-              value={ceremony}
-              onChange={onCeremony}
-              className={styles.switch}
             />
           </Reveal>
 
@@ -130,7 +126,7 @@ export default function Ceremony({ ceremony, onCeremony }) {
            */}
           <article key={side} data-side={side} className={styles.card}>
             <div className={styles.households}>
-              {HOUSEHOLDS.map((key) => (
+              {householdOrder(side).map((key) => (
                 <div className={styles.household} key={key}>
                   <p className={styles.householdLabel}>
                     {t.ceremony.households[key]}
@@ -194,7 +190,40 @@ export default function Ceremony({ ceremony, onCeremony }) {
               {card.home}
             </p>
             <p className={styles.address}>{engagement.homes[side].address}</p>
+
+            {/*
+             * Directions to the house on the tab that is showing — the one
+             * thing on this card a guest acts on rather than reads. Same
+             * control as the reception's, down to its wording: `venue.mapLink`
+             * is "view directions", which is what this is, and a second string
+             * saying the same thing in the same language is a second string to
+             * keep in step.
+             */}
+            <a
+              className={styles.mapLink}
+              href={engagement.homes[side].mapUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t.venue.mapLink}
+            </a>
           </article>
+
+          {/*
+           * The way back to the reception — see CelebrationSwitch.js.
+           *
+           * At the foot of this screen rather than its head, so it sits where
+           * the hero video's copy of it sits: the two celebrations are one
+           * control in one place, and a guest who has just read a card should
+           * find the other day directly under it. It is in the flow rather
+           * than pinned to the viewport because this screen is taller than
+           * one — pinned, it would cover the card it belongs to.
+           */}
+          <CelebrationSwitch
+            value={ceremony}
+            onChange={onCeremony}
+            className={styles.switch}
+          />
         </div>
       </section>
 
@@ -210,17 +239,7 @@ export default function Ceremony({ ceremony, onCeremony }) {
         surface="section--pattern-wine"
         cherub={null}
         heading="h-2"
-        mark={
-          <Image
-            src="/assets/divider.webp"
-            alt=""
-            aria-hidden="true"
-            width={1200}
-            height={58}
-            sizes="(max-width: 479px) 78vw, 20rem"
-            className={styles.agendaDivider}
-          />
-        }
+        mark={<span className={styles.agendaOrnament} aria-hidden="true" />}
       />
     </>
   );

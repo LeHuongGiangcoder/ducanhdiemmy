@@ -27,6 +27,12 @@
    * The middle column is the rail's gutter, split evenly either side of it.
    * It has to clear the dot — a 7px square turned on its corner, so ~5px of
    * it juts into each half — before either the time or the title starts.
+   *
+   * 4em is measured against the widest time this holds, which is a Vietnamese
+   * one now that .time takes the DFVN size correction: "15:00" sets 65px at
+   * 19.35px, and its own -0.06em margin-right pulls the margin box back to
+   * 63.8px inside the 64px the column gives it. There is about a pixel spare,
+   * so a time column of six characters would need this widened with it.
    */
   grid-template-columns: 4em var(--s-7) 1fr;
   align-items: start;
@@ -41,7 +47,19 @@
   font-family: var(--font-heading);
   /* One step up from --t-fine, and half a weight heavier: the times are the
      spine of this section and were reading as a caption beside the events. */
-  font-size: var(--t-small);
+  /*
+   * Carrying --display-vn-scale is what finishes that.
+   *
+   * The times are set in --font-heading, so on the Vietnamese versions they
+   * swap to DFVN Big Bang with everything else — but they were the one line
+   * in the section still sized for TAN. The event titles beside them take the
+   * correction through .h-4, which put a 20.6px title next to a 15px time and
+   * dropped the times back to the caption they were raised out of. Multiplying
+   * it in here holds the pair in the same proportion in every language, and in
+   * both places this component is used: 1 on the English invitation, so
+   * nothing there moves.
+   */
+  font-size: calc(var(--t-small) * var(--display-vn-scale));
   font-weight: 500;
   letter-spacing: 0.06em;
   color: var(--gold);
@@ -112,7 +130,20 @@
   height: 7px;
   translate: -50% -50%;
   rotate: 45deg;
-  background: var(--navy);
+  /*
+   * A pale gold, not --navy.
+   *
+   * The unlit diamond used to be filled with the navy of the evening's own
+   * section, where it reads as a hollow gold outline. This component is also
+   * the family ceremonies' running order, and that one sits on the wine
+   * damask — where the same fill stopped being invisible and became a row of
+   * small blue dots down a red page, the only blue on the screen.
+   *
+   * Filling it with the rail's own gold at low alpha solves it for both: on
+   * either ground the unlit mark now reads as a faint version of the lit one,
+   * which is what it is.
+   */
+  background: #c6a75f29;
   border: 1px solid #c6a75f66;
   transition:
     background var(--dur) var(--ease),

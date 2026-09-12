@@ -116,6 +116,38 @@
   position: relative;
 }
 
+/*
+ * Evening up the three closing lines — the sign-off, the signature, the date.
+ *
+ * .stack--snug gives all three gaps the same 24px, and they did not read that
+ * way. Measured ink to ink on the families' version: 22.5px between
+ * "TRÂN TRỌNG" and "Gia Đình Hai Bên", and 42.3px between that and the date.
+ * Almost double, with nothing in the markup saying so.
+ *
+ * The 24px is the gap between line BOXES, and around the date neither box is
+ * filled by its own ink. The date's digits are cap-height inside a 1.4
+ * line-height, which leaves 9.1px of empty box above them; and where the
+ * signature is words with no descender in them, its box leaves another 9.2px
+ * empty underneath. The gap above the signature has no such slack on either
+ * side — the eyebrow's box is tight and the display face's ascenders actually
+ * overshoot theirs — so all of it landed on one side.
+ *
+ * Each rule below takes back the slack of its OWN element rather than one
+ * number splitting the difference, because the two versions of this screen do
+ * not have the same slack: the couple sign with "D.A & D.M" in TAN Pearl,
+ * whose descenders do reach the foot of the box, and a correction sized for
+ * DFVN threw that one out by as much as it fixed the other. Both now come out
+ * within 2px either side.
+ *
+ * `text-box-trim` is the declaration that would state this directly instead
+ * of compensating for it; it is too new to put a wedding invitation's closing
+ * screen on.
+ */
+.signoff :global(.date-text) {
+  /* 9.1px at the date's 20.6px — the leading above cap-height digits. */
+  margin-top: -0.44em;
+}
+
 .signature {
   font-family: var(--font-couple-name);
   color: var(--cream-bright);
@@ -132,6 +164,13 @@
   white-space: normal;
   text-wrap: balance;
   max-width: 12em;
+  /*
+   * The other half of the sign-off's spacing — see the note on .date-text
+   * above. "Gia Đình Hai Bên" has no descender anywhere in it, so the bottom
+   * of its line box is 9.2px of nothing; at this line's 36px that is 0.26em.
+   * On the initials this rule does not apply, and they do not need it.
+   */
+  margin-bottom: -0.26em;
 }
 
 /*

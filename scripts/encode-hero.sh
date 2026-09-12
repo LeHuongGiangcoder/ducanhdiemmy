@@ -49,9 +49,10 @@ encode() {
 
 encode "public/hero final.mp4"      "public/assets/hero-en.mp4"
 encode "public/hero final viet.mp4" "public/assets/hero-vi.mp4"
-# The families' card. Its master arrived at 9 Mbps and was encoded once without
-# ffmpeg on the machine (AVFoundation, 3.2 Mbps — 4.0 MB), which is a megabyte
-# and a half more than this line produces for the same picture. Run it.
+# The families' card, now the ver16 cut. The master is the same composition as
+# the one before it — the only change is that "Trân trọng kính mời" is set in
+# the navy of the monogram rather than in cream, so every line stayed on its
+# own row and the slot Hero.js measures did not move (see PARENTS_SLOT_TOP).
 encode "public/hero final parents.mp4" "public/assets/hero-parents.mp4"
 
 ls -la public/assets/hero-*

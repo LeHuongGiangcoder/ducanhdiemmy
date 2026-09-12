@@ -35,11 +35,17 @@ export const couple = {
  * Nguyễn Tất / Kim Dũng and not Nguyễn / Tất Kim Dũng. Rendered with
  * white-space: pre-line.
  *
+ * Ông and Bà, not Mr. and Mrs. These names are only ever read in Vietnamese —
+ * the gate sets them on the families' version alone, and the ceremony cards
+ * below keep every rite in Vietnamese in all three versions by the couple's
+ * own instruction — so an English honorific was the one word on either screen
+ * in a language the rest of it does not use.
+ *
  * The household labels are per-language and live in content.js.
  */
 export const families = {
-  groom: ["Mr. Vũ\nHồng Khanh", "Mrs. Nguyễn\nNgọc Thanh"],
-  bride: ["Mr. Nguyễn Tất\nKim Dũng", "Mrs. Lê\nHồng Ánh"],
+  groom: ["Ông Vũ\nHồng Khanh", "Bà Nguyễn\nNgọc Thanh"],
+  bride: ["Ông Nguyễn Tất\nKim Dũng", "Bà Lê\nHồng Ánh"],
 };
 
 export const wedding = {
@@ -89,9 +95,23 @@ export const engagement = {
    * am I going to", and each home holds whichever rite belongs to it — see
    * `ceremony.sides` in content.js for the wording each one carries.
    */
+  /*
+   * `mapUrl` is the families' own Google Maps share link for each house, not
+   * a `?query=` search built from the address above. A search would resolve
+   * these two by guesswork — both are addresses down an alley, and "Số 29 Ngõ
+   * 36 Giang Văn Minh" is exactly the shape of address a text search puts on
+   * the wrong end of the street. The share links are pins the families
+   * dropped themselves.
+   */
   homes: {
-    groom: { address: "Số 29 Ngõ 36 Giang Văn Minh, Ba Đình, Hà Nội" },
-    bride: { address: "Số 58 Hàng Cót, Hoàn Kiếm, Hà Nội" },
+    groom: {
+      address: "Số 29 Ngõ 36 Giang Văn Minh, Ba Đình, Hà Nội",
+      mapUrl: "https://maps.app.goo.gl/4UQz2HeUKEJnNNG27",
+    },
+    bride: {
+      address: "Số 58 Hàng Cót, Hoàn Kiếm, Hà Nội",
+      mapUrl: "https://maps.app.goo.gl/Bc39QuyBG3vfPA4d7",
+    },
   },
 };
 

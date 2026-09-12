@@ -46,7 +46,7 @@ const SLOT_HEIGHT = SLOT_BOTTOM - SLOT_TOP;
  * and only the affected language changes.
  */
 /*
- * The families' card does not share them, and has now been re-cut twice.
+ * The families' card does not share them, and has now been re-cut three times.
  *
  * The first cut was the Vietnamese composition with the parents' wording
  * swapped in, and its blank line fell on the same rows to the pixel. The
@@ -69,6 +69,17 @@ const SLOT_HEIGHT = SLOT_BOTTOM - SLOT_TOP;
  * knowing if these ever need re-measuring: narrow the window to the middle
  * half of the frame and drop the threshold, or the top of the slot comes back
  * as the monogram's baseline and the name lands 150px high.
+ *
+ * The ver16 cut that replaced it changes one thing and nothing else: the
+ * salutation is set in the monogram's navy instead of cream. Differenced
+ * against the previous master at 0.3s, 5.0s and 8.0s, the two frames disagree
+ * on exactly three bands — 0.1969–0.2240, 0.2938–0.3161 and 0.3318–0.3609 —
+ * which are the salutation and the two wishes lines on their own rows, at
+ * centres 0.5148 / 0.5130 / 0.5167. Same type, same rows, new colour, so the
+ * three numbers below carry over untouched. (The salutation's ink runs to
+ * 0.2240 against the 0.2151 recorded above it: the bright-ink sweep stopped
+ * at the baseline and missed the descender in "trọng". SLOT_FILL leaves the
+ * name clear of it either way, which is why it has never shown.)
  */
 const PARENTS_SLOT_TOP = 0.2151;
 const PARENTS_SLOT_BOTTOM = 0.2943;
