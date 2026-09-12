@@ -30,7 +30,9 @@
 .segment {
   flex: 1 1 0;
   min-width: 0;
-  padding: var(--s-3) var(--s-2);
+  /* Inline padding is measure this label cannot spare — see the size note
+     below. The block padding is untouched: it is the tap target. */
+  padding: var(--s-3) var(--s-1);
 
   border: 0;
   border-radius: var(--radius-pill);
@@ -39,15 +41,34 @@
   font-family: var(--font-body);
   /*
    * --t-eyebrow's curve with a lower floor, and tighter tracking than any
-   * eyebrow on the site. Both labels have to hold one line inside half a
-   * phone, and "Lễ Ăn Hỏi & Vu Quy" is the long one that decides it: at the
-   * token's own 0.75rem floor it wrapped to two lines on a 320px screen.
+   * eyebrow on the site. Both labels have to hold ONE line inside half a
+   * pill, and "Lễ Ăn Hỏi & Vu Quy" is the long one that decides it.
+   *
+   * Measured rather than guessed. At the tracking below the label sets 10.23px
+   * of width per pixel of font-size, and half the pill — which is
+   * --switch-measure, see globals.css — less this rule's own padding is what
+   * it has to fit inside:
+   *
+   *   360px phone    108px of measure allows 10.6px; 2.8 * --vw asks 10.1px
+   *   375px          115px allows 11.3px; asks 10.5px
+   *   390px and up   123px and rising, against 10.9px and then the 0.8125rem
+   *                  ceiling — the headroom only grows
+   *
+   * Three things bought that line and no one of them was enough alone: the
+   * 16px of slack taken back out of the pill's width, the inline padding cut
+   * to --s-1, and the tracking off 0.06em. The size is the smallest of the
+   * four changes on purpose — this is a control, and shrinking a control's
+   * label is the last place to find room, not the first.
+   *
+   * Below 360px it still wraps, and deliberately so: 320px would need 8.6px
+   * type to hold the line, which is no longer a label anyone can read. Two
+   * lines is the better failure there.
    */
-  font-size: clamp(0.6875rem, calc(3.1 * var(--vw)), 0.875rem);
+  font-size: clamp(0.625rem, calc(2.8 * var(--vw)), 0.8125rem);
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  text-indent: 0.06em;
+  letter-spacing: 0.03em;
+  text-indent: 0.03em;
   line-height: 1.25;
   text-align: center;
   text-wrap: balance;

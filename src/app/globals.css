@@ -160,6 +160,29 @@
      the closing screen), so the mark never changes weight between screens. */
   --logo-size: clamp(3.25rem, calc(14 * var(--vw)), 4.5rem);
 
+  /*
+   * The celebration switch's measure — one value, because it is one control.
+   *
+   * It appears over the hero video and again at the foot of the ceremony
+   * screen, and both have to hold their two labels on one line at one type
+   * size (see .segment in CelebrationSwitch.module.css, which is sized
+   * against this). Each used to work it out from its own `100%`, and those
+   * are different boxes — the hero's is the full-bleed section, the ceremony's
+   * is the centred shell — so the same declaration gave two different pills
+   * and only one of them fitted.
+   *
+   * --frame rather than 100vw: the whole site pins its column to --frame,
+   * which is capped at 430px on a wide window, and a switch measured off the
+   * real viewport would drift off that column. What comes off it is the music
+   * dock's footprint at both ends — a 2.75rem button inside var(--s-4) of
+   * padding — because the dock is fixed across the foot of the column and the
+   * hero's copy of the switch shares that row.
+   */
+  --switch-measure: min(
+    var(--frame) - 2 * (var(--s-4) + 2.75rem),
+    20rem
+  );
+
   /* ---- Surface ---------------------------------------------------------- */
   --radius: 2px; /* almost square — luxury print, not app UI */
   --radius-pill: 999px;
@@ -613,6 +636,34 @@ select {
   width: var(--logo-size);
   height: auto;
   filter: drop-shadow(0 2px 12px #09203a73);
+}
+
+/*
+ * The calla lily from the couple's stationery, as a section mark.
+ *
+ * It heads the family ceremonies' running order and their closing screen —
+ * the two places one half of that day gives way to the next — so it lives
+ * here rather than in either component's stylesheet. Each caller sets only
+ * the air it needs around it.
+ *
+ * Drawn as a mask, not an <img>. The artwork ships filled in the stationery's
+ * wine (#850B19), which on the wine damask both of those screens use would be
+ * very nearly invisible; a mask takes the alpha alone and paints it in the
+ * design system's own gold. The aspect ratio is the artwork's tight bounding
+ * box — see the viewBox on the file, which is cropped to it.
+ */
+.calla {
+  display: block;
+  width: auto;
+  height: clamp(3rem, calc(13 * var(--vw)), 4rem);
+  aspect-ratio: 795 / 1384;
+  margin-inline: auto;
+
+  background-color: var(--gold);
+  opacity: 0.9;
+
+  -webkit-mask: url("/assets/ornament-calla.svg") no-repeat center / contain;
+  mask: url("/assets/ornament-calla.svg") no-repeat center / contain;
 }
 
 /* ==========================================================================

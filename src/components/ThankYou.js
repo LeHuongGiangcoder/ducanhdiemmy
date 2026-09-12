@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { couple, wedding } from "@/data/wedding";
+import { getContent } from "@/data/content";
 import { useContent } from "./LanguageProvider";
 import { fallbackFontClass } from "@/lib/aegean";
 import Reveal from "./Reveal";
@@ -17,37 +18,91 @@ import styles from "./ThankYou.module.css";
  * does it — it is sunk into the lower third of the screen as a watermark
  * behind the sign-off, so the closing screen reads as an echo of the gate
  * rather than a second copy of it.
+ *
+ * Behind the celebration toggle it becomes a third wine screen instead — see
+ * `families` below.
  */
-export default function ThankYou() {
-  const { t } = useContent();
-  return (
-    <section className={`section section--screen ${styles.section}`}>
-      <div className={styles.backdrop} aria-hidden="true">
-        <Image
-          src="/assets/thankyou-bg.jpg"
-          alt=""
-          fill
-          quality={90}
-          sizes="(max-width: 479px) 100vw, (max-height: 1000px) 100vh, 100vw"
-          className={styles.backdropImage}
-        />
-      </div>
 
-      {/* Sunk into the lower third, behind the sign-off. */}
-      <Image
-        src="/assets/monogram-couple.png"
-        alt=""
-        aria-hidden="true"
-        width={876}
-        height={900}
-        sizes="(max-width: 479px) 46vw, 198px"
-        className={styles.watermark}
-      />
+/**
+ * The closing words in the two families' voice.
+ *
+ * Read off the `parents` dictionary rather than copied, because it is the same
+ * paragraph the families' own invitation closes with and one of them editing
+ * it must change both. Deliberately NOT the active language's version: the
+ * whole of the ceremonies screen speaks for the parents — it is their card,
+ * their two households announcing it — so a closing screen signed "D.A & D.M"
+ * put the couple's own thanks at the foot of a page nobody said they were
+ * speaking on. That holds whatever language the guest reads the reception in,
+ * which is why this is a fixed lookup and not `t.thankYou`.
+ */
+const FAMILIES_THANKS = getContent("parents").thankYou;
+
+export default function ThankYou({ ceremony = null }) {
+  const { t } = useContent();
+  /**
+   * The family ceremonies replace the whole page, and this screen with it: the
+   * two screens above it are the wine damask, and the photograph closing them
+   * read as the reception's ending pasted onto the afternoon.
+   */
+  const families = ceremony === "anHoi";
+  const copy = families ? FAMILIES_THANKS : t.thankYou;
+
+  return (
+    <section
+      className={[
+        "section section--screen",
+        families ? "section--pattern-wine" : "",
+        styles.section,
+        families ? "" : styles.photo,
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      {families ? null : (
+        <div className={styles.backdrop} aria-hidden="true">
+          <Image
+            src="/assets/thankyou-bg.jpg"
+            alt=""
+            fill
+            quality={90}
+            sizes="(max-width: 479px) 100vw, (max-height: 1000px) 100vh, 100vw"
+            className={styles.backdropImage}
+          />
+        </div>
+      )}
+
+      {/*
+       * Sunk into the lower third, behind the sign-off — on the photograph
+       * only. At 6% it is a watermark in still water; over the damask there is
+       * already a pattern in that band and a second one under it reads as a
+       * smudge rather than a mark. The lily at the head is this screen's
+       * ornament when it is wine.
+       */}
+      {families ? null : (
+        <Image
+          src="/assets/monogram-couple.png"
+          alt=""
+          aria-hidden="true"
+          width={876}
+          height={900}
+          sizes="(max-width: 479px) 46vw, 198px"
+          className={styles.watermark}
+        />
+      )}
 
       <div className="shell stack center">
         <Reveal className="masthead">
-          <h2 className={`h-1 ${fallbackFontClass(t.thankYou.headline)}`}>{t.thankYou.headline}</h2>
-          <p className="body" style={{ whiteSpace: "pre-line", textWrap: "auto" }}>{t.thankYou.body}</p>
+          {/*
+           * The same mark that divides the ceremony card from its running
+           * order, dividing that from this. It is the one thing standing
+           * between two wine screens, so it does the work the change of
+           * ground used to do by itself.
+           */}
+          {families ? (
+            <span className={`calla ${styles.calla}`} aria-hidden="true" />
+          ) : null}
+          <h2 className={`h-1 ${fallbackFontClass(copy.headline)}`}>{copy.headline}</h2>
+          <p className="body" style={{ whiteSpace: "pre-line", textWrap: "auto" }}>{copy.body}</p>
         </Reveal>
 
         {/* The sign-off block: the closing words, the names, the date. */}
@@ -55,7 +110,7 @@ export default function ThankYou() {
           <div className="rule-mark" aria-hidden="true">
             <span className="rule-mark__dot" />
           </div>
-          <p className="eyebrow">{t.thankYou.signoff}</p>
+          <p className="eyebrow">{copy.signoff}</p>
           {/*
            * The couple sign with their initials; the families sign with their
            * name. `display-caps` and the nowrap that goes with it belong to the
@@ -63,13 +118,13 @@ export default function ThankYou() {
            * both were cut for. A signature of real words takes the ordinary
            * heading treatment and is allowed to wrap.
            */}
-          {t.thankYou.signature ? (
+          {copy.signature ? (
             <p
               className={`h-2 ${styles.signature} ${styles.signatureWords} ${fallbackFontClass(
-                t.thankYou.signature,
+                copy.signature,
               )}`}
             >
-              {t.thankYou.signature}
+              {copy.signature}
             </p>
           ) : (
             <p className={`h-2 display-caps ${styles.signature}`}>{couple.initials}</p>

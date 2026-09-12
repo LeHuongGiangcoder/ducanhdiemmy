@@ -272,7 +272,14 @@ export default function Invitation({ guest: initialGuest, bypassIntro = false, c
           )}
         </div>
 
-        <ThankYou />
+        {/*
+         * Outside the keyed wrapper above, because it closes both
+         * celebrations rather than belonging to either — but it is told which
+         * one it is closing: behind the toggle it becomes the families' own
+         * thanks on the damask, so the afternoon does not end on the
+         * reception's photograph. See ThankYou.js.
+         */}
+        <ThankYou ceremony={ceremony} />
       </main>
 
       <MusicToggle

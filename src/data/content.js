@@ -156,7 +156,15 @@ const en = {
     /** Heads the two household blocks at the top of each card. */
     households: { groom: "Nhà Trai", bride: "Nhà Gái" },
     announce: "With warmest regards",
-    heldOn: "to be held on",
+    /**
+     * Heads the weekday · date · hour row.
+     *
+     * "welcoming guests from", not "to be held on": the hour beside it is when
+     * the households open their doors, not when the rites begin. The families
+     * asked for the distinction — a guest reading "held on 14:00" arrives at
+     * two and finds the ăn hỏi already in progress.
+     */
+    heldOn: "welcoming guests from",
     at: "at",
     weekday: "Tuesday",
     sides: {
@@ -309,7 +317,8 @@ const vi = {
     tabs: { groom: "Nhà Trai", bride: "Nhà Gái" },
     households: { groom: "Nhà Trai", bride: "Nhà Gái" },
     announce: "Trân trọng kính báo",
-    heldOn: "được cử hành vào",
+    /** See the note on the English `heldOn` — the hour is when guests arrive. */
+    heldOn: "đón khách từ",
     at: "tại",
     weekday: "Thứ Ba",
     sides: {

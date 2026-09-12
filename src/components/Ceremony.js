@@ -181,9 +181,7 @@ export default function Ceremony({ ceremony, onCeremony }) {
 
             <p className={styles.lunar}>({engagement.lunar})</p>
 
-            <p className={`${styles.lead} ${styles.leadPlace}`}>
-              {t.ceremony.at}
-            </p>
+            <p className={styles.lead}>{t.ceremony.at}</p>
             <p
               className={`${styles.home} display-caps ${fallbackFontClass(card.home)}`}
             >
@@ -239,7 +237,9 @@ export default function Ceremony({ ceremony, onCeremony }) {
         surface="section--pattern-wine"
         cherub={null}
         heading="h-2"
-        mark={<span className={styles.agendaOrnament} aria-hidden="true" />}
+        mark={
+          <span className={`calla ${styles.agendaOrnament}`} aria-hidden="true" />
+        }
       />
     </>
   );

@@ -187,10 +187,13 @@
  *
  * The Fairmont lockup is composed into the footage and ends at 0.863 of the
  * video frame; below it the card is empty rock, which is the band the switch
- * sits in. And the music dock is fixed across the foot of the column with a
- * 2.75rem button inside var(--s-4) of padding, so the switch gives back that
- * much measure at BOTH ends rather than run under it — centred and clear is
- * worth more than a few extra pixels of pill.
+ * sits in — and it is only about 88px tall on a 375x812 phone, of which the
+ * music dock takes 76. That is why the switch shares the dock's row instead
+ * of stacking above it: lifted clear of the dock it would cover the lockup.
+ *
+ * The width is --switch-measure, shared with the ceremony screen's copy of
+ * the control — see the note on the token in globals.css. It is what keeps the
+ * dock clear of it, and it is what "Lễ Ăn Hỏi & Vu Quy" is sized against.
  */
 .switch {
   position: absolute;
@@ -198,7 +201,7 @@
   left: 50%;
   bottom: var(--s-5);
   translate: -50% 0;
-  width: min(100% - 2 * (var(--s-4) + 2.75rem + var(--s-2)), 20rem);
+  width: var(--switch-measure);
 
   opacity: 0;
   translate: -50% 0.75rem;

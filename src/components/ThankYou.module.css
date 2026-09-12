@@ -4,7 +4,6 @@
  */
 .section {
   position: relative;
-  background-color: var(--navy-deep);
   /*
    * The one section that does not pin its heading to `--section-head-offset`.
    * Centring the block puts it on the water below the horizon while keeping
@@ -12,6 +11,31 @@
    */
   align-content: center;
   padding-block: var(--section-y);
+}
+
+/*
+ * The photograph variant — the reception's closing screen.
+ *
+ * Everything from here to the foot of this file belongs to it and not to the
+ * wine one behind the celebration toggle, which sits on the damask the two
+ * screens above it use and needs none of it: no ground of its own, no scrim,
+ * and none of the type treatments below, which exist to buy back contrast the
+ * damask sections get for free. Adding halos to type on a flat ground only
+ * makes it look printed twice.
+ *
+ * The ground is declared here rather than on .section so that
+ * `section--pattern-wine` has nothing to override — the two are both single
+ * class selectors, and which of a module and a global stylesheet wins between
+ * them is not something to leave to injection order.
+ */
+.photo {
+  background-color: var(--navy-deep);
+}
+
+/* The lily at the head of the wine variant. The mark is .calla in
+   globals.css; this is the air under it, matching the running order's. */
+.calla {
+  margin-bottom: var(--s-4);
 }
 
 /* ---- The photograph ----------------------------------------------------- */
@@ -192,10 +216,10 @@
  * reads as a drop shadow, only as the type sitting a little forward of the
  * water. Anything tighter than this shows up as an edge.
  */
-.section :global(.h-1),
-.section :global(.body),
-.section :global(.eyebrow),
-.section .signature {
+.photo :global(.h-1),
+.photo :global(.body),
+.photo :global(.eyebrow),
+.photo .signature {
   text-shadow:
     0 1px 2px rgb(0 0 0 / 0.5),
     0 2px 18px rgb(0 0 0 / 0.6);
@@ -214,7 +238,7 @@
  * Kept under 0.2 alpha and spread wide, so it reads as light coming off the
  * words, never as a glow effect.
  */
-.section :global(.h-1) {
+.photo :global(.h-1) {
   text-shadow:
     0 1px 2px rgb(0 0 0 / 0.55),
     0 2px 14px rgb(0 0 0 / 0.6),
@@ -232,7 +256,7 @@
  * Cormorant is a light-boned face besides, so the same rule takes it off 400 —
  * a variable axis, so no extra file is fetched for the weight.
  */
-.section :global(.body) {
+.photo :global(.body) {
   color: rgb(232 220 200 / 0.9);
   font-weight: 500;
 }
@@ -243,7 +267,7 @@
  * and they land on the brightest part of the frame. One step further up the
  * weight axis puts them back.
  */
-[data-lang="vi"] .section :global(.body),
-[data-lang="parents"] .section :global(.body) {
+[data-lang="vi"] .photo :global(.body),
+[data-lang="parents"] .photo :global(.body) {
   font-weight: 550;
 }

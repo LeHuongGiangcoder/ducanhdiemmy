@@ -18,12 +18,30 @@
 }
 
 /*
- * The monogram, in the hero's place. It takes .monogram from globals.css,
- * which is the one size it appears at anywhere on the site — the gate, the
- * closing screen, and the card composed into the video — so this screen opens
- * at the same weight the video one does.
+ * The monogram, in the hero's place — and at the size the hero actually shows
+ * it, which is not --logo-size.
+ *
+ * The mark on the video screen is not this element: it is composed into the
+ * footage, and how big it lands depends on the video's own cover-scale. On the
+ * 1080x1920 card its ink measures 84x95px, so on a 375x812 phone — where the
+ * frame is painted at 0.457 to cover the screen — it arrives 38px wide.
+ * --logo-size asks for 14 * --vw, which is 52px there: half again as wide, and
+ * the two screens read as two different marks rather than one invitation.
+ *
+ * So this screen scales the token down by the measured ratio (10.2 against 14)
+ * rather than hard-coding a pixel size, which keeps it responsive the way the
+ * rest of the site is. Redefining the variable rather than the width, because
+ * .monogram in globals.css is built on it — no specificity fight, and the
+ * shadow and aspect ratio come along unchanged.
+ *
+ * An exact match at every viewport is not something CSS can do: the footage's
+ * mark tracks whichever of width or height is covering, and on a phone that
+ * is the height. This lands within a few pixels across every phone size in
+ * use, which is what "the same mark" needs.
  */
 .masthead {
+  --logo-size: clamp(2.375rem, calc(10.2 * var(--vw)), 3.25rem);
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -42,7 +60,14 @@
  * part of the card.
  */
 .switch {
-  width: min(100%, 20rem);
+  /*
+   * The hero's measure exactly — see --switch-measure in globals.css. Matching
+   * it is the point rather than a side effect: the two labels have to hold one
+   * line at one type size wherever this control appears, and a pill that was
+   * one width here and another on the video would need two sizes to do it,
+   * which is the drift this component exists to prevent.
+   */
+  width: var(--switch-measure);
   margin-top: var(--s-5);
 }
 
@@ -340,27 +365,30 @@
 }
 
 /*
- * "được cử hành vào" and "tại" — the small hinges, and the two lines that
- * open the last two groups. The space above them is what separates when and
- * where from the announcement, and from each other.
+ * "đón khách từ" and "tại" — the small hinges, and the two lines that open
+ * the last two groups. The space above them is what separates when and where
+ * from the announcement, and from each other.
+ *
+ * Both take the same margin, and it is half what the first of them used to.
+ *
+ * At --s-6 the hinge sat 43.8px of ink below the couple's names and 11.8px
+ * above the date it introduces — so it had drifted off the group it belongs
+ * to and become a line floating in a hole. (Measured, not eyeballed: the box
+ * gap was 40px and the names' own line box adds a few more underneath, since
+ * this card sets them in DFVN at a 1.3 line-height to clear the tone marks.)
+ * At --s-4 the gap above comes to 27.8px, which still divides when from what
+ * is announced while leaving the hinge plainly attached to the date.
+ *
+ * "tại" used to carry a smaller margin of its own, on the grounds that the
+ * lunar line above it is quiet enough to do half the separating. That is
+ * still true, but this is now the same 16px — so rather than keep a rule that
+ * sets a value it would inherit anyway, the two hinges are simply equal.
  */
 .lead {
-  margin-top: var(--s-6);
+  margin-top: var(--s-4);
   font-size: var(--t-fine);
   font-style: italic;
   color: var(--ink-faint);
-}
-
-/*
- * "tại" takes less air above it than "được cử hành vào" does.
- *
- * Both open a group, so both had the same margin — but this one follows the
- * lunar date, which is small and faint, and a full group's worth of space
- * after it read as a hole rather than as a division. The line above it is
- * already quiet enough to do half the separating.
- */
-.leadPlace {
-  margin-top: var(--s-4);
 }
 
 /*
@@ -471,37 +499,18 @@
 }
 
 /*
- * The calla lily above “Chi tiết chương trình”.
+ * The calla lily above “Chi tiết chương trình”. The mark itself is .calla in
+ * globals.css, shared with the closing screen; only its air is local.
  *
  * It replaces the full-measure filigree rule that used to sit here. A rule
  * spanning the column reads as a section BREAK — the card above it and the
  * running order below it looked like two documents — and what the couple
- * wanted was a small mark between two halves of one. So it is the lily from
- * their stationery, set small: tall enough to be the flower and no wider than
- * a word of the heading under it.
- *
- * Drawn as a mask rather than an <img>, so the gold is the design system's
- * --gold and not a colour baked into the file. The artwork ships filled in
- * the stationery's wine (#850B19), which on this section's own wine damask
- * would be very nearly invisible; a mask takes only the alpha and paints it
- * in whatever this rule says. The aspect ratio is the artwork's tight
- * bounding box — see the viewBox on the file, which is cropped to it.
+ * wanted was a small mark between two halves of one.
  *
  * The air below is deliberately generous, and larger than the rule it
  * replaces had: a small mark needs the space to read as a divider, where a
  * full-width line did the dividing by itself.
  */
 .agendaOrnament {
-  display: block;
-  width: auto;
-  height: clamp(3rem, calc(13 * var(--vw)), 4rem);
-  aspect-ratio: 795 / 1384;
-  margin-inline: auto;
   margin-bottom: var(--s-7);
-
-  background-color: var(--gold);
-  opacity: 0.9;
-
-  -webkit-mask: url("/assets/ornament-calla.svg") no-repeat center / contain;
-  mask: url("/assets/ornament-calla.svg") no-repeat center / contain;
 }
