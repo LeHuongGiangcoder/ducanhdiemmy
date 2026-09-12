@@ -53,11 +53,17 @@ export default function Ceremony({ ceremony, onCeremony }) {
   const { t } = useContent();
   const [side, setSide] = useState("groom");
   const card = t.ceremony.sides[side];
-  // The child of the selected house is named first, matching their card.
-  const names =
-    side === "groom"
-      ? [couple.groomFullVn, couple.brideFullVn]
-      : [couple.brideFullVn, couple.groomFullVn];
+  /*
+   * The groom is named first on both cards.
+   *
+   * The bride's used to lead with her, matching the printed piece, which each
+   * family sets in its own child's favour. On screen the two are one control
+   * apart, and the couple asked for the pair to stay put across the switch:
+   * the households above them already swap with the tab (see householdOrder),
+   * and having the names swap too meant every line in the middle of the card
+   * changed places at once.
+   */
+  const names = [couple.groomFullVn, couple.brideFullVn];
 
   return (
     <>
@@ -122,13 +128,7 @@ export default function Ceremony({ ceremony, onCeremony }) {
            * editing it in place — that is what lets the fade below run again
            * on every switch instead of only the first time.
            */}
-          {/*
-           * data-side, because the two printed cards do not size their rite
-           * the same way: the groom's sets "LỄ THÀNH HÔN" a shade under the
-           * couple's names, the bride's sets "LỄ ĂN HỎI & VU QUY" well above
-           * them and over two lines. See .rite in the stylesheet.
-           */}
-          <article key={side} data-side={side} className={styles.card}>
+          <article key={side} className={styles.card}>
             <div className={styles.households}>
               {householdOrder(side).map((key) => (
                 <div className={styles.household} key={key}>

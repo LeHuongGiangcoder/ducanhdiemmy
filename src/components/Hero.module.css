@@ -115,6 +115,28 @@
   transform: none;
 }
 
+/*
+ * The families' card sets its own salutation in navy, not cream, and the
+ * guest's name belongs to that line — it is the second half of a sentence the
+ * footage starts. Cream made it a different voice answering.
+ *
+ * --navy is the token, not a sampled value: the ink in the footage measures
+ * #113253 against the token's #0f2e4e, two or three levels a channel, which is
+ * compression noise on a 2.4 MB H.264 re-encode rather than a different
+ * colour. Only this version — the couple's two cards set the same line in
+ * cream and the name stays cream with them.
+ *
+ * The dark halo above goes with it. It was lifting cream off the water; under
+ * dark type on a bright sky it only muddies the letterforms. What replaces it
+ * is the opposite — a soft light one, at an alpha low enough that it never
+ * reads as a glow, so the name survives drifting over one of the darker
+ * clouds at the frame's edge.
+ */
+[data-lang="parents"] .guestName {
+  color: var(--navy);
+  text-shadow: 0 1px 12px #fffaf266;
+}
+
 /* TAN Aegean — used when the face covers every character in the name. */
 .guestDisplay {
   font-family: var(--font-heading);

@@ -326,13 +326,16 @@
 }
 
 /*
- * The groom's card sets "LỄ THÀNH HÔN" a shade UNDER the couple's names —
- * the printed piece does, and the line is short enough that at the bride's
- * size it filled the column and took over the screen.
+ * Both cards set their rite at the size above.
+ *
+ * The groom's used to be a step smaller, because the printed piece sets
+ * "LỄ THÀNH HÔN" under the couple's names and the line is short enough that
+ * at the bride's old size it filled the column. Neither reason survived: the
+ * rite came down to one line at 7.7 * --vw, which the short string wears
+ * comfortably, and the couple asked for the two tabs to match — switching
+ * between them resized the largest line on the card, which reads as the page
+ * rebuilding rather than as two cards in a set.
  */
-.card[data-side="groom"] .rite {
-  font-size: clamp(1.25rem, calc(6.2 * var(--vw)), 1.75rem);
-}
 
 /*
  * The couple, in TAN Pearl. Stacked with the ampersand between them, the same
@@ -361,11 +364,21 @@
   /*
    * Sized the same way as .rite above, off the longer of the two names:
    * "NGUYỄN TẤT DIỄM MY" sets at 12.19px of width per pixel of font-size, so
-   * it clears the column at 6.7 * --vw. A name broken across two lines reads
-   * as a mistake rather than as a line break, which is why this is measured
-   * rather than picked off the type scale.
+   * it clears the column at 6.7 * --vw, and a name broken across two lines
+   * reads as a mistake rather than as a line break. That is the ceiling; this
+   * sits under it at 5.9.
+   *
+   * A step below the rite, on both cards. Holding the rite to one line took it
+   * from 34.9px to 28.9px on a 375px phone, and at 6.7 the two names — two
+   * lines of them, against the rite's one — were the largest thing on the
+   * card. The couple asked for the opposite: the rite is which ceremony this
+   * is, the names are whose. 5.9 puts them about a third under it.
+   *
+   * It was the bride's card alone while the groom's rite was a step smaller
+   * and needed the names to lead it. Both rites are one size now, so both
+   * sets of names take the same step — otherwise switching tabs resized them.
    */
-  font-size: clamp(1.375rem, calc(6.7 * var(--vw)), 1.875rem);
+  font-size: clamp(1.25rem, calc(5.9 * var(--vw)), 1.625rem);
   font-weight: 300;
   /*
    * Not --lh-tight. That is 1.06, drawn for TAN, and DFVN stacks a tone mark
@@ -379,24 +392,6 @@
   text-indent: 0.05em;
   text-transform: uppercase;
   color: var(--cream);
-}
-
-/*
- * A step down on the bride's card only.
- *
- * Holding the rite to one line took it from 34.9px to 28.9px on a 375px
- * phone, and at the shared size above the two names — two lines of them,
- * against the rite's one — went back to being the largest thing on the card.
- * The couple asked for the opposite: the rite is which ceremony this is, and
- * the names are whose. 5.9 * --vw puts them a third under it, which is the
- * same interval the groom's card uses in the other direction.
- *
- * The groom's card keeps the full size, because there the printed piece sets
- * "LỄ THÀNH HÔN" under the names deliberately (see .rite above) and shrinking
- * these would leave nothing leading it.
- */
-.card[data-side="bride"] .couple {
-  font-size: clamp(1.25rem, calc(5.9 * var(--vw)), 1.625rem);
 }
 
 /*
