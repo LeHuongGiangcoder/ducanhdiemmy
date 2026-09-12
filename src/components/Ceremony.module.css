@@ -263,11 +263,17 @@
    * a phone that is the difference between the rite reading as the card's
    * heading and reading as two half-lines above their own names.
    *
-   * --cream-bright, where the couple's names below are --cream. This is the
-   * main information on the card — which day this is, and which of the two
-   * rites belongs to this house — so it takes both the size and the
-   * brightness, and the names take the step below. The earlier cut had them
-   * level, and level is what made them compete.
+   * Gold, where the couple's names below are cream. This is the main
+   * information on the card — which day this is, and which of the two rites
+   * belongs to this house — and setting it in a different ink rather than
+   * merely a brighter one is what finally separated the two: at --cream-bright
+   * the rite and the names were the same colour at different sizes, which on
+   * a card where both are large caps in the same face is not much of a
+   * hierarchy. Gold for the ceremony, cream for the people.
+   *
+   * --gold-bright rather than --accent, a step up from the address heading
+   * below, which is the card's other gold line and much the smaller of the
+   * two.
    */
   font-size: clamp(1.375rem, calc(7.7 * var(--vw)), 2.25rem);
   margin-top: var(--s-4);
@@ -276,7 +282,7 @@
      heavier than they measure. Counted in the measurement above. */
   letter-spacing: 0.04em;
   text-indent: 0.04em;
-  color: var(--cream-bright);
+  color: var(--gold-bright);
 }
 
 /*
@@ -353,11 +359,40 @@
   font-size: clamp(1.25rem, calc(5.9 * var(--vw)), 1.625rem);
 }
 
-/* Its own line box, so it sits in the gap rather than inside either name's. */
+/*
+ * Its own line box, so it sits in the gap rather than inside either name's.
+ *
+ * At 0.5em it was 12.5px of italic Cormorant between two 25px lines of DFVN
+ * caps — small enough that it read as a mark left between the names rather
+ * than as the word joining them, which on the one line of this card that is
+ * about two people is the wrong way round. 0.8em brings its ink up to about
+ * two thirds of their cap-height: plainly the word "and", still plainly
+ * subordinate to the names.
+ *
+ * The air is the other half of it, and it has to be added here rather than
+ * taken from .couple's gap: that gap is what holds each name's two lines
+ * together, and opening it would break the lockup apart to give the
+ * ampersand room. The margin belongs to the ampersand, so only the two gaps
+ * either side of it move.
+ *
+ * And the margin is asymmetric, which looks wrong written down and is what
+ * makes it look right on screen. Both names are all-caps, so the line above
+ * the ampersand ends at its baseline and leaves a full descender's worth of
+ * empty line box under it — about 10px at this size. The line below starts
+ * with tone marks that climb well above the cap line (Ũ on one tab, Ễ and Ấ
+ * on the other, which is why .couple sets a 1.3 line-height at all), so it
+ * arrives some 9px higher than its box. Measured with equal 8px margins the
+ * two gaps came out 24.9px above and 6.4px below — the ampersand visibly
+ * stuck to the lower name. Nothing above and --s-4 below evens them to
+ * roughly 17 and 14, and it holds on both tabs because both names are caps
+ * and both carry marks.
+ */
 .amp {
   font-family: var(--font-body);
-  font-size: 0.5em;
+  font-size: 0.8em;
   line-height: 1;
+  margin-top: 0;
+  margin-bottom: var(--s-4);
   font-style: italic;
   text-transform: none;
   text-indent: 0;

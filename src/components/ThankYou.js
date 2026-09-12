@@ -101,7 +101,22 @@ export default function ThankYou({ ceremony = null }) {
           {families ? (
             <span className={`calla ${styles.calla}`} aria-hidden="true" />
           ) : null}
-          <h2 className={`h-1 ${fallbackFontClass(copy.headline)}`}>{copy.headline}</h2>
+          {/*
+           * .h-2 on the wine variant, .h-1 on the photograph.
+           *
+           * Not a size preference — it is the same step the running order
+           * above it takes, and for the same reason: "Trân Trọng Cảm Ơn" is
+           * four words of DFVN where "Thank You" is two of TAN, and at .h-1
+           * it took two lines and most of the screen with them. The two wine
+           * screens now head at one size, which is what makes them read as
+           * one document. The photograph's copy keeps .h-1: it is the last
+           * screen of the evening and has a frame to hold its own against.
+           */}
+          <h2
+            className={`${families ? "h-2" : "h-1"} ${fallbackFontClass(copy.headline)}`}
+          >
+            {copy.headline}
+          </h2>
           <p className="body" style={{ whiteSpace: "pre-line", textWrap: "auto" }}>{copy.body}</p>
         </Reveal>
 
