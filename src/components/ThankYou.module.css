@@ -32,6 +32,19 @@
   background-color: var(--navy-deep);
 }
 
+/*
+ * The wine variant's head, closing the last of the three seams on that day's
+ * page. --s-6 is what the running order above gives back at its own foot and
+ * what the card above that gives at its head, so the two screens either side
+ * of every wine seam now contribute the same 32px.
+ *
+ * The foot keeps --section-y from .section above. It is the end of the page
+ * rather than a seam, and the date wants air under it.
+ */
+.wine {
+  padding-top: var(--s-6);
+}
+
 /* The lily at the head of the wine variant. The mark is .calla in
    globals.css; this is the air under it, matching the running order's. */
 .calla {

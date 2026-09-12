@@ -50,10 +50,23 @@ export default function ThankYou({ ceremony = null }) {
   return (
     <section
       className={[
-        "section section--screen",
-        families ? "section--pattern-wine" : "",
+        "section",
+        /*
+         * The wine variant deliberately does NOT take `section--screen`.
+         *
+         * That class is "one screen, one section" — min-height 100svh with the
+         * content centred in it — and on the photograph it is the whole
+         * composition: the copy sits on the water and the space around it is
+         * the picture. On the damask that same space is just pattern. This
+         * screen's content measures 565px, so centring it in 812 left 123px
+         * of empty damask above the lily, and since the screen above it ends
+         * on the same damask there was no edge anywhere to read that space
+         * against. It sizes to its content instead, and being the last section
+         * on the page there is nothing below it for the lost height to expose.
+         */
+        families ? "section--pattern-wine" : "section--screen",
         styles.section,
-        families ? "" : styles.photo,
+        families ? styles.wine : styles.photo,
       ]
         .filter(Boolean)
         .join(" ")}

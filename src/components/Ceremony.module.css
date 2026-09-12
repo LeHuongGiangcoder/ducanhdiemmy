@@ -602,4 +602,12 @@
  */
 .agenda {
   padding-top: var(--s-6);
+  /*
+   * And the same at the foot, for the same reason: below this comes the
+   * closing screen, still on the damask, so this padding is again half of a
+   * seam rather than the end of anything. Timeline's own --s-9 is written for
+   * the reception, where the list is followed by a cherub and then a change of
+   * ground.
+   */
+  padding-bottom: var(--s-6);
 }
