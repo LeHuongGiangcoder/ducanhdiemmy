@@ -9,8 +9,19 @@
  * ------------------------------------------------------------------------ */
 
 .section {
-  /* The card runs long; this screen is allowed to outgrow one viewport. */
-  padding-bottom: var(--s-9);
+  /*
+   * The card runs long; this screen is allowed to outgrow one viewport.
+   *
+   * --s-6 rather than the --s-9 it used to close on. Every other section ends
+   * on a change of ground, which does the dividing by itself; this one hands
+   * over to the running order on the same damask, so the two paddings that
+   * meet at that seam are the only thing between the switch at the foot of
+   * this screen and the lily at the head of the next. At --s-9 here and the
+   * full --section-head-offset there they measured 189px of empty damask,
+   * which reads as a hole rather than a break. Halved between the two (see
+   * .agenda below).
+   */
+  padding-bottom: var(--s-6);
 }
 
 .shell {
@@ -47,6 +58,35 @@
   align-items: center;
   gap: var(--s-5);
   width: 100%;
+}
+
+/*
+ * The couple's mark in gold.
+ *
+ * The artwork is drawn in cream, which is what the gate and the closing
+ * photograph want — they are the two screens that sit on photography, and a
+ * cream mark is what reads on a sunset. Here the mark shares a screen with the
+ * calla lily heading the running order below it, and a cream monogram above a
+ * gold lily made this one page's ornaments two different metals.
+ *
+ * Masked rather than filtered, for the reason the lily is: the colour comes
+ * from --gold and not from anything baked into the file, so it cannot drift
+ * from the rest of the page's gilt. The PNG carries a real alpha channel —
+ * three quarters of it is fully transparent — so its own cream never shows.
+ * The drop shadow is .monogram's, restated as a filter because there is no
+ * <img> here for it to fall from.
+ */
+.monogram {
+  display: block;
+  width: var(--logo-size);
+  aspect-ratio: 876 / 900;
+
+  background-color: var(--gold);
+
+  -webkit-mask: url("/assets/monogram-couple.png") no-repeat center / contain;
+  mask: url("/assets/monogram-couple.png") no-repeat center / contain;
+
+  filter: drop-shadow(0 2px 12px #09203a73);
 }
 
 /*
@@ -548,4 +588,18 @@
  */
 .agendaOrnament {
   margin-bottom: var(--s-7);
+}
+
+/*
+ * The running order's own section, tightened at the head.
+ *
+ * --section-head-offset is what pins every heading on the site to the same
+ * height, and it is right everywhere a section opens on a new ground. This
+ * one does not: it continues the damask the card above it ends on, so the
+ * offset was not opening a screen, it was adding 89px to the 72px that screen
+ * already closed with. See .section at the top of this file for the
+ * measurement; this is the other half of it.
+ */
+.agenda {
+  padding-top: var(--s-6);
 }

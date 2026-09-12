@@ -33,6 +33,12 @@ export default function Timeline({
   copy,
   surface = "section--pattern-navy",
   /*
+   * The caller's own class on the section. The agenda uses it to tighten the
+   * head offset, because it follows a section on the same damask — see
+   * .agenda in Ceremony.module.css.
+   */
+  className = "",
+  /*
    * The heading's size class. "Timeline" is one short word and carries .h-1
    * comfortably; "Chi tiết chương trình" is twenty-one characters of DFVN and
    * at the same size took two lines and the whole screen with them. The scale
@@ -79,7 +85,10 @@ export default function Timeline({
   }, []);
 
   return (
-    <section id={id} className={`section section--screen ${surface} ${styles.section}`}>
+    <section
+      id={id}
+      className={`section section--screen ${surface} ${styles.section} ${className}`.trim()}
+    >
       <div className={`shell stack center ${styles.shell}`}>
         <Reveal className="masthead">
           {mark}

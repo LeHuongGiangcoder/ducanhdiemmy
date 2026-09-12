@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import CelebrationSwitch from "./CelebrationSwitch";
 import { couple, engagement, engagementTimes, families } from "@/data/wedding";
@@ -75,16 +74,14 @@ export default function Ceremony({ ceremony, onCeremony }) {
       >
         <div className={`shell stack center ${styles.shell}`}>
           <Reveal className={styles.masthead}>
-            <Image
-              src={couple.monogram}
-              alt=""
-              aria-hidden="true"
-              width={876}
-              height={900}
-              sizes="(max-width: 479px) 14vw, 60px"
-              priority
-              className="monogram"
-            />
+            {/*
+             * The couple's mark, in gold rather than the cream it is drawn in
+             * — so it and the lily at the head of the running order are the
+             * same metal, and this screen has one ornament colour rather than
+             * two. Masked for the same reason the lily is: see .monogram in
+             * the stylesheet.
+             */}
+            <span className={styles.monogram} aria-hidden="true" />
           </Reveal>
 
           {/*
@@ -235,6 +232,7 @@ export default function Ceremony({ ceremony, onCeremony }) {
         times={engagementTimes}
         copy={t.ceremony.agenda}
         surface="section--pattern-wine"
+        className={styles.agenda}
         cherub={null}
         heading="h-2"
         mark={
