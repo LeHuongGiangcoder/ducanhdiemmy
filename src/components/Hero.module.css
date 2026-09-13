@@ -78,8 +78,18 @@
    * visible width keeps a long name wrapped, and wrapped is what the extra
    * leading below is for. On a viewport wide enough that the frame no longer
    * overflows, 100% is the smaller of the two and this cap does nothing.
+   *
+   * The cap is 84% of --frame, not 84vw. The two are the same on a phone, and
+   * nowhere else: from 480px up the column is pinned to a 430px --frame while
+   * vw keeps tracking the window, so on a laptop the cap became ~1000px and
+   * did nothing — and the frame is widest exactly there, because a tall
+   * window covers by height. At 1280x1000 the slot was 472px inside a 430px
+   * column, so a long name was fitted to 472px and then clipped by the
+   * column's overflow at both ends ("Gia đình Bác Chính, Cô…" lost its first
+   * and last letters). Measured against the column, the fit in Hero.js now
+   * shrinks it to what is actually on screen.
    */
-  width: min(100%, 84vw);
+  width: min(100%, calc(var(--frame) * 0.84));
   text-align: center;
   text-wrap: balance;
 
