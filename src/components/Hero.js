@@ -139,6 +139,21 @@ const SLOT_FILL = 0.7;
 /** Never shrink past this — below it the name stops reading as the same card. */
 const MIN_FIT = 0.62;
 
+/*
+ * How far a long name may shrink to stay on ONE line before it is allowed to
+ * wrap instead — lower than MIN_FIT on purpose.
+ *
+ * A wrap is a worse outcome than a smaller line: it breaks a name mid-phrase
+ * ("Gia đình Bác Chính, / Cô Hương") and spends a gap cut for one line on two.
+ * At the MIN_FIT floor, names only a little long were being pushed into that
+ * wrap — "Gia đình Bác Chính, Cô Hương" needs 0.59 of its size to hold a line
+ * on a 430px column, three hundredths short. 0.5 keeps names of that length
+ * whole, and on a 375px phone still leaves the smallest one-line name at
+ * about 15px, the size of the card's own small print. Anything longer than
+ * that genuinely cannot be one line, and wraps as before.
+ */
+const MIN_ONE_LINE = 0.5;
+
 export default function Hero({
   guest,
   started,
@@ -248,15 +263,15 @@ export default function Hero({
        *
        * So: measure it unwrapped, and if it overruns, shrink it to the
        * measure rather than break it. Only a name that cannot hold one line
-       * even at MIN_FIT is allowed to wrap, and then the pass below sizes the
-       * two lines as it always did.
+       * even at MIN_ONE_LINE is allowed to wrap, and then the pass below sizes
+       * the two lines as it always did.
        */
       el.style.whiteSpace = "nowrap";
       const measure = el.clientWidth;
       const oneLine = el.scrollWidth;
       if (oneLine > measure) {
         const wanted = measure / oneLine;
-        if (wanted >= MIN_FIT) {
+        if (wanted >= MIN_ONE_LINE) {
           scale = wanted;
         } else {
           el.style.whiteSpace = "";
@@ -266,10 +281,15 @@ export default function Hero({
 
       // Two passes: shrinking can un-wrap a line, which changes the height it
       // was solving for. It converges immediately; the loop is the guard.
+      // The floor is whichever is smaller, MIN_FIT or the width pass's own
+      // result: a one-line name already shrunk below MIN_FIT to fit the
+      // measure must not be clamped back UP past it here, or it overruns the
+      // column it was just fitted to.
+      const floor = Math.min(MIN_FIT, scale);
       for (let pass = 0; pass < 2; pass++) {
         const height = el.scrollHeight;
         if (height <= budget) break;
-        scale = Math.max(MIN_FIT, scale * (budget / height));
+        scale = Math.max(floor, scale * (budget / height));
         el.style.setProperty("--name-fit", String(scale));
       }
     };

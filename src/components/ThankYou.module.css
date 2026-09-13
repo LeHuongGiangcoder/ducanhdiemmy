@@ -48,7 +48,26 @@
 /* The lily at the head of the wine variant. The mark is .calla in
    globals.css; this is the air under it, matching the running order's. */
 .calla {
-  margin-bottom: var(--s-4);
+  margin-bottom: var(--s-7);
+}
+
+/*
+ * The heading to the paragraph under it, at the same --s-7.
+ *
+ * Together with the lily's margin above, this sets the closing screen's head
+ * to the running order's exactly: lily, 44px, heading, 44px, content, on both
+ * wine screens. They are the same mark heading the same size of title one
+ * screen apart, and measured they were not — 44/43px on the running order
+ * against 16/15px here, where the global .masthead heading-to-body gap was
+ * doing the second job. That gap is right for a heading and its own lede; here
+ * the paragraph is the screen's content, the way the list is the running
+ * order's.
+ *
+ * Scoped to .wine. The photograph's closing screen keeps the masthead's own
+ * rhythm — its heading and body are one block on the water.
+ */
+.wine :global(.masthead) > :global(.h-2) + * {
+  margin-top: var(--s-7);
 }
 
 /* ---- The photograph ----------------------------------------------------- */
