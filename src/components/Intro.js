@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { couple, families, wedding } from "@/data/wedding";
+import { couple, familiesIntro, wedding } from "@/data/wedding";
 import { useContent } from "./LanguageProvider";
 import { fallbackFontClass } from "@/lib/aegean";
 import styles from "./Intro.module.css";
@@ -160,7 +160,7 @@ export default function Intro({
                     {t.ceremony.households[side]}
                   </p>
                   <ul className={styles.familyNames}>
-                    {families[side].map((name) => (
+                    {familiesIntro[side].map((name) => (
                       <li key={name}>{name}</li>
                     ))}
                   </ul>
