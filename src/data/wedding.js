@@ -27,26 +27,38 @@ export const couple = {
  *
  * Two places set these names — the gate on the families' version, and the
  * ceremony cards behind the toggle — so they live here rather than in either
- * of them. The honorific and the line break travel with the name because
- * both places want the same two lines: family name above, given name below.
+ * of them. The line break travels with the name because both places want the
+ * same two lines: family name above, given name below.
  *
  * Where each break falls is settled by the couple's own card, not by taste:
  * the footage reads "NGUYỄN TẤT DIỄM MY", so the bride's father is
  * Nguyễn Tất / Kim Dũng and not Nguyễn / Tất Kim Dũng. Rendered with
  * white-space: pre-line.
  *
- * Ông and Bà, not Mr. and Mrs. These names are only ever read in Vietnamese —
- * the gate sets them on the families' version alone, and the ceremony cards
- * below keep every rite in Vietnamese in all three versions by the couple's
- * own instruction — so an English honorific was the one word on either screen
- * in a language the rest of it does not use.
+ * The honorific differs by screen, by the couple's instruction: the ceremony
+ * cards (ăn hỏi / vu quy tab) address them as Ông and Bà, the intro gate as
+ * Mr. and Mrs. Hence one list of bare names and two titled views of it.
  *
  * The household labels are per-language and live in content.js.
  */
-export const families = {
-  groom: ["Ông Vũ\nHồng Khanh", "Bà Nguyễn\nNgọc Thanh"],
-  bride: ["Ông Nguyễn Tất\nKim Dũng", "Bà Lê\nHồng Ánh"],
+const parents = {
+  groom: { father: "Vũ\nHồng Khanh", mother: "Nguyễn\nNgọc Thanh" },
+  bride: { father: "Nguyễn Tất\nKim Dũng", mother: "Lê\nHồng Ánh" },
 };
+
+const titled = (father, mother) =>
+  Object.fromEntries(
+    Object.entries(parents).map(([side, p]) => [
+      side,
+      [`${father} ${p.father}`, `${mother} ${p.mother}`],
+    ]),
+  );
+
+/** The ceremony cards — Ông and Bà. */
+export const families = titled("Ông", "Bà");
+
+/** The intro gate — Mr. and Mrs. */
+export const familiesIntro = titled("Mr.", "Mrs.");
 
 export const wedding = {
   // Taken from the card composed into the hero video: FRIDAY | OCTOBER 02 | 17:45 | 2026
