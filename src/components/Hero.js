@@ -183,15 +183,78 @@ export default function Hero({
    * hand once the wait is over. `muted` is what makes that `play()` legal
    * without a gesture.
    */
+  /*
+   * The start is attempted more than once, because the first attempt is the
+   * one most likely to be refused.
+   *
+   * `preloadVideo` turns true while the gate is still up — no gesture has
+   * happened yet, so that attempt rests entirely on the muted-autoplay
+   * allowance, and there are three common phones where that allowance does
+   * not exist: iOS in Low Power Mode, Android with Data Saver on, and the
+   * in-app browsers in Zalo, Messenger and Facebook, which is how most of
+   * these links are opened. In all three the promise rejects.
+   *
+   * It used to reject into an empty catch and that was the end of it. The
+   * comment there assumed the `autoplay` attribute would stand as the same
+   * instruction repeated — it does not: by the time `autoPlay` is switched on,
+   * resource selection has already concluded under `preload="none"`, and a
+   * late attribute never re-triggers playback. So the card sat on its poster
+   * and Safari drew its own play button over it, which is what guests
+   * reported seeing.
+   *
+   * Hence the retries. `started` is the important one: the curtain lifting IS
+   * the guest's tap, the single moment playback is allowed unconditionally,
+   * and it was going unused. The pointer listener catches the stragglers, and
+   * `visibilitychange` covers the webview that paused everything when the
+   * guest switched apps and came back.
+   */
   useEffect(() => {
     const video = videoRef.current;
     if (!preloadVideo || !video) return;
     if (video.readyState === 0) video.load();
-    video.play().catch(() => {
-      // A browser that refuses the programmatic start still has `autoplay`
-      // set on the element by now, which is the same instruction again.
-    });
-  }, [preloadVideo, t.hero.src]);
+
+    let done = false;
+
+    const attempt = () => {
+      // Already running — nothing to do, and calling play() again on a playing
+      // element is a no-op we can skip rather than a promise to swallow.
+      if (done || !videoRef.current || !videoRef.current.paused) return;
+      videoRef.current.play().then(
+        () => {
+          done = true;
+          detach();
+        },
+        () => {
+          // Refused. Another gesture may yet make it legal; keep listening.
+        },
+      );
+    };
+
+    const onVisible = () => {
+      if (document.visibilityState === "visible") attempt();
+    };
+
+    /* Passive, and on the window rather than the video: the element is under
+       the gate for the first of these, and the guest is not aiming at it. */
+    const detach = () => {
+      window.removeEventListener("pointerdown", attempt);
+      window.removeEventListener("touchstart", attempt);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
+
+    window.addEventListener("pointerdown", attempt, { passive: true });
+    window.addEventListener("touchstart", attempt, { passive: true });
+    document.addEventListener("visibilitychange", onVisible);
+
+    attempt();
+
+    return () => {
+      done = true;
+      detach();
+    };
+    /* `started` is a dependency for its effect, not its value: the curtain
+       lifting re-runs this, which is the attempt that carries the tap. */
+  }, [preloadVideo, t.hero.src, started, revealing]);
 
   /**
    * The video is `object-fit: cover`, so its rendered frame rarely matches the

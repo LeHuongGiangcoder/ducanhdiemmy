@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Invitation from "@/components/Invitation";
-import { allSlugs, getGuest, publicGuest } from "@/lib/guest-registry";
+import Unavailable from "@/components/Unavailable";
+import { allSlugs, getGuest, lookupGuest, publicGuest } from "@/lib/guest-registry";
 import { wedding } from "@/data/wedding";
 import { getContent } from "@/data/content";
 
@@ -30,7 +31,10 @@ export async function generateMetadata({ params }) {
 
 export default async function GuestRsvpPage({ params }) {
   const { slug } = await params;
-  const guest = await getGuest(slug);
+  const { guest, live } = await lookupGuest(slug);
+  // Same rule as the invitation page: an unreadable sheet is not a 404, and
+  // must not answer as one. See src/app/[slug]/page.js.
+  if (!guest && !live) return <Unavailable />;
   if (!guest) notFound();
 
   return <Invitation guest={publicGuest(guest)} bypassIntro={true} />;

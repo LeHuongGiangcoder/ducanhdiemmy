@@ -32,6 +32,21 @@ const SECRET = process.env.RSVP_SHARED_SECRET;
 export const GUESTS_TTL_SECONDS = 60;
 
 /**
+ * How long to wait on the sheet before giving up.
+ *
+ * Measured against the live Apps Script endpoint, a read takes anywhere from
+ * 4s to 11s — five consecutive samples came back at 10.5, 10.7, 4.2, 7.1 and
+ * 4.0 seconds. The old 10s ceiling therefore cut off a real answer perhaps two
+ * times in five, and each of those cut-offs was a guest sent to the gate.
+ *
+ * This is generous on purpose. Nothing waits on it in front of a guest: the
+ * invitation pages are served from the ISR cache while the refresh happens
+ * behind them, so the cost of waiting is latency on a background job, and the
+ * cost of not waiting is a broken invitation.
+ */
+const SHEET_TIMEOUT_MS = 25_000;
+
+/**
  * Shared by every render in a build and by every request after it, so
  * generateStaticParams and the page body can never disagree about who exists.
  *
@@ -67,22 +82,55 @@ let lastGood = null;
 /** The committed snapshot, put through the same shaping as a sheet row. */
 const fallback = snapshot.map(normalise);
 
-export async function getGuests() {
-  if (!ENDPOINT) return fallback; // sheet not wired up yet
+/**
+ * The guest list, together with whether the sheet is the one that supplied it.
+ *
+ * That second fact is the whole point of this function, and the reason the
+ * callers below are thin wrappers around it rather than the other way round.
+ * A list that came out of the fallback is not a smaller version of the truth —
+ * it is a DIFFERENT list, and a slug missing from it means nothing at all. Only
+ * a `live` list can be read as "this person was never invited".
+ *
+ * Losing that distinction is what sent guests to the code gate: a sheet read
+ * that timed out returned the snapshot, the guest's slug was not in it, and
+ * the page called notFound() on a guest who exists — which ISR then cached and
+ * served to everyone who opened that link for the next several minutes.
+ */
+async function readList() {
+  // No sheet configured: the snapshot IS the list here, so it is authoritative
+  // and an unknown slug really is unknown.
+  if (!ENDPOINT) return { list: fallback, live: true };
   try {
     const list = shape(await readRows());
     lastGood = list;
-    return list;
+    return { list, live: true };
   } catch (error) {
     console.error("[guests] sheet read failed", error);
-    return lastGood ?? fallback;
+    return { list: lastGood ?? fallback, live: false };
   }
 }
 
+export async function getGuests() {
+  return (await readList()).list;
+}
+
+/**
+ * Look a guest up, and say which kind of "no" a miss is.
+ *
+ * `{ guest: null, live: true }`  — the sheet answered and has no such slug.
+ * `{ guest: null, live: false }` — we could not read the sheet; unknowable.
+ *
+ * The caller decides what to do with the second one. It must never be a 404:
+ * see src/app/[slug]/page.js.
+ */
+export async function lookupGuest(slug) {
+  if (!slug) return { guest: null, live: true };
+  const { list, live } = await readList();
+  return { guest: list.find((g) => g.slug === slug) ?? null, live };
+}
+
 export async function getGuest(slug) {
-  if (!slug) return null;
-  const list = await getGuests();
-  return list.find((g) => g.slug === slug) ?? null;
+  return (await lookupGuest(slug)).guest;
 }
 
 /**
@@ -146,15 +194,38 @@ export async function allSlugs() {
   return list.map((g) => g.slug);
 }
 
-/** The sheet's rows, untouched. Shaping into guests happens after the cache. */
+/**
+ * The sheet's rows, untouched — with one retry.
+ *
+ * The endpoint is not flaky so much as erratically slow: five consecutive
+ * reads came back at 10.5, 10.7, 4.2, 7.1 and 4.0 seconds. A single attempt
+ * therefore fails a good fraction of the time for no reason other than Apps
+ * Script having a slow minute, and each of those failures used to cost a guest
+ * their invitation. A second attempt is nearly free — nothing is waiting on
+ * this in front of a guest — and it turns "Google was slow just then" from an
+ * outage into a pause.
+ *
+ * Two attempts, not more: past that the request is being kept alive longer
+ * than any revalidation is worth, and the snapshot is the better answer.
+ */
 async function fetchRows() {
+  try {
+    return await fetchRowsOnce();
+  } catch (error) {
+    console.warn("[guests] sheet read failed, retrying once", error?.message ?? error);
+    return fetchRowsOnce();
+  }
+}
+
+/** One attempt at the sheet. */
+async function fetchRowsOnce() {
   const res = await fetch(ENDPOINT, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ action: "guests", secret: SECRET }),
     // unstable_cache above owns the caching; this fetch is the cache miss.
     cache: "no-store",
-    signal: AbortSignal.timeout(10_000),
+    signal: AbortSignal.timeout(SHEET_TIMEOUT_MS),
   });
 
   // Apps Script answers 200 even when the script threw, so the body decides.
